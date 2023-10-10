@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiLabs.View.Pages.MainPage"
+             Title="Начальная страница">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+
+            <Button
+                x:Name="OpenAnotherPage"
+                WidthRequest="300" HeightRequest="180"
+                BorderColor="#D78ADB" BorderWidth="3"
+                Text="Перейти на страницу c пользователями"
+                SemanticProperties.Hint="НАжмите кнопку для перехода на страницу"
+                Clicked="OnCounterClicked"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

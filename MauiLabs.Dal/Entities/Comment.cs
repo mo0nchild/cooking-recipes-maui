@@ -1,0 +1,26 @@
+﻿using MauiLabs.Dal.Configurations;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MauiLabs.Dal.Entities
+{
+    [EntityTypeConfiguration(typeof(CommentConfiguration))]
+    public partial class Comment : object
+    {
+        public int Id { get; set; } = default!;
+
+        public string Text { get; set; } = string.Empty;
+        public double Rating { get; set; } = default!;
+        public DateTime PublicationTime { get; set; } = default;
+
+        public int ProfileId { get; set; } = default!;
+        public virtual UserProfile Profile { get; set; } = default!;
+
+        public int RecipeId { get; set; } = default!;
+        public virtual CookingRecipe Recipe { get; set; } = default!; 
+    }
+}
