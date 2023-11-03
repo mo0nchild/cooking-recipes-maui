@@ -25,9 +25,11 @@ namespace MauiLabs.View
 
             builder.Services.AddDataAccessLayer(builder.Configuration);
             builder.Services
-                .AddTransient<AnotherPage>()
+                .AddTransient<UserProfilePage>()
+                .AddTransient<UserListPage>()
                 .AddTransient<MainPage>();
 
+            builder.Services.AddTransient<UserListVm>();
             builder.Services.AddTransient<UserProfileVm>();
             return builder.Build();
         }

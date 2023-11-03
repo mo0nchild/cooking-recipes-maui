@@ -16,7 +16,6 @@ namespace MauiLabs.Dal.Configurations
             builder.ToTable(nameof(UserProfile), "public");
             builder.HasKey(x => x.Id);
             builder.HasIndex(x => x.Id).IsUnique();
-            builder.HasIndex(x => x.Email).IsUnique();
 
             builder.Property(x => x.Surname).HasMaxLength(50);
             builder.Property(x => x.Name).HasMaxLength(50);

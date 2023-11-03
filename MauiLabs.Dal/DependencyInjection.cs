@@ -11,19 +11,18 @@ namespace MauiLabs.Dal
 {
     public static class DependencyInjection : object
     {
-        public static IServiceCollection AddDataAccessLayer(this IServiceCollection collection, IConfiguration configuration)
+        public async static Task<IServiceCollection> AddDataAccessLayer(this IServiceCollection collection, IConfiguration configuration)
         {
             collection.AddDbContextFactory<CookingRecipeDbContext>(options =>
             {
-                var @string = configuration["ConnectionStrings:cookingrecipedb"];
-                options.UseNpgsql(@string);
+                options.UseNpgsql(configuration.GetConnectionString("cookingrecipedb"));
             });
             var serviceProvider = collection.BuildServiceProvider();
             var dbcontextFactory = serviceProvider.GetService<IDbContextFactory<CookingRecipeDbContext>>()!;
 
-            using (var dbcontext = dbcontextFactory.CreateDbContext())
+            using (var dbcontext = await dbcontextFactory.CreateDbContextAsync())
             {
-                dbcontext.Database.Migrate();
+                await dbcontext.Database.MigrateAsync();
             }
             return collection;
         }

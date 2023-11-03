@@ -2,17 +2,14 @@
 {
     public partial class MainPage : ContentPage
     {
-        private readonly AnotherPage anotherPage;
-
-        public MainPage(AnotherPage anotherPage) : base()
+        public MainPage() : base()
         {
             this.InitializeComponent();
-            this.anotherPage = anotherPage;
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private async void OnCounterClicked(object sender, EventArgs e)
         {
-            this.Navigation.PushAsync(this.anotherPage, false);
+            await Shell.Current.GoToAsync("./userlist");
         }
     }
 }

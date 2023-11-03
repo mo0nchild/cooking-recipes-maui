@@ -19,8 +19,8 @@ namespace MauiLabs.Dal.Entities
         public bool Confirmed { get; set; } = default!;
         public byte[]? Image { get; set; } = default!;
 
-        public int RecipeCategoryId { get; set; } = default!;
-        public virtual RecipeCategory RecipeCategory { get; set; } = default!;
+        public int? RecipeCategoryId { get; set; } = default!;
+        public virtual RecipeCategory? RecipeCategory { get; set; } = default!;
         public int PublisherId { get; set; } = default!;
         public virtual UserProfile Publisher { get; set; } = default!;
 

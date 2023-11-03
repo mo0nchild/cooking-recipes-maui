@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiLabs.View.Pages.AnotherPage"
+             x:Class="MauiLabs.View.Pages.UserListPage"
              Title="Данные пользователей">
     <ContentPage.Resources>
         <Style x:Key="tableText" TargetType="Label">
@@ -17,9 +17,8 @@
                 <Label Text="Имя" Grid.Row="0" Grid.Column="1" Padding="10"/>
                 <Label Text="Фамилия" Grid.Row="0" Grid.Column="2" Padding="10"/>
                 <Label Text="Email" Grid.Row="0" Grid.Column="3" Padding="10"/>
-                <Label Text="Email" Grid.Row="0" Grid.Column="5" Padding="10"/>
             </Grid>
-            <CollectionView Grid.Row="1" ItemsSource="{Binding UserProfiles}">
+            <CollectionView Grid.Row="1" x:Name="userProfileList" ItemsSource="{Binding UserProfiles}" SelectionChanged="userProfileList_SelectionChanged">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border Stroke="#FFF">
@@ -42,5 +41,6 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Grid>
+        <Button Command="{Binding AddProfile}" CommandParameter="test" Text="Кнопка"/>
     </VerticalStackLayout>
 </ContentPage>

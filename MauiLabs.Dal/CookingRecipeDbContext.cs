@@ -20,6 +20,8 @@ namespace MauiLabs.Dal
         public virtual DbSet<IngredientItem> IngredientItems { get; set; } = default!;
         public virtual DbSet<RecipeCategory> RecipeCategories { get; set; } = default!;
 
+        public virtual DbSet<LoggingInfo> LoggingInfos { get; set; } = default!;
+
         public CookingRecipeDbContext(DbContextOptions<CookingRecipeDbContext> options) : base(options) { }
 
         public CookingRecipeDbContext() : base() { }

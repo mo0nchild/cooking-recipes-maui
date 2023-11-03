@@ -20,7 +20,7 @@ namespace MauiLabs.Dal.Configurations
             builder.HasIndex(item => item.Login).IsUnique();
 
             builder.Property(item => item.Login).HasMaxLength(50);
-            builder.Property(item => item.Password).HasMaxLength(50);
+            builder.Property(item => item.Password).HasMaxLength(100);
 
             builder.HasOne(item => item.UserProfile).WithOne(item => item.Authorization)
                 .HasForeignKey((Authorization item) => item.UserProfileId)

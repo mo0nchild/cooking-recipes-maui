@@ -2,9 +2,9 @@
 {
     public partial class App : Application
     {
-        public App()
+        public App() : base()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             MainPage = new AppShell();
         }

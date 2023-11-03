@@ -21,7 +21,7 @@ namespace MauiLabs.Dal.Configurations
             builder.Property(x => x.Description).HasColumnType("text").IsRequired(false);
 
             builder.HasOne(x => x.RecipeCategory).WithMany(x => x.Recipes)
-                .HasForeignKey(x => x.RecipeCategoryId)
+                .HasForeignKey(x => x.RecipeCategoryId).OnDelete(DeleteBehavior.SetNull)
                 .HasPrincipalKey(x => x.Id);
 
             builder.HasOne(x => x.Publisher).WithMany(x => x.Recipes)

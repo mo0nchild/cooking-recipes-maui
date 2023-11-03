@@ -40,8 +40,8 @@ namespace MauiLabs.Dal.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("UserProfileId")
                         .HasColumnType("integer");
@@ -153,7 +153,7 @@ namespace MauiLabs.Dal.Migrations
                     b.Property<int>("PublisherId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("RecipeCategoryId")
+                    b.Property<int?>("RecipeCategoryId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -202,7 +202,7 @@ namespace MauiLabs.Dal.Migrations
                     b.Property<int>("CookingRecipeId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("IngredientItemId")
+                    b.Property<int?>("IngredientItemId")
                         .HasColumnType("integer");
 
                     b.Property<double>("Value")
@@ -218,6 +218,32 @@ namespace MauiLabs.Dal.Migrations
                     b.HasIndex("IngredientItemId");
 
                     b.ToTable("IngredientsList", "public");
+                });
+
+            modelBuilder.Entity("MauiLabs.Dal.Entities.LoggingInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MethodName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("UserInfo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LoggingInfo");
                 });
 
             modelBuilder.Entity("MauiLabs.Dal.Entities.RecipeCategory", b =>
@@ -272,9 +298,6 @@ namespace MauiLabs.Dal.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.HasIndex("Id")
                         .IsUnique();
@@ -342,8 +365,7 @@ namespace MauiLabs.Dal.Migrations
                     b.HasOne("MauiLabs.Dal.Entities.RecipeCategory", "RecipeCategory")
                         .WithMany("Recipes")
                         .HasForeignKey("RecipeCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Publisher");
 
@@ -361,8 +383,7 @@ namespace MauiLabs.Dal.Migrations
                     b.HasOne("MauiLabs.Dal.Entities.IngredientItem", "IngredientItem")
                         .WithMany("IngredientsLists")
                         .HasForeignKey("IngredientItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("CookingRecipe");
 

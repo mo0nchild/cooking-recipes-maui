@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiLabs.View", "MauiLabs.V
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiLabs.Dal", "MauiLabs.Dal\MauiLabs.Dal.csproj", "{F8A3D8C2-D169-4811-8116-A735B21D5222}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiLabs.Api", "MauiLabs.Api\MauiLabs.Api.csproj", "{718C48AA-CBCE-4E37-91A1-50521BFE278D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{F8A3D8C2-D169-4811-8116-A735B21D5222}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8A3D8C2-D169-4811-8116-A735B21D5222}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8A3D8C2-D169-4811-8116-A735B21D5222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{718C48AA-CBCE-4E37-91A1-50521BFE278D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{718C48AA-CBCE-4E37-91A1-50521BFE278D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{718C48AA-CBCE-4E37-91A1-50521BFE278D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{718C48AA-CBCE-4E37-91A1-50521BFE278D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

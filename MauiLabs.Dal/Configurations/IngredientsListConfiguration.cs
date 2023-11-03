@@ -18,7 +18,7 @@ namespace MauiLabs.Dal.Configurations
             builder.HasIndex(x => x.Id).IsUnique();
 
             builder.HasOne(x => x.IngredientItem).WithMany(x => x.IngredientsLists)
-                .HasForeignKey(x => x.IngredientItemId)
+                .HasForeignKey(x => x.IngredientItemId).OnDelete(DeleteBehavior.SetNull)
                 .HasPrincipalKey(x => x.Id);
 
             builder.HasOne(x => x.CookingRecipe).WithMany(x => x.Ingredients)

@@ -1,10 +1,15 @@
-﻿namespace MauiLabs.View
+﻿using MauiLabs.View.Pages;
+
+namespace MauiLabs.View
 {
     public partial class AppShell : Shell
     {
-        public AppShell()
+        public AppShell() : base()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+
+            Routing.RegisterRoute("main/userlist", typeof(UserListPage));
+            Routing.RegisterRoute("maui/userlist/userprofile", typeof(UserProfilePage));
         }
     }
 }
