@@ -2,7 +2,7 @@
 {
     public partial class ProfileCollection : object
     {
-        public List<ProfileInfo> Profiles { get; set; } = new();
-        public int AllCount { get; set; } = default!;
+        public required List<ProfileInfo> Profiles { get; set; } = new();
+        public required int AllCount { get; set; } = default!;
     }
 }

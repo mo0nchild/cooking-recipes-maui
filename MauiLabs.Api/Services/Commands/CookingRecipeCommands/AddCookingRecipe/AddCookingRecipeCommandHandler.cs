@@ -1,0 +1,45 @@
+﻿using AutoMapper;
+using MauiLabs.Api.Services.Commons.Exceptions;
+using MauiLabs.Dal;
+using MauiLabs.Dal.Entities;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
+namespace MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe
+{
+    public partial class AddCookingRecipeCommandHandler(IDbContextFactory<CookingRecipeDbContext> factory,
+        IMapper mapper) : IRequestHandler<AddCookingRecipeCommand>
+    {
+        protected readonly IDbContextFactory<CookingRecipeDbContext> _factory = factory;
+        protected readonly IMapper _mapper = mapper;
+
+        public async Task Handle(AddCookingRecipeCommand request, CancellationToken cancellationToken)
+        {
+            var mappedModel = _mapper.Map<CookingRecipe>(request);
+            var requestType = typeof(AddCookingRecipeCommand);
+            using (var dbcontext = await _factory.CreateDbContextAsync(cancellationToken))
+            {
+                if (await dbcontext.UserProfiles.FirstOrDefaultAsync(item => item.Id == request.PublisherId) == null)
+                {
+                    throw new ApiServiceException("Пользователь не найден", requestType);
+                }
+                if (request.Category != null)
+                {
+                    var category = await dbcontext.RecipeCategories.FirstOrDefaultAsync(item => item.Name == request.Category);
+                    if (category == null) throw new ApiServiceException("Категория не найдена", requestType);
+
+                    mappedModel.RecipeCategoryId = category.Id;
+                }
+                foreach (var item in request.Ingredients)
+                {
+                    var ingredient = await dbcontext.IngredientItems.FirstOrDefaultAsync(p => p.Name == item.Key);
+                    if (ingredient == null) throw new ApiServiceException($"Ингредиент не найден: {item.Key}", requestType);
+
+                    mappedModel.Ingredients.Add(new IngredientsList() { Value = item.Value, IngredientItemId = ingredient.Id });
+                }
+                await dbcontext.CookingRecipes.AddRangeAsync(mappedModel);
+                await dbcontext.SaveChangesAsync(cancellationToken);
+            }
+        }
+    }
+}

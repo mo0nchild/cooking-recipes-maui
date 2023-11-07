@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Security.Claims;
 using static MauiLabs.Api.Commons.Authentication.ConfigureJwtBearer;
 
 namespace MauiLabs.Api;
@@ -25,8 +26,11 @@ public static class Program : object
         builder.Services.ConfigureOptions<ConfigureJwtBearer>();
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
-        builder.Services.AddAuthorization(options => { });
-
+        builder.Services.AddAuthorization(options => 
+        {
+            options.AddPolicy("Admin", item => item.RequireClaim(ClaimTypes.Role, "Admin"));
+            options.AddPolicy("User", item => item.RequireClaim(ClaimTypes.Role, "User"));
+        });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {

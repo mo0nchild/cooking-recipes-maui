@@ -5,7 +5,8 @@ namespace MauiLabs.Api.Services.Requests.ProfileRequests.GetAllProfiles
 {
     public partial class GetAllProfilesRequest : IRequest<ProfileCollection> 
     {
-        public int Skip { get; set; } = default!;
-        public int Take { get; set; } = default!;
+        public string? TextFilter { get; set; } = default!;
+        public required int Skip { get; set; } = default!;
+        public required int Take { get; set; } = default!;
     }
 }

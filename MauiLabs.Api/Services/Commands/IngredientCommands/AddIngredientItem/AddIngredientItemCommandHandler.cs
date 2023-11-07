@@ -18,8 +18,7 @@ namespace MauiLabs.Api.Services.Commands.IngredientCommands.AddIngredientItem
             var mappedModel = this._mapper.Map<IngredientItem>(request);
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var collisionChecking = await dbcontext.IngredientItems.FirstOrDefaultAsync(item => item.Name == mappedModel.Name);
-                if (collisionChecking == null)
+                if (await dbcontext.IngredientItems.FirstOrDefaultAsync(item => item.Name == mappedModel.Name) != null)
                 {
                     throw new ApiServiceException("Данный игредиент уже создан", typeof(AddIngredientItemCommand));
                 }

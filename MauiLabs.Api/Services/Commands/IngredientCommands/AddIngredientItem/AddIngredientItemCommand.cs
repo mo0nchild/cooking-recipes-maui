@@ -7,8 +7,8 @@ namespace MauiLabs.Api.Services.Commands.IngredientCommands.AddIngredientItem
 {
     public partial class AddIngredientItemCommand : IRequest, IMappingTarget<IngredientItem>
     {
-        public string IngredientName { get; set; } = default!;
-        public string UnitName { get; set; } = default!;
+        public required string IngredientName { get; set; } = default!;
+        public required string UnitName { get; set; } = default!;
 
         public virtual void ConfigureMapping(Profile profile)
         {

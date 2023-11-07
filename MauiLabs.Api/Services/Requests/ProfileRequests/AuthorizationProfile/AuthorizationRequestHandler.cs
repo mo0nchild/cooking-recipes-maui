@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MauiLabs.Api.Controllers.ApiModels.Authorization;
+using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
 using MauiLabs.Dal;
 using MauiLabs.Dal.Entities;
 using MediatR;
@@ -9,12 +10,12 @@ namespace MauiLabs.Api.Services.Requests.ProfileRequests.AuthorizationProfile
 {
     using BCryptType = BCrypt.Net.BCrypt;
     public partial class AuthorizationRequestHandler(IDbContextFactory<CookingRecipeDbContext> factory,
-        IMapper mapper) : IRequestHandler<AuthorizationRequest, int?>
+        IMapper mapper) : IRequestHandler<AuthorizationRequest, AuthorizationInfo?>
     {
         protected readonly IDbContextFactory<CookingRecipeDbContext> _factory = factory;
         protected readonly IMapper _mapper = mapper;
 
-        public async Task<int?> Handle(AuthorizationRequest request, CancellationToken cancellationToken)
+        public async Task<AuthorizationInfo?> Handle(AuthorizationRequest request, CancellationToken cancellationToken)
         {
             var verifyPassword = (string hashPassword) =>
             {
@@ -23,10 +24,15 @@ namespace MauiLabs.Api.Services.Requests.ProfileRequests.AuthorizationProfile
             };
             using (var dbcontext = await _factory.CreateDbContextAsync(cancellationToken))
             {
-                var profiles = await dbcontext.Authorizations.Where(item => item.Login == request.Login).ToListAsync();
-                var result = profiles.FirstOrDefault(item => item.Login == request.Login && verifyPassword(item.Password));
+                var profiles = await dbcontext.Authorizations.Where(item => item.Login == request.Login)
+                    .Include(item => item.UserProfile).ToListAsync();
 
-                return result?.UserProfile.Id;
+                var result = profiles.FirstOrDefault(item => item.Login == request.Login && verifyPassword(item.Password));
+                return result == null ? null : new AuthorizationInfo() 
+                {
+                    Id = result.UserProfile.Id,
+                    IsAdmin = result.UserProfile.IsAdmin,
+                };
             }
         }
     }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MauiLabs.Api.Commons.Authentication;
-using MauiLabs.Api.Controllers.ApiModels.Authorization;
 using MauiLabs.Api.Services.Commons.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -14,12 +13,14 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Text;
 using MauiLabs.Api.Services.Commands.ProfileCommands.RegistrationProfile;
 using MauiLabs.Api.Services.Requests.ProfileRequests.AuthorizationProfile;
+using MauiLabs.Api.Controllers.ApiModels.Authorization.Requests;
+using MauiLabs.Api.Controllers.ApiModels.Authorization.Responses;
 
 namespace MauiLabs.Api.Controllers.ApiControllers
 {
     using JwtBearerConfig = MauiLabs.Api.Commons.Authentication.ConfigureJwtBearer.JwtBearerConfig;
 
-    [Route("cookingrecipes/profile"), AllowAnonymous]
+    [Route("cookingrecipes/auth"), AllowAnonymous]
     [ApiController]
     public partial class AuthorizationController : ControllerBase
     {
@@ -47,16 +48,24 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             {
                 return this.Problem("Пользователь не найден", statusCode: (int)StatusCodes.Status400BadRequest);
             }
+            var resultClaims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Sid, result.Id.ToString()), 
+                new Claim(ClaimTypes.Role, "User"),
+            };
+            if (result.IsAdmin) resultClaims.Add(new Claim(ClaimTypes.Role, "Admin"));
+
             var encodingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._tokenConfig.SecretKey));
             var securityToken = new JwtSecurityToken(
                 issuer: this._tokenConfig.Issuer,
                 audience: this._tokenConfig.Audience,
-                claims: new List<Claim>() { new Claim(ClaimTypes.Sid, result.Value.ToString()) },
+                claims: resultClaims,
                 signingCredentials: new SigningCredentials(encodingKey, SecurityAlgorithms.HmacSha256));
 
             return this.Ok(new LoginResponseModel() 
             {
-                JwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken)
+                IsAdmin = result.IsAdmin,
+                JwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken),
             });
         }
         /// <summary>
@@ -70,7 +79,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> RegistrationHandler([FromBody] RegistrationRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<RegistrationCommand>(request)); }
-            catch (ApiServiceException errorInfo) 
+            catch (Exception errorInfo) 
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }

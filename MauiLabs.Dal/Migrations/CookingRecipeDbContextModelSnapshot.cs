@@ -150,6 +150,9 @@ namespace MauiLabs.Dal.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<DateTime>("PublicationTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("PublisherId")
                         .HasColumnType("integer");
 
@@ -202,7 +205,7 @@ namespace MauiLabs.Dal.Migrations
                     b.Property<int>("CookingRecipeId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("IngredientItemId")
+                    b.Property<int>("IngredientItemId")
                         .HasColumnType("integer");
 
                     b.Property<double>("Value")
@@ -383,7 +386,8 @@ namespace MauiLabs.Dal.Migrations
                     b.HasOne("MauiLabs.Dal.Entities.IngredientItem", "IngredientItem")
                         .WithMany("IngredientsLists")
                         .HasForeignKey("IngredientItemId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CookingRecipe");
 

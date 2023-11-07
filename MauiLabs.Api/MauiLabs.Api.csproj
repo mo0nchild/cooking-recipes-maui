@@ -40,7 +40,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Services\Commands\IngredientCommands\DeleteIngredientItem\" />
+      <Folder Include="Controllers\ApiModels\Admin\Responses\" />
     </ItemGroup>
 
 </Project>

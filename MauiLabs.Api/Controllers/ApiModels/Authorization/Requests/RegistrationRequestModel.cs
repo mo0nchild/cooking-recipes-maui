@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace MauiLabs.Api.Controllers.ApiModels.Authorization
+namespace MauiLabs.Api.Controllers.ApiModels.Authorization.Requests
 {
     /// <summary>
     /// Данные для регистрации профиля пользователя

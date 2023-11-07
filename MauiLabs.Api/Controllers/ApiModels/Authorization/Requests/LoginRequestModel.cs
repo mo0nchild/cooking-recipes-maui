@@ -2,7 +2,7 @@
 using MauiLabs.Api.Services.Requests.ProfileRequests.AuthorizationProfile;
 using System.ComponentModel.DataAnnotations;
 
-namespace MauiLabs.Api.Controllers.ApiModels.Authorization
+namespace MauiLabs.Api.Controllers.ApiModels.Authorization.Requests
 {
     /// <summary> 
     /// Данные для авторизации в профиль

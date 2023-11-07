@@ -21,7 +21,7 @@ namespace MauiLabs.Api.Services.Commands.ProfileCommands.RegistrationProfile
                     .FirstOrDefaultAsync(p => p.Authorization.Login == request.Login);
                 if (collisionDetection != null)
                 {
-                    throw new ApiServiceException("Логин или почта уже используется", typeof(RegistrationCommand));
+                    throw new ApiServiceException("Логин уже используется", typeof(RegistrationCommand));
                 }
                 await dbcontext.UserProfiles.AddAsync(_mapper.Map<UserProfile>(request));
                 await dbcontext.SaveChangesAsync(cancellationToken);

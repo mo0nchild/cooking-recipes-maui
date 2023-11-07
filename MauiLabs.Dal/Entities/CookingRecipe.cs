@@ -13,6 +13,7 @@ namespace MauiLabs.Dal.Entities
     {
         public int Id { get; set; } = default!;
 
+        public DateTime PublicationTime { get; set; } = default!;
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; } = string.Empty;
 
