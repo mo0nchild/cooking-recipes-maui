@@ -1,4 +1,6 @@
-﻿namespace MauiLabs.Api.Controllers.ApiModels.Comments.Requests
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MauiLabs.Api.Controllers.ApiModels.Comments.Requests
 {
     /// <summary>
     /// Данные для удаления комментария с использованием токена
@@ -8,6 +10,7 @@
         /// <summary>
         /// Идентификатор рецепта
         /// </summary>
+        [Required(ErrorMessage = "Необходимо указать идентификатор рецепта")]
         public required int RecipeId { get; set; } = default!;
     }
 }

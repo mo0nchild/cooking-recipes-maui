@@ -1,5 +1,6 @@
 ﻿using MauiLabs.Api.Commons.Mapping;
 using MauiLabs.Api.Services.Commands.RecipeCategoryCommands.DeleteRecipeCategory;
+using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.Api.Controllers.ApiModels.RecipeCategory.Requests
 {
@@ -11,6 +12,8 @@ namespace MauiLabs.Api.Controllers.ApiModels.RecipeCategory.Requests
         /// <summary>
         /// Название категории
         /// </summary>
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Длина названия в диапазоне от 3 до 50 символов")]
+        [Required(ErrorMessage = "Необходимо указать название категории")]
         public required string Name { get; set; } = default!;
     }
 }

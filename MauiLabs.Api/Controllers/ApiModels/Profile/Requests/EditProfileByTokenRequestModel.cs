@@ -6,16 +6,10 @@ using System.ComponentModel;
 namespace MauiLabs.Api.Controllers.ApiModels.Profile.Requests
 {
     /// <summary>
-    /// Данные для реактирования профиля пользователя 
+    /// Данные для реактирования профиля пользователя при помощи токена 
     /// </summary>
-    public partial class EditProfileRequestModel : IMappingTarget<EditProfileCommand>
+    public partial class EditProfileByTokenRequestModel : IMappingTarget<EditProfileCommand>
     {
-        /// <summary>
-        /// Идентификатор пользователя
-        /// </summary>
-        [Required(ErrorMessage = "Необходимо указать идентификатор пользователя")]
-        public required int Id { get; set; } = default!;
-
         /// <summary> 
         /// Имя пользователя
         /// </summary>

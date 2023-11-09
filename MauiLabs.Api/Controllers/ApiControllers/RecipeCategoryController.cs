@@ -16,6 +16,7 @@ using System.Security.Claims;
 
 namespace MauiLabs.Api.Controllers.ApiControllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
     [Route("cookingrecipes/category"), ApiController]
     public partial class RecipeCategoryController(IMediator mediator, IMapper mapper) : ControllerBase
     {
@@ -27,11 +28,10 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// </summary>
         /// <param name="request">Название категории</param>
         /// <returns>Статус добавления категории</returns>
-        /// <role>Admin</role>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("add"), HttpPost]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> AddRecipeCategoryHandler([FromBody] AddRecipeCategoryRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddRecipeCategoryCommand>(request)); }
@@ -46,12 +46,11 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// </summary>
         /// <param name="request">Название категории</param>
         /// <returns>Статус удаления категории</returns>
-        /// <role>Admin</role>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("delete"), HttpDelete]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteRecipeCategoryHandler([FromBody] DeleteRecipeCategoryRequestModel request)
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteRecipeCategoryHandler([FromQuery] DeleteRecipeCategoryRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<DeleteRecipeCategoryCommand>(request)); }
             catch (Exception errorInfo)
@@ -61,18 +60,20 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             return this.Ok("Категория рецептов успешно удалена");
         }
         /// <summary>
-        /// [User] Получение списка категорий рецептов
+        /// Получение списка категорий рецептов
         /// </summary>
         /// <returns>Список категорий</returns>
-        /// <role>User</role>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
         [Route("getlist"), HttpGet]
         [ProducesResponseType(typeof(GetRecipeCategoriesListResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetRecipeCategoriesListHandler()
         {
-            var requestResult = await this.mediator.Send(new GetCategoryListRequest());
-            return this.Ok(this.mapper.Map<GetRecipeCategoriesListResponseModel>(requestResult));
+            var requestModel = new GetCategoryListRequest();
+            try { return this.Ok(this.mapper.Map<GetRecipeCategoriesListResponseModel>(await this.mediator.Send(requestModel))); }
+            catch (Exception errorInfo)
+            {
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+            }
         }
     }
 }

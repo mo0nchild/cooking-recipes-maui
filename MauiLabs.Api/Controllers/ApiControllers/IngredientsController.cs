@@ -15,6 +15,7 @@ using System.Security.Claims;
 
 namespace MauiLabs.Api.Controllers.ApiControllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
     [Route("cookingrecipes/ingredients"), ApiController]
     public partial class IngredientsController(IMediator mediator, IMapper mapper) : ControllerBase
     {
@@ -27,11 +28,10 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// </summary>
         /// <param name="request">Данные ингредиента</param>
         /// <returns>Статус добавления ингредиента</returns>
-        /// <role>Admin</role>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("add"), HttpPost]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> AddIngredientHandler([FromBody] AddIngredientRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddIngredientItemCommand>(request)); }
@@ -45,12 +45,11 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// [Admin] Удаление ингредиента для создания рецепта
         /// </summary>
         /// <param name="request">Название ингредиента</param>
-        /// <returns>Статус добавления ингредиента</returns>
-        /// <role>Admin</role>
+        /// <returns>Статус удаления ингредиента</returns>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("delete"), HttpDelete]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> DeleteIngredientHandler([FromQuery] DeleteIngredientRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<DeleteIngredientItemCommand>(request)); }
@@ -58,21 +57,23 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
-            return this.Ok("Ингредиент успешно добавлена");
+            return this.Ok("Ингредиент успешно удален");
         }
         /// <summary>
-        /// [User] Получение списка доступных ингредиентов
+        /// Получение списка доступных ингредиентов
         /// </summary>
         /// <returns>Список доступных ингредиентов</returns>
-        /// <role>User</role>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
         [Route("getlist"), HttpGet]
         [ProducesResponseType(typeof(GetIngredientsResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetIngredientsHandler()
         {
-            var requestResult = await this.mediator.Send(new GetIngredientItemsRequest());
-            return this.Ok(this.mapper.Map<GetIngredientsResponseModel>(requestResult));
+            var requestModel = new GetIngredientItemsRequest();
+            try { return this.Ok(this.mapper.Map<GetIngredientsResponseModel>(await this.mediator.Send(requestModel))); }
+            catch (Exception errorInfo)
+            {
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+            }
         }
     }
 }

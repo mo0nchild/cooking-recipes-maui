@@ -1,5 +1,6 @@
 ﻿using MauiLabs.Api.Commons.Mapping;
 using MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetBookmarksList;
+using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests
 {
@@ -11,6 +12,7 @@ namespace MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests
         /// <summary>
         /// Идентификатор пользователя, у которого ищутся заметки
         /// </summary>
+        [Required(ErrorMessage = "Необходимо указать идентификатор пользователя")]
         public required int ProfileId { get; set; } = default!;
 
         /// <summary>
@@ -21,6 +23,7 @@ namespace MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests
         /// <summary>
         /// Порядок сортировки по дате добавления
         /// </summary>
+        [Required(ErrorMessage = "Необходимо указать порядок сортировки по дате добавления")]
         public bool ReverseOrder { get; set; } = default!;
     }
 }

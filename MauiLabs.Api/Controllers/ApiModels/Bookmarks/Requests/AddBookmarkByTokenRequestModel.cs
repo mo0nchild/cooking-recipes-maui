@@ -5,16 +5,10 @@ using System.ComponentModel.DataAnnotations;
 namespace MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests
 {
     /// <summary>
-    /// Данные о добавляемой заметки рецепта
+    /// Данные о добавляемой заметки рецепта при помощи токена
     /// </summary>
-    public partial class AddBookmarkRequestModel : IMappingTarget<AddBookmarkCommand>
+    public partial class AddBookmarkByTokenRequestModel : IMappingTarget<AddBookmarkCommand>
     {
-        /// <summary>
-        /// Идентификатор пользователя, к которому происходит добавление
-        /// </summary>
-        [Required(ErrorMessage = "Необходимо указать идентификатор пользователя")]
-        public required int ProfileId { get; set; } = default!;
-
         /// <summary>
         /// Идентификатор добавляемого рецепта
         /// </summary>

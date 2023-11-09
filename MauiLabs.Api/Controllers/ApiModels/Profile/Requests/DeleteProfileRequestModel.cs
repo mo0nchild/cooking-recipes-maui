@@ -1,7 +1,8 @@
 ﻿using MauiLabs.Api.Commons.Mapping;
 using MauiLabs.Api.Services.Commands.ProfileCommands.DeleteProfile;
+using System.ComponentModel.DataAnnotations;
 
-namespace MauiLabs.Api.Controllers.ApiModels.Admin.Requests
+namespace MauiLabs.Api.Controllers.ApiModels.Profile.Requests
 {
     /// <summary>
     /// Данные для удаления профиля пользователя
@@ -11,6 +12,7 @@ namespace MauiLabs.Api.Controllers.ApiModels.Admin.Requests
         /// <summary>
         /// Идентификатор удаляемого профиля 
         /// </summary>
+        [Required(ErrorMessage = "Необходимо указать идентификатор удаляемого профиля")]
         public required int Id { get; set; } = default!;
     }
 }

@@ -1,0 +1,27 @@
+syntax = "proto3";
+option csharp_namespace = "MauiLabs.Api.RemoteServices.Implementations";
+
+import "google/protobuf/wrappers.proto";
+// import "google/protobuf/duration.proto"; 
+// import "google/protobuf/timestamp.proto";
+
+package cookingrecipe_user;
+
+message AddCookingRecipeRequestModel {
+	string name = 1;
+	
+	optional string description = 2;
+	optional bytes image = 3;
+
+	optional string category = 4;
+	int32 publisher_id = 5;
+	map<string, double> ingredients = 6;
+}
+
+message AddCookingRecipeResponseModel {
+	optional string error = 1;
+}
+
+service CookingRecipeUser {
+	rpc AddCookingRecipe(AddCookingRecipeRequestModel) returns (AddCookingRecipeResponseModel); 
+}

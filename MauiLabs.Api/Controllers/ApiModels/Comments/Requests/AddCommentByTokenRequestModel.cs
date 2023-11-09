@@ -1,13 +1,13 @@
 ﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.CommentCommands.EditComment;
+using MauiLabs.Api.Services.Commands.CommentCommands.AddComment;
 using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.Api.Controllers.ApiModels.Comments.Requests
 {
     /// <summary>
-    /// Данные для изменения комментария рецепта
+    /// Данные для добавления комментария к рецепту при помощи токена
     /// </summary>
-    public partial class EditCommentRequestModel : IMappingTarget<EditCommentCommand>
+    public partial class AddCommentByTokenRequestModel : IMappingTarget<AddCommentCommand>
     {
         /// <summary>
         /// Текст комментария (описание)
@@ -28,11 +28,5 @@ namespace MauiLabs.Api.Controllers.ApiModels.Comments.Requests
         /// </summary>
         [Required(ErrorMessage = "Необходимо указать идентификатор рецепта")]
         public required int RecipeId { get; set; } = default!;
-
-        /// <summary>
-        /// Идентификатор пользователя, который оставил комментарий
-        /// </summary>
-        [Required(ErrorMessage = "Необходимо указать идентификатор пользователя")]
-        public required int ProfileId { get; set; } = default!;
     }
 }

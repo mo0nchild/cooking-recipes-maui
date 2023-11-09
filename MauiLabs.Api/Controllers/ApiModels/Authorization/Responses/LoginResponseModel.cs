@@ -14,5 +14,10 @@
         /// Определение роли пользователя системы
         /// </summary>
         public required bool IsAdmin { get; set; } = default!;
+
+        /// <summary>
+        /// Идентификатор профиля пользователя
+        /// </summary>
+        public required int ProfileId { get; set; } = default!;
     }
 }

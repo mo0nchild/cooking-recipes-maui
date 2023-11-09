@@ -15,6 +15,7 @@ using MauiLabs.Api.Services.Commands.ProfileCommands.RegistrationProfile;
 using MauiLabs.Api.Services.Requests.ProfileRequests.AuthorizationProfile;
 using MauiLabs.Api.Controllers.ApiModels.Authorization.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Authorization.Responses;
+using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
 
 namespace MauiLabs.Api.Controllers.ApiControllers
 {
@@ -40,13 +41,17 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// <returns>Токен авторизации</returns>
         [Route("login"), HttpGet]
         [ProducesResponseType(typeof(LoginResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> LoginHandler([FromQuery] LoginRequestModel request)
         {
-            var result = await this.mediator.Send(this.mapper.Map<AuthorizationRequest>(request));
-            if (result == null)
+            AuthorizationInfo? result = default!;
+            try {
+                result = await this.mediator.Send(this.mapper.Map<AuthorizationRequest>(request));
+                if (result == null) throw new Exception("Пользователь не найден");
+            }
+            catch (Exception errorInfo)
             {
-                return this.Problem("Пользователь не найден", statusCode: (int)StatusCodes.Status400BadRequest);
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
             var resultClaims = new List<Claim>()
             {
@@ -64,8 +69,8 @@ namespace MauiLabs.Api.Controllers.ApiControllers
 
             return this.Ok(new LoginResponseModel() 
             {
-                IsAdmin = result.IsAdmin,
                 JwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken),
+                IsAdmin = result.IsAdmin, ProfileId = result.Id,
             });
         }
         /// <summary>
@@ -75,7 +80,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// <returns>Токен авторизации</returns>
         [Route("registration"), HttpPost]
         [ProducesResponseType(typeof(LoginResponseModel), (int)StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)StatusCodes.Status400BadRequest)]
+        [ProducesResponseType((int)StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RegistrationHandler([FromBody] RegistrationRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<RegistrationCommand>(request)); }

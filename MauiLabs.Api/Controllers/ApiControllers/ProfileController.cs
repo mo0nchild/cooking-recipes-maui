@@ -3,9 +3,12 @@ using MauiLabs.Api.Controllers.ApiModels.Bookmarks;
 using MauiLabs.Api.Controllers.ApiModels.Profile.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Profile.Responses;
 using MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark;
+using MauiLabs.Api.Services.Commands.ProfileCommands.ChangePassword;
 using MauiLabs.Api.Services.Commands.ProfileCommands.DeleteProfile;
 using MauiLabs.Api.Services.Commands.ProfileCommands.EditProfile;
+using MauiLabs.Api.Services.Requests.ProfileRequests.GetAllProfiles;
 using MauiLabs.Api.Services.Requests.ProfileRequests.GetProfileInfo;
+using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -24,14 +27,14 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public int ProfileId { get => int.Parse(this.User.FindFirstValue(ClaimTypes.PrimarySid)!); }
 
         /// <summary>
-        /// Изменение данных профиля пользователя
+        /// Изменение данных профиля пользователя при помощи токена
         /// </summary>
         /// <param name="request">Данные пользователя</param>
         /// <returns>Статус изменения профиля</returns>
-        [Route("edit"), HttpPut]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> EditProfileHandler([FromBody] EditProfileRequestModel request)
+        [Route("editbytoken"), HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> EditProfileByTokenHandler([FromBody] EditProfileByTokenRequestModel request)
         {
             var mappedRequest = this.mapper.Map<EditProfileCommand>(request);
             mappedRequest.Id = this.ProfileId;
@@ -44,20 +47,20 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             return this.Ok("Данные профиля успешно изменены");
         }
         /// <summary>
-        /// Удаление профиля пользователя
+        /// Удаление профиля пользователя при помощи токена
         /// </summary>
         /// <returns>Статус удаления профиля</returns>
-        [Route("delete"), HttpDelete]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteProfileHandler()
+        [Route("deletebytoken"), HttpDelete]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteProfileByTokenHandler()
         {
             try { await this.mediator.Send(new DeleteProfileCommand() { Id = this.ProfileId }); }
             catch (Exception errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
-            return this.Ok("Данные профиля успешно изменены");
+            return this.Ok("Данные профиля успешно удалены");
         }
         /// <summary>
         /// Получение информации о профиле пользователя при помощи токена
@@ -65,13 +68,17 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// <returns>Информация о профиле пользователя</returns>
         [Route("getbytoken"), HttpGet]
         [ProducesResponseType(typeof(GetProfileInfoResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetProfileInfoByTokenHandler()
         {
-            var requestResult = await this.mediator.Send(new GetProfileInfoRequest() { Id = this.ProfileId });
-            if (requestResult == null)
+            ProfileInfo? requestResult = default!;
+            try {
+                requestResult = await this.mediator.Send(new GetProfileInfoRequest() { Id = this.ProfileId });
+                if (requestResult == null) throw new Exception("Профиль не найден");
+            }
+            catch (Exception errorInfo) 
             {
-                return this.Problem("Профиль не найден", statusCode: (int)StatusCodes.Status400BadRequest);
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
             return this.Ok(this.mapper.Map<GetProfileInfoResponseModel>(requestResult));
         }
@@ -82,13 +89,17 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// <returns>Информация о профиле пользователя</returns>
         [Route("get"), HttpGet]
         [ProducesResponseType(typeof(GetProfileInfoResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetProfileInfoHandler([FromQuery] GetProfileInfoRequestModel request)
         {
-            var requestResult = await this.mediator.Send(this.mapper.Map<GetProfileInfoRequest>(request));
-            if (requestResult == null)
+            ProfileInfo? requestResult = default!;
+            try {
+                requestResult = await this.mediator.Send(this.mapper.Map<GetProfileInfoRequest>(request));
+                if (requestResult == null) throw new Exception("Профиль не найден");
+            }
+            catch (Exception errorInfo)
             {
-                return this.Problem("Профиль не найден", statusCode: (int)StatusCodes.Status400BadRequest);
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
             return this.Ok(this.mapper.Map<GetProfileInfoResponseModel>(requestResult));
         }
@@ -96,18 +107,92 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// Получение списка пользователей системы
         /// </summary>
         /// <param name="request">Настройки поиска пользователей</param>
-        /// <returns>Информация о профиле пользователя</returns>
+        /// <returns>Список профилей пользователей</returns>
         [Route("getlist"), HttpGet]
-        [ProducesResponseType(typeof(GetProfileInfoResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(GetProfilesListRequestModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetProfilesListHandler([FromQuery] GetProfilesListRequestModel request)
         {
-            var requestResult = await this.mediator.Send(this.mapper.Map<GetProfileInfoRequest>(request));
-            if (requestResult == null)
+            var mappedRequest = this.mapper.Map<GetAllProfilesRequest>(request);
+            try { return this.Ok(this.mapper.Map<GetProfilesListResponseModel>(await this.mediator.Send(mappedRequest))); }
+            catch (Exception errorInfo) 
             {
-                return this.Problem("Профиль не найден", statusCode: (int)StatusCodes.Status400BadRequest);
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
-            return this.Ok(this.mapper.Map<GetProfileInfoResponseModel>(requestResult));
+        }
+        /// <summary>
+        /// [Admin] Изменение данных профиля пользователя
+        /// </summary>
+        /// <param name="request">Данные пользователя</param>
+        /// <returns>Статус изменения профиля</returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
+        [Route("edit"), HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> EditProfileHandler([FromBody] EditProfileRequestModel request)
+        {
+            try { await this.mediator.Send(this.mapper.Map<EditProfileCommand>(request)); }
+            catch (Exception errorInfo)
+            {
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+            }
+            return this.Ok("Данные профиля успешно изменены");
+        }
+        /// <summary>
+        /// [Admin] Удаление профиля пользователя
+        /// </summary>
+        /// <param name="request">Идентификатор пользователя</param>
+        /// <returns>Статус удаления профиля</returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
+        [Route("delete"), HttpDelete]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteProfileHandler([FromQuery] DeleteProfileRequestModel request)
+        {
+            try { await this.mediator.Send(this.mapper.Map<DeleteProfileCommand>(request)); }
+            catch (Exception errorInfo)
+            {
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+            }
+            return this.Ok("Данные профиля успешно удалены");
+        }
+        /// <summary>
+        /// Изменение пароля профиля пользователя при помощи токена
+        /// </summary>
+        /// <param name="request">Новый и старый пароль</param>
+        /// <returns>Статус изменения пароля</returns>
+        [Route("editbytoken/password"), HttpPatch]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ChangePasswordByTokenHandler([FromBody] ChangePasswordByTokenRequestModel request)
+        {
+            var mappedRequest = this.mapper.Map<ChangePasswordCommand>(request);
+            mappedRequest.Id = this.ProfileId;
+
+            try { await this.mediator.Send(mappedRequest); }
+            catch (Exception errorInfo)
+            {
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+            }
+            return this.Ok("Пароль профиля успешно изменен");
+        }
+        /// <summary>
+        /// [Admin] Изменение пароля профиля пользователя
+        /// </summary>
+        /// <param name="request">Новый и старый пароль</param>
+        /// <returns>Статус изменения пароля</returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
+        [Route("edit/password"), HttpPatch]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ChangePasswordHandler([FromBody] ChangePasswordRequestModel request)
+        {
+            try { await this.mediator.Send(this.mapper.Map<ChangePasswordCommand>(request)); }
+            catch (Exception errorInfo)
+            {
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+            }
+            return this.Ok("Пароль профиля успешно изменен");
         }
     }
 }

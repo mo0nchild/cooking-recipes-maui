@@ -5,16 +5,10 @@ using System.ComponentModel.DataAnnotations;
 namespace MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests
 {
     /// <summary>
-    /// Данные об удаляемой заметки рецепта
+    /// Данные об удаляемой заметки рецепта при помощи токена
     /// </summary>
-    public partial class DeleteBookmarkRequestModel : IMappingTarget<DeleteBookmarkCommand>
+    public partial class DeleteBookmarkByTokenRequestModel : IMappingTarget<DeleteBookmarkCommand>
     {
-        /// <summary>
-        /// Идентификатор пользователя, от которого происходит удаление
-        /// </summary>
-        [Required(ErrorMessage = "Необходимо указать идентификатор пользователя")]
-        public required int ProfileId { get; set; } = default!;
-
         /// <summary>
         /// Идентификатор удаляемого рецепта
         /// </summary>

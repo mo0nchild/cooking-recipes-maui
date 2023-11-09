@@ -7,6 +7,8 @@ using MauiLabs.Api.Services.Commands.CommentCommands.AddComment;
 using MauiLabs.Api.Services.Commands.CommentCommands.DeleteComment;
 using MauiLabs.Api.Services.Commands.CommentCommands.EditComment;
 using MauiLabs.Api.Services.Requests.CommentRequests.GetComment;
+using MauiLabs.Api.Services.Requests.CommentRequests.GetProfileCommentsList;
+using MauiLabs.Api.Services.Requests.CommentRequests.GetRecipeCommentsList;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +18,7 @@ using System.Security.Claims;
 
 namespace MauiLabs.Api.Controllers.ApiControllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
     [Route("cookingrecipes/comments"), ApiController]
     public partial class CommentsController(IMediator mediator, IMapper mapper) : ControllerBase
     {
@@ -24,18 +27,37 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public int ProfileId { get => int.Parse(this.User.FindFirstValue(ClaimTypes.PrimarySid)!); }
 
         /// <summary>
-        /// [User] Добавление комментария к записи о рецепте
+        /// [Admin] Добавление комментария к записи о рецепте
         /// </summary>
         /// <param name="request">Данные комментария</param>
         /// <returns>Статус добавления комментария</returns>
-        /// <role>Admin</role>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("add"), HttpPost]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> AddCommentHandler([FromBody] AddCommentRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddCommentCommand>(request)); }
+            catch (Exception errorInfo)
+            {
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+            }
+            return this.Ok("Комментарий успешно добавлен");
+        }
+        /// <summary>
+        /// Добавление комментария к записи о рецепте при помощи токена
+        /// </summary>
+        /// <param name="request">Данные комментария</param>
+        /// <returns>Статус добавления комментария</returns>
+        [Route("addbytoken"), HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> AddCommentByTokenHandler([FromBody] AddCommentByTokenRequestModel request)
+        {
+            var mappedRequest = this.mapper.Map<AddCommentCommand>(request);
+            mappedRequest.ProfileId = this.ProfileId;
+
+            try { await this.mediator.Send(mappedRequest); }
             catch (Exception errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
@@ -47,12 +69,11 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// </summary>
         /// <param name="request">Идентификатор комментария</param>
         /// <returns>Статус удаления комментария</returns>
-        /// <role>Admin</role>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("delete"), HttpDelete]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteCommentHandler([FromBody] DeleteCommentRequestModel request)
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteCommentHandler([FromQuery] DeleteCommentRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<DeleteCommentCommand>(request)); }
             catch (Exception errorInfo)
@@ -62,16 +83,14 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             return this.Ok("Комментарий успешно удален");
         }
         /// <summary>
-        /// [User] Удаление комментария пользователя к записи о рецепте 
+        /// Удаление комментария пользователя к записи о рецепте при помощи токена
         /// </summary>
         /// <param name="request">Идентификатор комментария</param>
         /// <returns>Статус удаления комментария</returns>
-        /// <role>User</role>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
         [Route("deletebytoken"), HttpDelete]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteCommentByTokenHandler([FromBody] DeleteCommentByTokenRequestModel request)
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteCommentByTokenHandler([FromQuery] DeleteCommentByTokenRequestModel request)
         {
             try { await this.mediator.Send(new DeleteCommentCommand() { ProfileId = this.ProfileId, RecipeId = request.RecipeId }); }
             catch (Exception errorInfo)
@@ -85,11 +104,10 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// </summary>
         /// <param name="request">Данные для изменения комментария</param>
         /// <returns>Статус изменения комментария</returns>
-        /// <role>Admin</role>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("edit"), HttpPut]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> EditCommentHandler([FromBody] EditCommentRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<EditCommentCommand>(request)); }
@@ -100,15 +118,13 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             return this.Ok("Комментарий успешно изменен");
         }
         /// <summary>
-        /// [User] Изменение комментария пользователя к записи о рецепте 
+        /// Изменение комментария пользователя к записи о рецепте при помощи токена
         /// </summary>
         /// <param name="request">Данные для изменения комментария</param>
         /// <returns>Статус изменения комментария</returns>
-        /// <role>User</role>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
         [Route("editbytoken"), HttpPut]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> EditCommentByTokenHandler([FromBody] EditCommentByTokenRequestModel request)
         {
             var mappedResult = this.mapper.Map<EditCommentCommand>(request);
@@ -119,18 +135,16 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
-            return this.Ok("Комментарий успешно удален");
+            return this.Ok("Комментарий успешно изменен");
         }
         /// <summary>
         /// Получение информации о комментарии
         /// </summary>
         /// <param name="request">Данные для получения информации о комментарии</param>
         /// <returns>Информация о комментарии</returns>
-        /// <role>User</role>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
         [Route("get"), HttpGet]
         [ProducesResponseType(typeof(GetCommentResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetCommentHandler([FromQuery] GetCommentRequestModel request)
         {
             var mappedRequest = this.mapper.Map<GetCommentRequest>(request);
@@ -141,15 +155,13 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             }
         }
         /// <summary>
-        /// Получение информации о комментарии при помощи токена
+        /// Получение информации о комментарии при помощи токена при помощи токена
         /// </summary>
         /// <param name="request">Данные для получения информации о комментарии</param>
         /// <returns>Информация о комментарии</returns>
-        /// <role>User</role>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
         [Route("getbytoken"), HttpGet]
         [ProducesResponseType(typeof(GetCommentResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetCommentByTokenHandler([FromQuery] GetCommentByTokenRequestModel request)
         {
             var mappedRequest = this.mapper.Map<GetCommentRequest>(request);
@@ -165,18 +177,48 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// Получение списка комментарий пользователя
         /// </summary>
         /// <param name="request">Данные для получения списка комментарий пользователя</param>
-        /// <returns>Список комментарий</returns>
-        /// <role>User</role>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
+        /// <returns>Список комментариев</returns>
         [Route("getlist/byprofile"), HttpGet]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetProfileCommentsHandler([FromQuery] GetCommentByTokenRequestModel request)
+        [ProducesResponseType(typeof(GetCommentsResponseModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetProfileCommentsHandler([FromQuery] GetProfileCommentsRequestModel request)
         {
-            var mappedRequest = this.mapper.Map<GetCommentRequest>(request);
+            try { return this.Ok(await this.mediator.Send(this.mapper.Map<GetProfileCommentsListRequest>(request))); }
+            catch (Exception errorInfo)
+            {
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+            }
+        }
+        /// <summary>
+        /// Получение списка комментарий пользователя при помощи токена
+        /// </summary>
+        /// <param name="request">Данные для получения списка комментарий пользователя</param>
+        /// <returns>Список комментариев</returns>
+        [Route("getlistbytoken/byprofile"), HttpGet]
+        [ProducesResponseType(typeof(GetCommentsResponseModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetProfileCommentsByTokenHandler([FromQuery] GetProfileCommentsByTokenRequestModel request)
+        {
+            var mappedRequest = this.mapper.Map<GetProfileCommentsListRequest>(request);
             mappedRequest.ProfileId = this.ProfileId;
 
             try { return this.Ok(await this.mediator.Send(mappedRequest)); }
+            catch (Exception errorInfo)
+            {
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+            }
+        }
+        /// <summary>
+        /// Получение списка комментарий рецета
+        /// </summary>
+        /// <param name="request">Данные для получения списка комментарий рецепта</param>
+        /// <returns>Список комментариев</returns>
+        [Route("getlist/byrecipe"), HttpGet]
+        [ProducesResponseType(typeof(GetCommentsResponseModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetRecipeCommentsHandler([FromQuery] GetRecipeCommentsRequestModel request)
+        {
+            try { return this.Ok(await this.mediator.Send(this.mapper.Map<GetRecipeCommentsListRequest>(request))); }
             catch (Exception errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);

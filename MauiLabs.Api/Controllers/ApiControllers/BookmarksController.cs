@@ -29,13 +29,14 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public int ProfileId { get => int.Parse(this.User.FindFirstValue(ClaimTypes.PrimarySid)!); }
 
         /// <summary>
-        /// Добавление заметки о рецепте для пользователя
+        /// [Admin] Добавление заметки о рецепте для пользователя
         /// </summary>
         /// <param name="request">Данные заметки о рецепте</param>
         /// <returns>Статус добавления заметки о рецепте</returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("add"), HttpPost]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> AddBookmarkHandler([FromBody] AddBookmarkRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddBookmarkCommand>(request)); }
@@ -46,14 +47,52 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             return this.Ok("Заметка успешно добавлена");
         }
         /// <summary>
-        /// Удаление заметки о рецепте для пользователя
+        /// Добавление заметки о рецепте для пользователя при помощи токена
+        /// </summary>
+        /// <param name="request">Данные заметки о рецепте</param>
+        /// <returns>Статус добавления заметки о рецепте</returns>
+        [Route("addbytoken"), HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> AddBookmarkByTokenHandler([FromBody] AddBookmarkByTokenRequestModel request)
+        {
+            var mappedRequest = this.mapper.Map<AddBookmarkCommand>(request);
+            mappedRequest.ProfileId = this.ProfileId;
+
+            try { await this.mediator.Send(mappedRequest); }
+            catch (Exception errorInfo)
+            {
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+            }
+            return this.Ok("Заметка успешно добавлена");
+        }
+        /// <summary>
+        /// [Admin] Удаление заметки о рецепте для пользователя
         /// </summary>
         /// <param name="request">Данные заметки о рецепте</param>
         /// <returns>Статус удаления заметки о рецепте</returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("delete"), HttpDelete]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(OkObjectResult), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddBookmarkHandler([FromQuery] DeleteBookmarkRequestModel request)
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteBookmarkHandler([FromQuery] DeleteBookmarkRequestModel request)
+        {
+            try { await this.mediator.Send(this.mapper.Map<DeleteBookmarkCommand>(request)); }
+            catch (Exception errorInfo)
+            {
+                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+            }
+            return this.Ok("Заметка успешно удалена");
+        }
+        /// <summary>
+        /// Удаление заметки о рецепте для пользователя при помощи токена
+        /// </summary>
+        /// <param name="request">Данные заметки о рецепте</param>
+        /// <returns>Статус удаления заметки о рецепте</returns>
+        [Route("deletebytoken"), HttpDelete]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteBookmarkByTokenHandler([FromQuery] DeleteBookmarkByTokenRequestModel request)
         {
             var mappedRequest = this.mapper.Map<DeleteBookmarkCommand>(request);
             mappedRequest.ProfileId = this.ProfileId;
@@ -72,8 +111,8 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// <returns>Список заметок рецептов пользователя</returns>
         [Route("getlistbytoken"), HttpGet]
         [ProducesResponseType(typeof(GetBookmarksResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetBookmarksListHandler([FromQuery] GetBookmarksByTokenRequestModel request)
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetBookmarksListByTokenHandler([FromQuery] GetBookmarksByTokenRequestModel request)
         {
             var mappedRequest = this.mapper.Map<GetBookmarksListRequest>(request);
             mappedRequest.ProfileId = this.ProfileId;
@@ -91,7 +130,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// <returns>Список заметок рецептов пользователя</returns>
         [Route("getlist"), HttpGet]
         [ProducesResponseType(typeof(GetBookmarksResponseModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetBookmarksListHandler([FromQuery] GetBookmarksRequestModel request)
         {
             try { return this.Ok(await this.mediator.Send(this.mapper.Map<GetBookmarksListRequest>(request))); }
