@@ -16,10 +16,10 @@ namespace MauiLabs.Dal.Entities
         public string Surname { get; set; } = string.Empty;
 
         public string Email { get; set; } = string.Empty;
-        public string? Phone { get; set; } = string.Empty;
         public byte[]? Image { get; set; } = default;
 
         public bool IsAdmin { get; set; } = default!;
+        public string ReferenceLink { get; set; } = default!;
         public virtual Authorization Authorization { get; set; } = default!;
 
         public virtual List<Bookmark> Bookmarks { get; set; } = new();

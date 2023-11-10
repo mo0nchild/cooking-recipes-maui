@@ -14,8 +14,8 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models
         {
             profile.CreateMap<IngredientsList, IngredientInfo>()
                 .ForMember(item => item.Value, options => options.MapFrom(p => p.Value))
-                .ForMember(item => item.Name, options => options.MapFrom(p => p.IngredientItem.Name))
-                .ForMember(item => item.Unit, options => options.MapFrom(p => p.IngredientItem.Unit));
+                .ForMember(item => item.Name, options => options.MapFrom(p => p.Name))
+                .ForMember(item => item.Unit, options => options.MapFrom(p => p.IngredientUnit.Name));
         }
     }
 }

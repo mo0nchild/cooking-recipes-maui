@@ -2,6 +2,7 @@
 using MauiLabs.Api.Commons.Mapping;
 using MauiLabs.Dal.Entities;
 using MediatR;
+using Microsoft.Extensions.Options;
 
 namespace MauiLabs.Api.Services.Commands.ProfileCommands.RegistrationProfile
 {
@@ -12,9 +13,7 @@ namespace MauiLabs.Api.Services.Commands.ProfileCommands.RegistrationProfile
         public required string Surname { get; set; } = default!;
 
         public required string Email { get; set; } = default!;
-        public string? Phone { get; set; } = default!;
         public byte[]? Image { get; set; } = default!;
-
         public required string Login { get; set; } = default!;
         public required string Password { get; set; } = default!;
 
@@ -26,7 +25,7 @@ namespace MauiLabs.Api.Services.Commands.ProfileCommands.RegistrationProfile
                     Login = p.Login,
                     Password = BCryptType.HashPassword(p.Password),
                 }))
-                .ReverseMap();
+                .ForMember(p => p.ReferenceLink, options => options.MapFrom(p => BCryptType.HashPassword(p.Login)));
         }
     }
 }

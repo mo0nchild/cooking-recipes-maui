@@ -13,8 +13,10 @@ namespace MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe
 
             RuleFor(item => item.Ingredients).ForEach(item =>
             {
-                item.ChildRules(p => p.RuleFor(i => i.Key).MaximumLength(20).NotEmpty()
+                item.ChildRules(p => p.RuleFor(i => i.Key).MaximumLength(50).NotEmpty()
                     .WithMessage("Неверное значение названия ингредиента"));
+                item.ChildRules(p => p.RuleFor(i => i.Value.Unit).MaximumLength(20).NotEmpty()
+                    .WithMessage("Неверное значение названия единицы измерения"));
             });
         }
     }

@@ -3,9 +3,9 @@ using MauiLabs.Api.Controllers.ApiModels.Bookmarks;
 using MauiLabs.Api.Controllers.ApiModels.Ingredients.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Ingredients.Responses;
 using MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark;
-using MauiLabs.Api.Services.Commands.IngredientCommands.AddIngredientItem;
-using MauiLabs.Api.Services.Commands.IngredientCommands.DeleteIngredientItem;
-using MauiLabs.Api.Services.Requests.IngredientItemRequests.GetIngredientItems;
+using MauiLabs.Api.Services.Commands.IngredientCommands.AddIngredientUnit;
+using MauiLabs.Api.Services.Commands.IngredientCommands.DeleteIngredientUnit;
+using MauiLabs.Api.Services.Requests.IngredientRequests.GetIngredientUnits;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -16,60 +16,60 @@ using System.Security.Claims;
 namespace MauiLabs.Api.Controllers.ApiControllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
-    [Route("cookingrecipes/ingredients"), ApiController]
-    public partial class IngredientsController(IMediator mediator, IMapper mapper) : ControllerBase
+    [Route("cookingrecipes/units"), ApiController]
+    public partial class IngredientUnitsController(IMediator mediator, IMapper mapper) : ControllerBase
     {
         protected internal readonly IMediator mediator = mediator;
         protected internal readonly IMapper mapper = mapper;
         public int ProfileId { get => int.Parse(this.User.FindFirstValue(ClaimTypes.PrimarySid)!); }
 
         /// <summary>
-        /// [Admin] Добавление ингредиента для создания рецепта
+        /// [Admin] Добавление единицы измерения для создания рецепта
         /// </summary>
-        /// <param name="request">Данные ингредиента</param>
-        /// <returns>Статус добавления ингредиента</returns>
+        /// <param name="request">Данные единицы измерения</param>
+        /// <returns>Статус добавления единицы измерения</returns>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("add"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddIngredientHandler([FromBody] AddIngredientRequestModel request)
+        public async Task<IActionResult> AddIngredientHandler([FromBody] AddIngredientUnitRequestModel request)
         {
-            try { await this.mediator.Send(this.mapper.Map<AddIngredientItemCommand>(request)); }
+            try { await this.mediator.Send(this.mapper.Map<AddIngredientUnitCommand>(request)); }
             catch (Exception errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
-            return this.Ok("Ингредиент успешно добавлен");
+            return this.Ok("Единица измерения успешно добавлена");
         }
         /// <summary>
-        /// [Admin] Удаление ингредиента для создания рецепта
+        /// [Admin] Удаление единицы измерения для создания рецепта
         /// </summary>
-        /// <param name="request">Название ингредиента</param>
-        /// <returns>Статус удаления ингредиента</returns>
+        /// <param name="request">Название единицы измерения</param>
+        /// <returns>Статус удаления единицы измерения</returns>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("delete"), HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteIngredientHandler([FromQuery] DeleteIngredientRequestModel request)
+        public async Task<IActionResult> DeleteIngredientHandler([FromQuery] DeleteIngredientUnitRequestModel request)
         {
-            try { await this.mediator.Send(this.mapper.Map<DeleteIngredientItemCommand>(request)); }
+            try { await this.mediator.Send(this.mapper.Map<DeleteIngredientUnitCommand>(request)); }
             catch (Exception errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
-            return this.Ok("Ингредиент успешно удален");
+            return this.Ok("Единица измерения успешно удалена");
         }
         /// <summary>
-        /// Получение списка доступных ингредиентов
+        /// Получение списка доступных единиц измерения
         /// </summary>
-        /// <returns>Список доступных ингредиентов</returns>
+        /// <returns>Список доступных единиц измерения</returns>
         [Route("getlist"), HttpGet]
-        [ProducesResponseType(typeof(GetIngredientsResponseModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(GetIngredientUnitsResponseModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetIngredientsHandler()
         {
-            var requestModel = new GetIngredientItemsRequest();
-            try { return this.Ok(this.mapper.Map<GetIngredientsResponseModel>(await this.mediator.Send(requestModel))); }
+            var requestModel = new GetIngredientUnitsRequest();
+            try { return this.Ok(this.mapper.Map<GetIngredientUnitsResponseModel>(await this.mediator.Send(requestModel))); }
             catch (Exception errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);

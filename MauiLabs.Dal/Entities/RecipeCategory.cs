@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MauiLabs.Dal.Entities
 {
-    [Table(nameof(RecipeCategory))]
+    [Table(nameof(RecipeCategory), Schema = "public")]
     public partial class RecipeCategory : object
     {
         public int Id { get; set; } = default;

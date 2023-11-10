@@ -8,16 +8,13 @@ using System.Threading.Tasks;
 
 namespace MauiLabs.Dal.Entities
 {
-    [Table(nameof(IngredientItem))]
-    public partial class IngredientItem : object
+    [Table(nameof(IngredientUnit), Schema = "public")]
+    public partial class IngredientUnit : object
     {
         public int Id { get; set; } = default!;
 
-        [MaxLength(50, ErrorMessage = "Неверное значение название ингредиента")]
-        public string Name { get; set; } = string.Empty;
-
         [MaxLength(20, ErrorMessage = "Неверное значение название единицы измерения")]
-        public string Unit { get;set; } = string.Empty;
+        public string Name { get;set; } = string.Empty;
         public virtual List<IngredientsList> IngredientsLists { get; set; } = new();
     }
 }

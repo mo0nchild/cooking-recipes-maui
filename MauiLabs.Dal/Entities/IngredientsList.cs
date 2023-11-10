@@ -13,9 +13,10 @@ namespace MauiLabs.Dal.Entities
     {
         public int Id { get; set; } = default!;
         public double Value { get; set; } = default!;
+        public string Name { get; set; } = string.Empty;
 
-        public int IngredientItemId { get; set; } = default!;
-        public virtual IngredientItem IngredientItem { get; set; } = default!;
+        public int IngredientUnitId { get; set; } = default!;
+        public virtual IngredientUnit IngredientUnit { get; set; } = default!;
 
         public int CookingRecipeId { get; set; } = default!;
         public virtual CookingRecipe CookingRecipe { get; set; } = default!;

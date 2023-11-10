@@ -21,10 +21,6 @@ namespace MauiLabs.Api.Services.Commands.ProfileCommands.RegistrationProfile
                  .MaximumLength(100)
                  .Matches(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")
                  .WithMessage("Неверный формат почты");
-
-            this.RuleFor(item => item.Phone)
-                .Must(item => item == null || Regex.IsMatch(item, @"^\+7[0-9]{10}$"))
-                .WithMessage("Неверный формат номера телефона");
         }
     }
 }

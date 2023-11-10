@@ -28,7 +28,6 @@ namespace MauiLabs.Api.Services.Commands.ProfileCommands.EditProfile
                 profile.Image = mappedModel.Image;
 
                 profile.Email = mappedModel.Email;
-                profile.Phone = mappedModel.Phone;
                 await dbcontext.SaveChangesAsync(cancellationToken);
             }
         }

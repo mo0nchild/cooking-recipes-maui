@@ -47,7 +47,12 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="RemoteServices\ProtoContracts\cookingrecipe_user.proto" GrpcServices="Server" />
+		<Protobuf Include="RemoteServices\ProtoContracts\CookingRecipeUser.proto" GrpcServices="Server" />
+		<Protobuf Include="RemoteServices\ProtoContracts\CookingRecipeAdmin.proto" GrpcServices="Server" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Services\Requests\FriendRequests\" />
 	</ItemGroup>
 
 </Project>

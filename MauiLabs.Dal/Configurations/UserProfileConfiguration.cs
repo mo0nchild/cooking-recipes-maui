@@ -20,7 +20,7 @@ namespace MauiLabs.Dal.Configurations
             builder.Property(x => x.Surname).HasMaxLength(50);
             builder.Property(x => x.Name).HasMaxLength(50);
             builder.Property(x => x.Email).HasMaxLength(100);
-            builder.Property(x => x.Phone).HasMaxLength(12);
+            builder.Property(x => x.ReferenceLink).HasMaxLength(100);
         }
     }
 }

@@ -17,10 +17,12 @@ namespace MauiLabs.Dal
 
         public virtual DbSet<CookingRecipe> CookingRecipes { get; set; } = default!;
         public virtual DbSet<IngredientsList> Ingredients { get; set; } = default!;
-        public virtual DbSet<IngredientItem> IngredientItems { get; set; } = default!;
+        public virtual DbSet<IngredientUnit> IngredientUnits { get; set; } = default!;
         public virtual DbSet<RecipeCategory> RecipeCategories { get; set; } = default!;
 
         public virtual DbSet<LoggingInfo> LoggingInfos { get; set; } = default!;
+        public virtual DbSet<FriendList> FriendsList { get; set; } = default!;
+        public virtual DbSet<Recommendation> Recommendations { get; set; } = default!;
 
         public CookingRecipeDbContext(DbContextOptions<CookingRecipeDbContext> options) : base(options) { }
 

@@ -33,13 +33,18 @@ namespace MauiLabs.Api.Services.Commands.CookingRecipeCommands.EditCookingRecipe
                 }
                 foreach (var ingredient in request.Ingredients)
                 {
-                    await dbcontext.Ingredients.Include(item => item.IngredientItem).Where(p => p.CookingRecipeId == cookingrecipe.Id
-                        && ingredient.Key != p.IngredientItem.Name).ExecuteDeleteAsync();
+                    await dbcontext.Ingredients.Include(item => item.IngredientUnit).Where(p => p.CookingRecipeId == cookingrecipe.Id
+                        && ingredient.Key != p.Name).ExecuteDeleteAsync();
 
-                    var ingredientItem = await dbcontext.IngredientItems.FirstOrDefaultAsync(p => p.Name == ingredient.Key);
-                    if (ingredientItem == null) throw new ApiServiceException($"Ингредиент не найден: {ingredient.Key}", requestType);
-
-                    cookingrecipe.Ingredients.Add(new IngredientsList() { Value = ingredient.Value, IngredientItem = ingredientItem });
+                    var ingredientUnit = await dbcontext.IngredientUnits.FirstOrDefaultAsync(p => p.Name == ingredient.Value.Unit);
+                    if (ingredientUnit == null)
+                    {
+                        throw new ApiServiceException($"Единица измерения не найдена: {ingredient.Value.Unit}", requestType);
+                    }
+                    cookingrecipe.Ingredients.Add(new IngredientsList()
+                    {
+                        Value = ingredient.Value.Value, Name = ingredient.Key, IngredientUnitId = ingredientUnit.Id
+                    });
                 }
                 await dbcontext.SaveChangesAsync(cancellationToken);
             }

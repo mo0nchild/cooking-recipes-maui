@@ -12,6 +12,6 @@ namespace MauiLabs.Api.Services.Commands.CookingRecipeCommands.EditCookingRecipe
         public byte[]? Image { get; set; } = default!;
 
         public required string? Category { get; set; } = default!;
-        public Dictionary<string, double> Ingredients { get; set; } = new();
+        public Dictionary<string, (double Value, string Unit)> Ingredients { get; set; } = new();
     }
 }

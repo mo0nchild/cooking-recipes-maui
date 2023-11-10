@@ -1,7 +1,7 @@
 syntax = "proto3";
 option csharp_namespace = "MauiLabs.Api.RemoteServices.Implementations";
 
-import "google/protobuf/wrappers.proto";
+// import "google/protobuf/wrappers.proto";
 // import "google/protobuf/duration.proto"; 
 // import "google/protobuf/timestamp.proto";
 

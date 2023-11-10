@@ -11,7 +11,6 @@ namespace MauiLabs.Api.Services.Commands.ProfileCommands.EditProfile
         public required string Surname { get; set; } = default!;
 
         public required string Email { get; set; } = default!;
-        public string? Phone { get; set; } = default!;
         public byte[]? Image { get; set; } = default!;
     }
 }

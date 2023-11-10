@@ -6,14 +6,9 @@ using MediatR;
 
 namespace MauiLabs.Api.Services.Requests.ProfileRequests.AuthorizationProfile
 {
-    public sealed class AuthorizationRequest : IRequest<AuthorizationInfo?>, IMappingTarget<LoginRequestModel>
+    public sealed class AuthorizationRequest : IRequest<AuthorizationInfo?>
     {
         public string Login { get; set; } = default!;
         public string Password { get; set; } = default!;
-
-        public void ConfigureMapping(Profile profile)
-        {
-            profile.CreateMap<AuthorizationRequest, LoginRequestModel>();
-        }
     }
 }

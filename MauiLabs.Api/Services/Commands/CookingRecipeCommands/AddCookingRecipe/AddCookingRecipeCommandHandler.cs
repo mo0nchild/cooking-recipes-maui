@@ -30,12 +30,17 @@ namespace MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe
 
                     mappedModel.RecipeCategoryId = category.Id;
                 }
-                foreach (var item in request.Ingredients)
+                foreach (var ingredient in request.Ingredients)
                 {
-                    var ingredient = await dbcontext.IngredientItems.FirstOrDefaultAsync(p => p.Name == item.Key);
-                    if (ingredient == null) throw new ApiServiceException($"Ингредиент не найден: {item.Key}", requestType);
-
-                    mappedModel.Ingredients.Add(new IngredientsList() { Value = item.Value, IngredientItemId = ingredient.Id });
+                    var ingredientUnit = await dbcontext.IngredientUnits.FirstOrDefaultAsync(p => p.Name == ingredient.Value.Unit);
+                    if (ingredientUnit == null)
+                    {
+                        throw new ApiServiceException($"Единица измерения не найдена: {ingredient.Key}", requestType);
+                    }
+                    mappedModel.Ingredients.Add(new IngredientsList() 
+                    {
+                        Value = ingredient.Value.Value, Name = ingredient.Key, IngredientUnitId = ingredientUnit.Id 
+                    });
                 }
                 await dbcontext.CookingRecipes.AddRangeAsync(mappedModel);
                 await dbcontext.SaveChangesAsync(cancellationToken);

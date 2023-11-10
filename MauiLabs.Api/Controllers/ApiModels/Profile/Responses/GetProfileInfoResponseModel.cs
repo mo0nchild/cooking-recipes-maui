@@ -12,25 +12,26 @@ namespace MauiLabs.Api.Controllers.ApiModels.Profile.Responses
         /// Идентификатор пользователя
         /// </summary>
         public required int Id { get; set; } = default;
+
         /// <summary>
         /// Фамилия пользователя
         /// </summary>
-        public string Surname { get; set; } = default!;
+        public required string Surname { get; set; } = default!;
 
         /// <summary>
         /// Имя пользователя
         /// </summary>
-        public string Name { get; set; } = default!;
+        public required string Name { get; set; } = default!;
 
         /// <summary>
         /// Электронная почта пользователя
         /// </summary>
-        public string Email { get; set; } = default!;
+        public required string Email { get; set; } = default!;
 
         /// <summary>
-        /// Номер телефона пользователя
+        /// Ссылка для добавления в друзья
         /// </summary>
-        public string? Phone { get; set; } = default!;
+        public required string ReferenceLink { get; set; } = default!;
 
         /// <summary>
         /// Изображение профиля пользователя

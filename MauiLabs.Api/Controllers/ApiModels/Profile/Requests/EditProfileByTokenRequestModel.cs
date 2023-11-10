@@ -34,12 +34,6 @@ namespace MauiLabs.Api.Controllers.ApiModels.Profile.Requests
         public string Email { get; set; } = default!;
 
         /// <summary> 
-        /// Данные номера телефона
-        /// </summary>
-        [DefaultValue(null)]
-        public string? Phone { get; set; } = default!;
-
-        /// <summary> 
         /// Изображение в профиле пользователя
         /// </summary>
         [DefaultValue(null)]

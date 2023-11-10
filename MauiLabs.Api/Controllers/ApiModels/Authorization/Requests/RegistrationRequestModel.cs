@@ -10,7 +10,7 @@ namespace MauiLabs.Api.Controllers.ApiModels.Authorization.Requests
     /// <summary>
     /// Данные для регистрации профиля пользователя
     /// </summary>
-    public partial class RegistrationRequestModel : IMappingTarget<RegistrationCommand>, IValidatableObject
+    public partial class RegistrationRequestModel : IMappingTarget<RegistrationCommand>
     {
         /// <summary> 
         /// Имя пользователя
@@ -36,12 +36,6 @@ namespace MauiLabs.Api.Controllers.ApiModels.Authorization.Requests
         public string Email { get; set; } = default!;
 
         /// <summary> 
-        /// Данные номера телефона
-        /// </summary>
-        [DefaultValue(null)]
-        public string? Phone { get; set; } = default!;
-
-        /// <summary> 
         /// Изображение в профиле пользователя
         /// </summary>
         [DefaultValue(null)]
@@ -60,15 +54,5 @@ namespace MauiLabs.Api.Controllers.ApiModels.Authorization.Requests
         [StringLength(50, MinimumLength = 5, ErrorMessage = "Длина пароля в диапазоне от 5 до 50 символов")]
         [Required(ErrorMessage = "Необходимо указать пароль пользователя")]
         public string Password { get; set; } = default!;
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var validationResult = new List<ValidationResult>();
-            if (Phone != null && !Regex.IsMatch(Phone, @"^\+7[0-9]{10}$"))
-            {
-                validationResult.Add(new ValidationResult("Неверный формат номера телефона", new string[] { "Phone" }));
-            }
-            return validationResult;
-        }
     }
 }
