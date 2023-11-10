@@ -51,8 +51,4 @@
 		<Protobuf Include="RemoteServices\ProtoContracts\CookingRecipeAdmin.proto" GrpcServices="Server" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Services\Requests\FriendRequests\" />
-	</ItemGroup>
-
 </Project>
