@@ -19,12 +19,13 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetCookingRecipes
         {
             var filterName = (string name) => request.TextFilter == null ? true : Regex.IsMatch(name, request.TextFilter);
             var filterCategory = (RecipeCategory? category) => category?.Name == request.Category;
+            var filterConfirmed = (bool value) => request.Confirmed == null ? true : value == request.Confirmed;
 
             var sortedRating = (CookingRecipe item) => item.Comments.Sum(op => (double)op.Rating / item.Comments.Count());
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
                 var requestResult = dbcontext.CookingRecipes.Include(item => item.RecipeCategory)
-                    .Where(item => filterName(item.Name) && item.Confirmed == request.Confirmed && filterCategory(item.RecipeCategory))
+                    .Where(item => filterName(item.Name) && filterConfirmed(item.Confirmed) && filterCategory(item.RecipeCategory))
                     .Include(item => item.Publisher)
                     .Include(item => item.Comments)
                     .Include(item => item.Ingredients);

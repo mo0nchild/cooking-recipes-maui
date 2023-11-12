@@ -10,7 +10,7 @@ namespace MauiLabs.Api.Services.Requests.ProfileRequests.Models
         public required string Name { get; set; } = default!;
 
         public required string Email { get; set; } = default!;
-        public string ReferenceLink { get; set; } = default!;
+        public required string ReferenceLink { get; set; } = default!;
         public byte[]? Image { get; set; } = default!;
     }
 }

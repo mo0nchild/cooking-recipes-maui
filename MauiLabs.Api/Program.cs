@@ -1,5 +1,9 @@
 using MauiLabs.Api.Commons.Authentication;
 using MauiLabs.Api.Commons.Middleware;
+using MauiLabs.Api.RemoteServices;
+using MauiLabs.Api.RemoteServices.Implementations.CookingRecipe;
+using MauiLabs.Api.RemoteServices.Implementations.FriendsList;
+using MauiLabs.Api.RemoteServices.Implementations.RecommendsList;
 using MauiLabs.Api.Services;
 using MauiLabs.Dal;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text;
 using static MauiLabs.Api.Commons.Authentication.ConfigureJwtBearer;
 
 namespace MauiLabs.Api;
@@ -23,14 +28,44 @@ public static class Program : object
         builder.Services.AddControllers();
         builder.Services.AddProblemDetails();
         builder.Services.Configure<JwtBearerConfig>(builder.Configuration.GetSection("Authentication"));
-        builder.Services.ConfigureOptions<ConfigureJwtBearer>();
 
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+        builder.Services.AddGrpcReflection();
+        builder.Services.AddGrpc();
+        builder.Services.AddHttpContextAccessor();
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+        {
+            /*
+             * "SecretKey": "c08838a2-1393-450f-bac8-b42e384a54e9",
+             * "Issuer": "byterbrod387",
+             * "Audience": "byterbrod387"
+             */
+            options.RequireHttpsMetadata = true;
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidAudience = "byterbrod387",
+                ValidateAudience = true,
+
+                ValidIssuer = "byterbrod387",
+                ValidateIssuer = true,
+
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("c08838a2-1393-450f-bac8-b42e384a54e9")),
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true,
+            };
+            options.SaveToken = true;
+        });
         builder.Services.AddAuthorization(options => 
         {
             options.AddPolicy("Admin", item => item.RequireClaim(ClaimTypes.Role, "Admin"));
             options.AddPolicy("User", item => item.RequireClaim(ClaimTypes.Role, "User"));
         });
+
+
+        
+        //builder.Services.ConfigureOptions<ConfigureJwtBearer>();
+
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
@@ -80,12 +115,11 @@ public static class Program : object
                 options.InjectStylesheet("/styles/swagger-darkui.css");
             });
         }
-        application.UseExceptionHandler();
         application.UseHttpsRedirection().UseStaticFiles();
-        application.UseAuthentication().UseAuthorization();
-
         application.UseRequestLogging();
-        application.UseRouting().UseEndpoints(options => options.MapControllers());
+        application.UseAuthentication().UseRouting().UseAuthorization();
+
+        application.UseEndpoints(options => options.MapRemoteServices().MapControllers());
         await application.RunAsync();
     }
 }

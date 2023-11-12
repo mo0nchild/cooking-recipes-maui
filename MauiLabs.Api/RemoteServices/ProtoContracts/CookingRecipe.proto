@@ -1,0 +1,130 @@
+syntax = "proto3";
+option csharp_namespace = "MauiLabs.Api.RemoteServices.Implementations.CookingRecipe";
+
+// import "google/protobuf/wrappers.proto";
+// import "google/protobuf/duration.proto"; 
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package cookingrecipe;
+
+message AddCookingRecipeModel {
+	string name = 1;
+	optional string description = 2;
+	optional bytes image = 3;
+
+	optional string category = 4;
+	int32 publisher_id = 5;
+
+	message IngredientUnit {
+		double value = 1;
+		string unit = 2;
+	}
+	map<string, IngredientUnit> ingredients = 6;
+}
+message AddCookingRecipeByTokenModel {
+	string name = 1;
+	optional string description = 2;
+	optional bytes image = 3;
+	optional string category = 4;
+
+	message IngredientUnit {
+		double value = 1;
+		string unit = 2;
+	}
+	map<string, IngredientUnit> ingredients = 6;
+}
+message ConfirmeCookingRecipeModel {
+	int32 id = 1;
+	bool status = 2;
+}
+message DeleteCookingRecipeModel {
+	int32 id = 1;
+}
+message EditCookingRecipeModel {
+	int32 id = 1;
+	string name = 2;
+
+	optional string description = 3;
+	optional bytes image = 4;
+	optional string category = 5;
+
+	message IngredientUnit {
+		double value = 1;
+		string unit = 2;
+	}
+	map<string, IngredientUnit> ingredients = 6;
+}
+
+service CookingRecipeCommands {
+	rpc AddCookingRecipeByToken(AddCookingRecipeByTokenModel) returns (google.protobuf.Empty);
+	rpc AddCookingRecipe(AddCookingRecipeModel) returns (google.protobuf.Empty);
+	rpc DeleteCookingRecipe(DeleteCookingRecipeModel) returns (google.protobuf.Empty);
+
+	rpc EditCookingRecipe(EditCookingRecipeModel) returns (google.protobuf.Empty);
+	rpc ConfirmeCookingRecipe(ConfirmeCookingRecipeModel) returns (google.protobuf.Empty);
+}
+
+message CookingRecipeInfoModel {
+
+	message IngredientInfoModel { 
+		double value = 1;
+		string name = 2;
+		string unit = 3;
+	}
+	message PublisherInfoModel {
+		int32 id = 1; 
+		string surname = 2;
+		string name = 3;
+		optional bytes image = 4;
+	}
+	int32 id = 1;
+	string name = 2;
+
+	optional string description = 3;
+	google.protobuf.Timestamp publication_time = 4;
+	double rating = 5;
+	optional bool confirmed = 6; 
+
+	repeated IngredientInfoModel ingredients = 7;
+	int32 publisher_id = 8;
+	PublisherInfoModel publisher = 9;
+	optional bytes image = 10;
+}
+message CookingRecipeListModel {
+	repeated CookingRecipeInfoModel recipes = 1;
+	int32 all_count = 2;
+}
+
+message GetCookingRecipeModel {
+	int32 recipe_id = 1;
+}
+
+message GetCookingRecipesListModel {
+	enum RecipeSortingType {
+		RECIPE_SORTING_TYPE_BY_DATE = 0;
+		RECIPE_SORTING_TYPE_BY_NAME = 1;
+		RECIPE_SORTING_TYPE_BY_RATING = 2;
+	}
+	int32 skip = 1;
+	int32 take = 2;
+	optional bool confirmed = 3;
+	
+	RecipeSortingType sorting_type = 4;
+	optional string category = 5;
+	optional string text_filter = 6;
+}
+
+message GetPublishedRecipeListModel {
+	int32 publisher_id = 1;
+}
+message GetPublisherRecipeListByTokenModel { }
+
+service CookingRecipeRequests {
+
+	rpc GetCookingRecipesList(GetCookingRecipesListModel) returns (CookingRecipeListModel);
+	rpc GetPublisherRecipeListByToken(GetPublisherRecipeListByTokenModel) returns (CookingRecipeListModel);
+	rpc GetPublishedRecipeList(GetPublishedRecipeListModel) returns (CookingRecipeListModel);
+
+	rpc GetCookingRecipe(GetCookingRecipeModel) returns (CookingRecipeInfoModel);
+}

@@ -8,7 +8,7 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <LangVersion>preview</LangVersion>
-		<NoWarn>ASP0014</NoWarn>
+		<NoWarn>ASP0014; ASP0001</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,9 +17,10 @@
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
         <PackageReference Include="AutoMapper" Version="12.0.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.58.0" />
-        <PackageReference Include="Grpc.Core.Api" Version="2.58.0" />
-        <PackageReference Include="Grpc.Net.Common" Version="2.58.0" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.59.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.59.0" />
+        <PackageReference Include="Grpc.Core.Api" Version="2.59.0" />
+        <PackageReference Include="Grpc.Net.Common" Version="2.59.0" />
         <PackageReference Include="Grpc.Tools" Version="2.59.0">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -47,8 +48,9 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="RemoteServices\ProtoContracts\CookingRecipeUser.proto" GrpcServices="Server" />
-		<Protobuf Include="RemoteServices\ProtoContracts\CookingRecipeAdmin.proto" GrpcServices="Server" />
+		<Protobuf Include="RemoteServices\ProtoContracts\CookingRecipe.proto" GrpcServices="Server" />
+		<Protobuf Include="RemoteServices\ProtoContracts\FriendsList.proto" GrpcServices="Server" />
+		<Protobuf Include="RemoteServices\ProtoContracts\RecommendsList.proto" GrpcServices="Server" />
 	</ItemGroup>
 
 </Project>

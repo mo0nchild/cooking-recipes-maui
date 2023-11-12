@@ -18,7 +18,7 @@ namespace MauiLabs.Api.Services.Commands.ProfileCommands.DeleteProfile
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
                 var result = await dbcontext.UserProfiles.Where(item => item.Id == request.Id).ExecuteDeleteAsync();
-                if (result < 0) throw new ApiServiceException("Невозможно удалить профиль", requestType);
+                if (result <= 0) throw new ApiServiceException("Невозможно удалить профиль", requestType);
             }   
         }
     }

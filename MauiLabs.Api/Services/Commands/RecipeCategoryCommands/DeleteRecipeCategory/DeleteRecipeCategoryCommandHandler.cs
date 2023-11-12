@@ -16,7 +16,7 @@ namespace MauiLabs.Api.Services.Commands.RecipeCategoryCommands.DeleteRecipeCate
             using (var dbcontext = await _factory.CreateDbContextAsync(cancellationToken))
             {
                 var result = await dbcontext.RecipeCategories.Where(item => item.Name == request.Name).ExecuteDeleteAsync();
-                if (result < 0) throw new ApiServiceException("Категория не найдена", requestType);
+                if (result <= 0) throw new ApiServiceException("Категория не найдена", requestType);
             }
         }
     }

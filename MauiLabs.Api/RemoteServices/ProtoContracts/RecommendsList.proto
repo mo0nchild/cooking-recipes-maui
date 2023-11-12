@@ -1,0 +1,81 @@
+syntax = "proto3";
+option csharp_namespace = "MauiLabs.Api.RemoteServices.Implementations.RecommendsList";
+
+// import "google/protobuf/wrappers.proto";
+// import "google/protobuf/duration.proto"; 
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package recommendslist;
+
+message AddRecommendModel {
+	string text = 1;
+	int32 recipe_id = 2;
+	int32 from_user_id = 3;
+	int32 to_user_id = 4;
+}
+message AddRecommendByTokenModel {
+	string text = 1;
+	int32 recipe_id = 2;
+	int32 to_user_id = 3;
+}
+message DeleteRecommendModel {
+	int32 record_id = 1;
+}
+
+service RecommendsListCommands {
+	rpc AddRecommendByToken(AddRecommendByTokenModel) returns (google.protobuf.Empty);
+	rpc AddRecommend(AddRecommendModel) returns (google.protobuf.Empty);
+
+	rpc DeleteRecommend(DeleteRecommendModel) returns (google.protobuf.Empty);
+}
+
+message GetRecommendsListModel {
+	int32 profile_id = 1;
+}
+message GetRecommendsListByTokenModel { }
+
+message RecommendInfoListModel {
+
+	message ProfileInfoModel {
+		int32 id = 1;
+		string surname = 2;
+		string name = 3;
+		optional bytes image = 4;
+		string email = 5;
+		string reference_link = 6;
+	}
+	message CookingRecipeInfoModel {
+
+		message IngredientInfoModel { 
+			double value = 1;
+			string name = 2;
+			string unit = 3;
+		}
+		int32 id = 1;
+		string name = 2;
+
+		optional string description = 3;
+		google.protobuf.Timestamp publication_time = 4;
+		double rating = 5;
+		optional bytes image = 6;
+		optional bool confirmed = 7; 
+
+		repeated IngredientInfoModel ingredients = 8;
+		int32 publisher_id = 9;
+		ProfileInfoModel publisher = 10;
+	}
+	message RecommendInfoModel {
+		int32 id = 1;
+		string text = 2;
+		CookingRecipeInfoModel recipe = 3;
+		ProfileInfoModel from_user = 4;
+	}
+	repeated RecommendInfoModel Recommends = 1;
+	int32 all_count = 2;
+}
+
+service RecommendsListRequests {
+	rpc GetRecommendsListByToken (GetRecommendsListByTokenModel) returns (RecommendInfoListModel);
+	rpc GetRecommendsList (GetRecommendsListModel) returns (RecommendInfoListModel);
+}

@@ -1,0 +1,56 @@
+syntax = "proto3";
+option csharp_namespace = "MauiLabs.Api.RemoteServices.Implementations.FriendsList";
+
+// import "google/protobuf/wrappers.proto";
+// import "google/protobuf/duration.proto"; 
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package friendslist;
+
+message AddFriendModel {
+	int32 requester_id = 1;
+	string reference_link = 2;
+}
+message AddFriendByTokenModel {
+	string reference_link = 1;
+}
+message DeleteFriendModel {
+	int32 record_id = 1;
+}
+
+service FriendsListCommands {
+	rpc AddFriend(AddFriendModel) returns (google.protobuf.Empty);
+	rpc AddFriendByToken(AddFriendByTokenModel) returns (google.protobuf.Empty);
+
+	rpc DeleteFriend(DeleteFriendModel) returns (google.protobuf.Empty);
+}
+
+message FriendInfoListModel {
+	message ProfileInfoModel {
+		int32 id = 1;
+		string surname = 2;
+		string name = 3;
+		string email = 4;
+
+		string reference_link = 5;
+		optional bytes image = 6;
+	}
+	message FriendInfoModel {
+		int32 id = 1;
+		google.protobuf.Timestamp DateTime = 2;
+		ProfileInfoModel profile = 3;
+	}
+	repeated FriendInfoModel friends = 1;
+	int32 all_count = 2;
+}
+
+message GetFriendsListModel {
+	int32 profile_id = 1;
+}
+message GetFriendsListByTokenModel { }
+
+service FriendsListRequests {
+	rpc GetFriendsListByToken(GetFriendsListByTokenModel) returns (FriendInfoListModel);
+	rpc GetFriendsList(GetFriendsListModel) returns (FriendInfoListModel);
+}

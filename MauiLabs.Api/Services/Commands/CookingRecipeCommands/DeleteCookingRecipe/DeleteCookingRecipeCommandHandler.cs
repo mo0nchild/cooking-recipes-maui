@@ -17,7 +17,7 @@ namespace MauiLabs.Api.Services.Commands.CookingRecipeCommands.DeleteCookingReci
             using (var dbcontext = await _factory.CreateDbContextAsync(cancellationToken))
             {
                 var result = await dbcontext.CookingRecipes.Where(item => item.Id == request.Id).ExecuteDeleteAsync();
-                if (result < 0) throw new ApiServiceException("Рецепт не найден", requestType);
+                if (result <= 0) throw new ApiServiceException("Рецепт не найден", requestType);
             }
         }
     }

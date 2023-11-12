@@ -16,7 +16,7 @@ namespace MauiLabs.Api.Services.Commands.FriendCommands.DeleteFriend
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
                 var requestResult = await dbcontext.FriendsList.Where(p => p.Id == request.RecordId).ExecuteDeleteAsync();
-                if (requestResult < 0) throw new ApiServiceException("Запись о дружбе не найдена", requestType);
+                if (requestResult <= 0) throw new ApiServiceException("Запись о дружбе не найдена", requestType);
             }
         }
     }

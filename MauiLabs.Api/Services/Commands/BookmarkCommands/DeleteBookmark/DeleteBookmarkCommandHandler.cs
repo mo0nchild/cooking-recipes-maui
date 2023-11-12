@@ -19,7 +19,7 @@ namespace MauiLabs.Api.Services.Commands.BookmarkCommands.DeleteBookmark
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
                 var result = await dbcontext.Bookmarks.Where(item => deleteFilter.Invoke(item)).ExecuteDeleteAsync();
-                if (result < 0) throw new ApiServiceException("Заметка не найдена", requestType);
+                if (result <= 0) throw new ApiServiceException("Заметка не найдена", requestType);
             }
         }
     }

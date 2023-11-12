@@ -18,7 +18,7 @@ namespace MauiLabs.Api.Services.Commands.CommentCommands.DeleteComment
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
                 var result = await dbcontext.Comments.Where(item => deleteFilter.Invoke(item)).ExecuteDeleteAsync();
-                if (result < 0) throw new ApiServiceException("Комментарий не найден", requestType);
+                if (result <= 0) throw new ApiServiceException("Комментарий не найден", requestType);
             }
         }
     }
