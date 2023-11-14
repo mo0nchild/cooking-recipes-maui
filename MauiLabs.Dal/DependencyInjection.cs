@@ -26,8 +26,7 @@ namespace MauiLabs.Dal
             {
                 await dbcontext.Database.MigrateAsync();
             }
-            var databaseUrlInfo = $"Database URL: {configuration.GetConnectionString("cookingrecipedb")}";
-            serviceProvider.GetService<ILogger>()?.LogInformation(databaseUrlInfo);
+            await Console.Out.WriteLineAsync($"Database URL: {configuration.GetConnectionString("cookingrecipedb")}");
             return collection;
         }
     }
