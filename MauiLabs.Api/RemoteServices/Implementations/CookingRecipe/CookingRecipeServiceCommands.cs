@@ -37,6 +37,7 @@ namespace MauiLabs.Api.RemoteServices.Implementations.CookingRecipe
             try { await this._mediator.Send(mappedRequest); }
             catch (ValidationException errorInfo)
             {
+                await Console.Out.WriteLineAsync($"\nError: {errorInfo.Message}\n");
                 throw new RpcException(Status.DefaultCancelled, errorInfo.Message);
             }
             return new Empty();
