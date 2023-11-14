@@ -15,6 +15,7 @@ namespace MauiLabs.Dal
     {
         public async static Task<IServiceCollection> AddDataAccessLayer(this IServiceCollection collection, IConfiguration configuration)
         {
+            await Console.Out.WriteLineAsync($"Database URL: {configuration.GetConnectionString("cookingrecipedb")}");
             collection.AddDbContextFactory<CookingRecipeDbContext>(options =>
             {
                 options.UseNpgsql(configuration.GetConnectionString("cookingrecipedb"));
@@ -26,7 +27,6 @@ namespace MauiLabs.Dal
             {
                 await dbcontext.Database.MigrateAsync();
             }
-            await Console.Out.WriteLineAsync($"Database URL: {configuration.GetConnectionString("cookingrecipedb")}");
             return collection;
         }
     }
