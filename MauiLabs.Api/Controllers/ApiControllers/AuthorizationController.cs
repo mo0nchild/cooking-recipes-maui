@@ -16,6 +16,7 @@ using MauiLabs.Api.Services.Requests.ProfileRequests.AuthorizationProfile;
 using MauiLabs.Api.Controllers.ApiModels.Authorization.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Authorization.Responses;
 using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.Api.Controllers.ApiControllers
 {
@@ -47,15 +48,15 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             AuthorizationInfo? result = default!;
             try {
                 result = await this.mediator.Send(this.mapper.Map<AuthorizationRequest>(request));
-                if (result == null) throw new Exception("Пользователь не найден");
+                if (result == null) throw new ValidationException("Пользователь не найден");
             }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
             var resultClaims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Sid, result.Id.ToString()), 
+                new Claim(ClaimTypes.PrimarySid, result.Id.ToString()), 
                 new Claim(ClaimTypes.Role, "User"),
             };
             if (result.IsAdmin) resultClaims.Add(new Claim(ClaimTypes.Role, "Admin"));
@@ -84,7 +85,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> RegistrationHandler([FromBody] RegistrationRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<RegistrationCommand>(request)); }
-            catch (Exception errorInfo) 
+            catch (ValidationException errorInfo) 
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }

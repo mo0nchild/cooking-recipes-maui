@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks;
 using MauiLabs.Api.Controllers.ApiModels.Profile.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Profile.Responses;
@@ -40,7 +41,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             mappedRequest.Id = this.ProfileId;
 
             try { await this.mediator.Send(mappedRequest); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -56,7 +57,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> DeleteProfileByTokenHandler()
         {
             try { await this.mediator.Send(new DeleteProfileCommand() { Id = this.ProfileId }); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -74,9 +75,9 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             ProfileInfo? requestResult = default!;
             try {
                 requestResult = await this.mediator.Send(new GetProfileInfoRequest() { Id = this.ProfileId });
-                if (requestResult == null) throw new Exception("Профиль не найден");
+                if (requestResult == null) throw new ValidationException("Профиль не найден");
             }
-            catch (Exception errorInfo) 
+            catch (ValidationException errorInfo) 
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -95,9 +96,9 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             ProfileInfo? requestResult = default!;
             try {
                 requestResult = await this.mediator.Send(this.mapper.Map<GetProfileInfoRequest>(request));
-                if (requestResult == null) throw new Exception("Профиль не найден");
+                if (requestResult == null) throw new ValidationException("Профиль не найден");
             }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -115,7 +116,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         {
             var mappedRequest = this.mapper.Map<GetAllProfilesRequest>(request);
             try { return this.Ok(this.mapper.Map<GetProfilesListResponseModel>(await this.mediator.Send(mappedRequest))); }
-            catch (Exception errorInfo) 
+            catch (ValidationException errorInfo) 
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -132,7 +133,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> EditProfileHandler([FromBody] EditProfileRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<EditProfileCommand>(request)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -150,7 +151,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> DeleteProfileHandler([FromQuery] DeleteProfileRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<DeleteProfileCommand>(request)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -170,7 +171,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             mappedRequest.Id = this.ProfileId;
 
             try { await this.mediator.Send(mappedRequest); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -188,7 +189,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> ChangePasswordHandler([FromBody] ChangePasswordRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<ChangePasswordCommand>(request)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }

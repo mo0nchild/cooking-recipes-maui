@@ -11,7 +11,7 @@ namespace MauiLabs.Api.Services.Requests.CommentRequests.Models
         public required double Rating { get; set; } = default!;
         public required DateTime PublicationTime { get; set; } = default;
 
-        public required int ProfileId { get; set; } = default!;
+        public required ProfileInfo Profile { get; set; } = default!;
         public required int RecipeId { get; set; } = default!;
     }
 }

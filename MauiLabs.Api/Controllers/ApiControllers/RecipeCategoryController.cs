@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MauiLabs.Api.Controllers.ApiModels.Profile.Requests;
 using MauiLabs.Api.Controllers.ApiModels.RecipeCategory.Requests;
 using MauiLabs.Api.Controllers.ApiModels.RecipeCategory.Responses;
@@ -35,7 +36,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> AddRecipeCategoryHandler([FromBody] AddRecipeCategoryRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddRecipeCategoryCommand>(request)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -53,7 +54,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> DeleteRecipeCategoryHandler([FromQuery] DeleteRecipeCategoryRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<DeleteRecipeCategoryCommand>(request)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -70,7 +71,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         {
             var requestModel = new GetCategoryListRequest();
             try { return this.Ok(this.mapper.Map<GetRecipeCategoriesListResponseModel>(await this.mediator.Send(requestModel))); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }

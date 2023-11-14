@@ -26,7 +26,8 @@ service FriendsListCommands {
 	rpc DeleteFriend(DeleteFriendModel) returns (google.protobuf.Empty);
 }
 
-message FriendInfoListModel {
+
+message FriendInfoModel {
 	message ProfileInfoModel {
 		int32 id = 1;
 		string surname = 2;
@@ -36,13 +37,9 @@ message FriendInfoListModel {
 		string reference_link = 5;
 		optional bytes image = 6;
 	}
-	message FriendInfoModel {
-		int32 id = 1;
-		google.protobuf.Timestamp DateTime = 2;
-		ProfileInfoModel profile = 3;
-	}
-	repeated FriendInfoModel friends = 1;
-	int32 all_count = 2;
+	int32 id = 1;
+	google.protobuf.Timestamp DateTime = 2;
+	ProfileInfoModel profile = 3;
 }
 
 message GetFriendsListModel {
@@ -51,6 +48,6 @@ message GetFriendsListModel {
 message GetFriendsListByTokenModel { }
 
 service FriendsListRequests {
-	rpc GetFriendsListByToken(GetFriendsListByTokenModel) returns (FriendInfoListModel);
-	rpc GetFriendsList(GetFriendsListModel) returns (FriendInfoListModel);
+	rpc GetFriendsListByToken(GetFriendsListByTokenModel) returns (stream FriendInfoModel);
+	rpc GetFriendsList(GetFriendsListModel) returns (stream FriendInfoModel);
 }

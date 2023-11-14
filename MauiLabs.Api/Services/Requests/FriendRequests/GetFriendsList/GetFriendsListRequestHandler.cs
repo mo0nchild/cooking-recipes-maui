@@ -16,10 +16,10 @@ namespace MauiLabs.Api.Services.Requests.FriendRequests.GetFriendsList
 
         public async Task<FriendInfoList> Handle(GetFriendsListRequest request, CancellationToken cancellationToken)
         {
-            var findFilter = (FriendList item) => item.RequesterId == request.ProfileId || item.AddresseeId == request.ProfileId;
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var friendRecord = await dbcontext.FriendsList.Where(item => findFilter.Invoke(item))
+                var friendRecord = await dbcontext.FriendsList
+                    .Where(item => item.RequesterId == request.ProfileId || item.AddresseeId == request.ProfileId)
                     .Include(item => item.Requester)
                     .Include(item => item.Addressee).ToListAsync();
                 return new FriendInfoList()

@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using System.Runtime.CompilerServices;
 
 namespace MauiLabs.Api.Services.Commons.Exceptions
 {
-    public partial class ApiServiceException: Exception
+    public partial class ApiServiceException: ValidationException
     {
         public Type ServiceType { get; private set; } = default!;
         public string ErrorMessage { get => this.Message; }

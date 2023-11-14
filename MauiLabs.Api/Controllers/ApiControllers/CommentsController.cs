@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Comments.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Comments.Responses;
@@ -38,7 +39,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> AddCommentHandler([FromBody] AddCommentRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddCommentCommand>(request)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -58,7 +59,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             mappedRequest.ProfileId = this.ProfileId;
 
             try { await this.mediator.Send(mappedRequest); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -76,7 +77,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> DeleteCommentHandler([FromQuery] DeleteCommentRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<DeleteCommentCommand>(request)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -93,7 +94,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> DeleteCommentByTokenHandler([FromQuery] DeleteCommentByTokenRequestModel request)
         {
             try { await this.mediator.Send(new DeleteCommentCommand() { ProfileId = this.ProfileId, RecipeId = request.RecipeId }); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -111,7 +112,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> EditCommentHandler([FromBody] EditCommentRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<EditCommentCommand>(request)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -131,7 +132,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             mappedResult.ProfileId = this.ProfileId;
 
             try { await this.mediator.Send(mappedResult); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -149,7 +150,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         {
             var mappedRequest = this.mapper.Map<GetCommentRequest>(request);
             try { return this.Ok(this.mapper.Map<GetCommentResponseModel>(await this.mediator.Send(mappedRequest))); }
-            catch (Exception errorInfo) 
+            catch (ValidationException errorInfo) 
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -168,7 +169,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             mappedRequest.ProfileId = this.ProfileId;
 
             try { return this.Ok(this.mapper.Map<GetCommentResponseModel>(await this.mediator.Send(mappedRequest))); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -184,7 +185,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> GetProfileCommentsHandler([FromQuery] GetProfileCommentsRequestModel request)
         {
             try { return this.Ok(await this.mediator.Send(this.mapper.Map<GetProfileCommentsListRequest>(request))); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -203,7 +204,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             mappedRequest.ProfileId = this.ProfileId;
 
             try { return this.Ok(await this.mediator.Send(mappedRequest)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -219,7 +220,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> GetRecipeCommentsHandler([FromQuery] GetRecipeCommentsRequestModel request)
         {
             try { return this.Ok(await this.mediator.Send(this.mapper.Map<GetRecipeCommentsListRequest>(request))); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }

@@ -12,12 +12,12 @@ namespace MauiLabs.Api.Services.Commands.CommentCommands.DeleteComment
         protected readonly IDbContextFactory<CookingRecipeDbContext> _factory = factory;
         public async Task Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
         {
-            var deleteFilter = (Comment item) => item.RecipeId == request.RecipeId && item.ProfileId == request.ProfileId;
-
             var requestType = typeof(DeleteCommentCommand);
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var result = await dbcontext.Comments.Where(item => deleteFilter.Invoke(item)).ExecuteDeleteAsync();
+                var result = await dbcontext.Comments.Where(item => item.RecipeId == request.RecipeId 
+                    && item.ProfileId == request.ProfileId).ExecuteDeleteAsync();
+
                 if (result <= 0) throw new ApiServiceException("Комментарий не найден", requestType);
             }
         }

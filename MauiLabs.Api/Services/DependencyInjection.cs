@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace MauiLabs.Api.Services
 {
-    public static class DependencyInjection : object
+    public static class DependencyInjectionExtension : object
     {
         public static Task<IServiceCollection> AddApiServices(this IServiceCollection collection, IConfiguration configuration)
         {

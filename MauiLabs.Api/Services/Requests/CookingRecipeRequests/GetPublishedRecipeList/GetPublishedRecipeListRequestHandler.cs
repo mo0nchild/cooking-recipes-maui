@@ -22,7 +22,7 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetPublishedRecip
                     .Include(item => item.Ingredients).ToListAsync();
                 return new CookingRecipesList()
                 {
-                    AllCount = await dbcontext.CookingRecipes.CountAsync(),
+                    AllCount = requestResult.Count,
                     Recipes = this._mapper.Map<List<CookingRecipeInfo>>(requestResult),
                 };
             }

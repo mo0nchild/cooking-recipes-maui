@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Google.Protobuf.WellKnownTypes;
 using MauiLabs.Api.Services.Commons.Exceptions;
 using MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models;
 using MauiLabs.Dal;
 using MauiLabs.Dal.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetCookingRecipesList
 {
@@ -17,26 +20,25 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetCookingRecipes
 
         public async Task<CookingRecipesList> Handle(GetCookingRecipesListRequest request, CancellationToken cancellationToken)
         {
-            var filterName = (string name) => request.TextFilter == null ? true : Regex.IsMatch(name, request.TextFilter);
-            var filterCategory = (RecipeCategory? category) => category?.Name == request.Category;
-            var filterConfirmed = (bool value) => request.Confirmed == null ? true : value == request.Confirmed;
-
             var sortedRating = (CookingRecipe item) => item.Comments.Sum(op => (double)op.Rating / item.Comments.Count());
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var requestResult = dbcontext.CookingRecipes.Include(item => item.RecipeCategory)
-                    .Where(item => filterName(item.Name) && filterConfirmed(item.Confirmed) && filterCategory(item.RecipeCategory))
+                var requestResult = await dbcontext.CookingRecipes.Include(item => item.RecipeCategory)
+                    .Where(item => request.Confirmed == null ? true : item.Confirmed == request.Confirmed)
+                    .Where(item => request.Category == null ? true : item.RecipeCategory!.Name == request.Category)
+                    .Where(item => request.TextFilter == null ? true : Regex.IsMatch(item.Name, request.TextFilter))
                     .Include(item => item.Publisher)
                     .Include(item => item.Comments)
-                    .Include(item => item.Ingredients);
-                var orderedResult = await (request.SortingType switch
+                    .Include(item => item.Ingredients)
+                    .Skip(request.Skip).Take(request.Take).ToListAsync();
+                var orderedResult = (request.SortingType switch
                 {
                     RecipeSortingType.ByRating => requestResult.OrderByDescending(item => sortedRating(item)),
                     RecipeSortingType.ByDate => requestResult.OrderByDescending(item => item.PublicationTime),
                     RecipeSortingType.ByName => requestResult.OrderBy(item => item.Name),
                     _ => throw new ApiServiceException("Не установлен режим сортировки", typeof(GetCookingRecipesListRequest))
                 })
-                .Skip(request.Skip).Take(request.Take).ToListAsync();
+                .ToImmutableList();
                 return new CookingRecipesList()
                 {
                     AllCount = await dbcontext.CookingRecipes.CountAsync(),

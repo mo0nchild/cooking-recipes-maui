@@ -16,10 +16,6 @@ namespace MauiLabs.Api.Services.Commands.RecommendCommands.AddRecommend
         public async Task Handle(AddRecommendCommand request, CancellationToken cancellationToken)
         {
             var requestType = typeof(AddRecommendCommand);
-            var collisionFilter = (Recommendation el) =>
-            {
-                return el.ToUserId == request.ToUserId && el.FromUserId == request.FromUserId && el.RecipeId == request.RecipeId;
-            };
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
                 if (await dbcontext.UserProfiles.FirstOrDefaultAsync(item => item.Id == request.FromUserId) == null)
@@ -34,7 +30,8 @@ namespace MauiLabs.Api.Services.Commands.RecommendCommands.AddRecommend
                 {
                     throw new ApiServiceException("Рецепт не найден", requestType);
                 }
-                var collision = await dbcontext.Recommendations.FirstOrDefaultAsync(item => collisionFilter.Invoke(item));
+                var collision = await dbcontext.Recommendations.FirstOrDefaultAsync(item => item.ToUserId == request.ToUserId 
+                    && item.FromUserId == request.FromUserId && item.RecipeId == request.RecipeId);
                 if (collision != null) throw new ApiServiceException("Рекомендация уже отправлена", requestType);
 
                 await dbcontext.Recommendations.AddRangeAsync(this._mapper.Map<Recommendation>(request));

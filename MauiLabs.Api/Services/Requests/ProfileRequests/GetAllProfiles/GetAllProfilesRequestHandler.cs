@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
 using MauiLabs.Dal;
+using MauiLabs.Dal.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace MauiLabs.Api.Services.Requests.ProfileRequests.GetAllProfiles
 {
@@ -15,11 +18,10 @@ namespace MauiLabs.Api.Services.Requests.ProfileRequests.GetAllProfiles
 
         public async Task<ProfileCollection> Handle(GetAllProfilesRequest request, CancellationToken cancellationToken)
         {
-            var filterName = (string name, string surname) => request.TextFilter == null ? true 
-                : Regex.IsMatch($"{name} {surname}", request.TextFilter);
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var profiles = await dbcontext.UserProfiles.Where(item => filterName.Invoke(item.Name, item.Surname))
+                var profiles = await dbcontext.UserProfiles.Where(item => 
+                    request.TextFilter == null ? true : Regex.IsMatch($"{item.Name} {item.Surname}", request.TextFilter))
                     .Skip(request.Skip).Take(request.Take).ToListAsync();
                 return new ProfileCollection() 
                 { 

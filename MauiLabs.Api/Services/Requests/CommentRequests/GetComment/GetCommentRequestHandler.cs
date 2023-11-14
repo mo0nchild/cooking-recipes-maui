@@ -16,8 +16,9 @@ namespace MauiLabs.Api.Services.Requests.CommentRequests.GetComment
         {
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var comment = await dbcontext.Comments.FirstOrDefaultAsync(item => item.ProfileId == request.ProfileId
-                    && item.RecipeId == request.RecipeId);
+                var comment = await dbcontext.Comments.Include(item => item.Profile)
+                    .FirstOrDefaultAsync(item => item.ProfileId == request.ProfileId && item.RecipeId == request.RecipeId);
+
                 return this._mapper.Map<CommentInfo?>(comment);
             }
         }

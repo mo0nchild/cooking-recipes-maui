@@ -5,6 +5,7 @@ using MauiLabs.Api.Services.Requests.CommentRequests.Models;
 using MauiLabs.Dal;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 
 namespace MauiLabs.Api.Services.Requests.CommentRequests.GetProfileCommentsList
 {
@@ -18,19 +19,20 @@ namespace MauiLabs.Api.Services.Requests.CommentRequests.GetProfileCommentsList
         {
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var requestResult = dbcontext.Comments.Where(item => item.ProfileId == request.ProfileId)
-                    .Include(item => item.Profile);
-                var sortedResult = await (request.SortingType switch
+                var requestResult = await dbcontext.Comments.Where(item => item.ProfileId == request.ProfileId)
+                    .Include(item => item.Profile)
+                    .Skip(request.Skip).Take(request.Take).ToListAsync();
+                var sortedResult = (request.SortingType switch
                 {
                     CommentSortingType.ByRating => requestResult.OrderByDescending(item => item.Rating),
                     CommentSortingType.ByDate => requestResult.OrderByDescending(item => item.PublicationTime),
                     _ => throw new ApiServiceException("Не установлен режим сортировки", typeof(GetRecipeCommentsListRequest)),
                 })
-                .Skip(request.Skip).Take(request.Take).ToListAsync();
+                .ToImmutableList();
                 return new CommentsList()
                 {
                     Comments = this._mapper.Map<List<CommentInfo>>(sortedResult),
-                    AllCount = await requestResult.CountAsync(),
+                    AllCount = requestResult.Count,
                 };
             }
         }

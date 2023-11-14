@@ -1,5 +1,7 @@
 ﻿using MauiLabs.Api.Commons.Mapping;
+using MauiLabs.Api.Controllers.ApiModels.Commons;
 using MauiLabs.Api.Services.Requests.CommentRequests.Models;
+using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
 
 namespace MauiLabs.Api.Controllers.ApiModels.Comments.Responses
 {
@@ -29,9 +31,9 @@ namespace MauiLabs.Api.Controllers.ApiModels.Comments.Responses
         public required DateTime PublicationTime { get; set; } = default;
 
         /// <summary>
-        /// Идентификатор пользователя, который опубликовал комментарий
+        /// Данные пользователя, который опубликовал комментарий
         /// </summary>
-        public required int ProfileId { get; set; } = default!;
+        public required ProfileInfoModel Profile { get; set; } = default!;
 
         /// <summary>
         /// Идентификатор рецепта

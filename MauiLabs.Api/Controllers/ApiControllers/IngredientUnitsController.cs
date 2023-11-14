@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks;
 using MauiLabs.Api.Controllers.ApiModels.Ingredients.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Ingredients.Responses;
@@ -35,7 +36,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> AddIngredientHandler([FromBody] AddIngredientUnitRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddIngredientUnitCommand>(request)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -53,7 +54,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> DeleteIngredientHandler([FromQuery] DeleteIngredientUnitRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<DeleteIngredientUnitCommand>(request)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -70,7 +71,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         {
             var requestModel = new GetIngredientUnitsRequest();
             try { return this.Ok(this.mapper.Map<GetIngredientUnitsResponseModel>(await this.mediator.Send(requestModel))); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }

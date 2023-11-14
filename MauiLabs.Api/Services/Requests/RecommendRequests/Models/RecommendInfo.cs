@@ -11,6 +11,7 @@ namespace MauiLabs.Api.Services.Requests.RecommendRequests.Models
         public required string Text { get; set; } = default!;
 
         public required ProfileInfo FromUser { get; set; } = default!;
+        public required ProfileInfo ToUser { get; set; } = default!;
         public required CookingRecipeInfo Recipe { get; set; } = default!;
     }
 }

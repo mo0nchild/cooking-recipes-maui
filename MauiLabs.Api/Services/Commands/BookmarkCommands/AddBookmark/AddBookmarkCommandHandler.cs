@@ -14,7 +14,6 @@ namespace MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark
 
         public async Task Handle(AddBookmarkCommand request, CancellationToken cancellationToken)
         {
-            var filterCollision = (Bookmark p) => p.ProfileId == request.ProfileId && p.RecipeId == request.RecipeId;
             using (var dbcontext = await _factory.CreateDbContextAsync(cancellationToken))
             {
                 if (await dbcontext.UserProfiles.FirstOrDefaultAsync(item => item.Id == request.ProfileId) == null)
@@ -25,10 +24,10 @@ namespace MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark
                 {
                     throw new ApiServiceException("Рецепт не найден", typeof(AddCommentCommand));
                 }
-                if (await dbcontext.Bookmarks.FirstOrDefaultAsync(item => filterCollision.Invoke(item)) != null)
-                {
-                    throw new ApiServiceException("Заметка уже добавлена", typeof(AddCommentCommand));
-                }
+                var collision = await dbcontext.Bookmarks.FirstOrDefaultAsync(item => item.ProfileId == request.ProfileId 
+                    && item.RecipeId == request.RecipeId);
+                if (collision != null) throw new ApiServiceException("Заметка уже добавлена", typeof(AddCommentCommand));
+
                 await dbcontext.Bookmarks.AddRangeAsync(new Bookmark()
                 {
                     ProfileId = request.ProfileId, RecipeId = request.RecipeId,

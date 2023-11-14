@@ -1,3 +1,4 @@
+using Calzolari.Grpc.AspNetCore.Validation;
 using MauiLabs.Api.Commons.Authentication;
 using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.RemoteServices;
@@ -24,48 +25,19 @@ public static class Program : object
     public async static Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        builder.Services.AddHttpContextAccessor();
         builder.Services.AddControllers();
         builder.Services.AddProblemDetails();
+
         builder.Services.Configure<JwtBearerConfig>(builder.Configuration.GetSection("Authentication"));
+        builder.Services.ConfigureOptions<ConfigureJwtBearer>();
 
-        builder.Services.AddGrpcReflection();
-        builder.Services.AddGrpc();
-        builder.Services.AddHttpContextAccessor();
-
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-        {
-            /*
-             * "SecretKey": "c08838a2-1393-450f-bac8-b42e384a54e9",
-             * "Issuer": "byterbrod387",
-             * "Audience": "byterbrod387"
-             */
-            options.RequireHttpsMetadata = true;
-            options.TokenValidationParameters = new TokenValidationParameters()
-            {
-                ValidAudience = "byterbrod387",
-                ValidateAudience = true,
-
-                ValidIssuer = "byterbrod387",
-                ValidateIssuer = true,
-
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("c08838a2-1393-450f-bac8-b42e384a54e9")),
-                ValidateIssuerSigningKey = true,
-                ValidateLifetime = true,
-            };
-            options.SaveToken = true;
-        });
-        builder.Services.AddAuthorization(options => 
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+        builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy("Admin", item => item.RequireClaim(ClaimTypes.Role, "Admin"));
             options.AddPolicy("User", item => item.RequireClaim(ClaimTypes.Role, "User"));
         });
-
-
-        
-        //builder.Services.ConfigureOptions<ConfigureJwtBearer>();
-
-
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
@@ -102,6 +74,7 @@ public static class Program : object
             var localpath = AppDomain.CurrentDomain.BaseDirectory;
             options.IncludeXmlComments(Path.Combine(localpath, "MauiLabs.Api.xml"));
         });
+        await builder.Services.AddRemoteServices(builder.Configuration);
         await builder.Services.AddDataAccessLayer(builder.Configuration);
         await builder.Services.AddApiServices(builder.Configuration);
 

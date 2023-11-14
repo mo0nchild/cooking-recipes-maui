@@ -8,13 +8,13 @@ namespace MauiLabs.Api.Controllers.ApiModels.Bookmarks.Responses
     /// <summary>
     /// Список заметок рецептов пользователя
     /// </summary>
-    public partial class GetBookmarksResponseModel : IMappingTarget<GetBookmarksListRequest>
+    public partial class GetBookmarksResponseModel : IMappingTarget<BookmarksList>
     {
         /// <summary>
         /// Данные о заметках в форме списка
         /// </summary>
-        public required List<CookingRecipeInfoModel> Recipes { get; set; } = new();
-        
+        public required List<BookmarkInfoModel> Bookmarks { get; set; } = new();
+
         /// <summary>
         /// Общее количество заметок рецептов
         /// </summary>

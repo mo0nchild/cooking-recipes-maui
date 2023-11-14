@@ -7,7 +7,7 @@ using System.Text;
 namespace MauiLabs.Api.Commons.Authentication
 {
     using JwtBearerConfig = ConfigureJwtBearer.JwtBearerConfig;
-    public partial class ConfigureJwtBearer(IOptions<JwtBearerConfig> options) : IConfigureOptions<JwtBearerOptions>
+    public partial class ConfigureJwtBearer(IOptions<JwtBearerConfig> options) : IConfigureNamedOptions<JwtBearerOptions>
     {
         protected JwtBearerConfig Configuration { get; private set; } = options.Value;
         protected byte[] SecurityKey { get => Encoding.UTF8.GetBytes(this.Configuration.SecretKey); }
@@ -18,21 +18,22 @@ namespace MauiLabs.Api.Commons.Authentication
             public string Audience { get; set; } = default!;
             public string SecretKey { get; set; } = default!;
         }
-
-        public virtual void Configure(JwtBearerOptions options)
+        public virtual void Configure(string? name, JwtBearerOptions options) => this.Configure(options);
+        public void Configure(JwtBearerOptions options)
         {
-            options.RequireHttpsMetadata = true;
+            //options.RequireHttpsMetadata = true;
             options.TokenValidationParameters = new TokenValidationParameters()
             {
-                ValidAudience = this.Configuration.Audience,
-                ValidateAudience = true,
-                
                 ValidIssuer = this.Configuration.Issuer,
                 ValidateIssuer = true,
+
+                ValidAudience = this.Configuration.Audience,
+                ValidateAudience = true,
 
                 IssuerSigningKey = new SymmetricSecurityKey(this.SecurityKey),
                 ValidateIssuerSigningKey = true,
                 ValidateLifetime = true,
+                RequireExpirationTime = false,
             };
             options.SaveToken = true;
         }

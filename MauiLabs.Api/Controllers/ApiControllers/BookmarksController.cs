@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MauiLabs.Api.Controllers.ApiModels.Authorization;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Responses;
@@ -40,7 +41,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> AddBookmarkHandler([FromBody] AddBookmarkRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddBookmarkCommand>(request)); }
-            catch (Exception errorInfo) 
+            catch (ValidationException errorInfo) 
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -60,7 +61,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             mappedRequest.ProfileId = this.ProfileId;
 
             try { await this.mediator.Send(mappedRequest); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -78,7 +79,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> DeleteBookmarkHandler([FromQuery] DeleteBookmarkRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<DeleteBookmarkCommand>(request)); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -98,7 +99,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             mappedRequest.ProfileId = this.ProfileId;
 
             try { await this.mediator.Send(mappedRequest); }
-            catch (Exception errorInfo)
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -118,7 +119,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             mappedRequest.ProfileId = this.ProfileId;
 
             try { return this.Ok(await this.mediator.Send(mappedRequest)); }
-            catch (Exception errorInfo) 
+            catch (ValidationException errorInfo) 
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
@@ -134,7 +135,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> GetBookmarksListHandler([FromQuery] GetBookmarksRequestModel request)
         {
             try { return this.Ok(await this.mediator.Send(this.mapper.Map<GetBookmarksListRequest>(request))); }
-            catch (Exception errorInfo) 
+            catch (ValidationException errorInfo) 
             { 
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest); 
             }

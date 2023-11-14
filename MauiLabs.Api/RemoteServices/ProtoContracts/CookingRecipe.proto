@@ -1,8 +1,8 @@
 syntax = "proto3";
 option csharp_namespace = "MauiLabs.Api.RemoteServices.Implementations.CookingRecipe";
 
-// import "google/protobuf/wrappers.proto";
 // import "google/protobuf/duration.proto"; 
+import "google/protobuf/wrappers.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
@@ -10,29 +10,29 @@ package cookingrecipe;
 
 message AddCookingRecipeModel {
 	string name = 1;
-	optional string description = 2;
+	optional google.protobuf.StringValue description = 2;
 	optional bytes image = 3;
 
-	optional string category = 4;
+	optional google.protobuf.StringValue category = 4;
 	int32 publisher_id = 5;
 
-	message IngredientUnit {
+	message IngredientUnitModel {
 		double value = 1;
 		string unit = 2;
 	}
-	map<string, IngredientUnit> ingredients = 6;
+	map<string, IngredientUnitModel> ingredients = 6;
 }
 message AddCookingRecipeByTokenModel {
 	string name = 1;
-	optional string description = 2;
+	optional google.protobuf.StringValue description = 2;
 	optional bytes image = 3;
-	optional string category = 4;
+	optional google.protobuf.StringValue category = 4;
 
-	message IngredientUnit {
+	message IngredientUnitModel {
 		double value = 1;
 		string unit = 2;
 	}
-	map<string, IngredientUnit> ingredients = 6;
+	map<string, IngredientUnitModel> ingredients = 6;
 }
 message ConfirmeCookingRecipeModel {
 	int32 id = 1;
@@ -45,15 +45,15 @@ message EditCookingRecipeModel {
 	int32 id = 1;
 	string name = 2;
 
-	optional string description = 3;
+	optional google.protobuf.StringValue description = 3;
 	optional bytes image = 4;
-	optional string category = 5;
+	optional google.protobuf.StringValue category = 5;
 
-	message IngredientUnit {
+	message IngredientUnitModel {
 		double value = 1;
 		string unit = 2;
 	}
-	map<string, IngredientUnit> ingredients = 6;
+	map<string, IngredientUnitModel> ingredients = 6;
 }
 
 service CookingRecipeCommands {
@@ -81,7 +81,7 @@ message CookingRecipeInfoModel {
 	int32 id = 1;
 	string name = 2;
 
-	optional string description = 3;
+	optional google.protobuf.StringValue description = 3;
 	google.protobuf.Timestamp publication_time = 4;
 	double rating = 5;
 	optional bool confirmed = 6; 
@@ -108,11 +108,11 @@ message GetCookingRecipesListModel {
 	}
 	int32 skip = 1;
 	int32 take = 2;
-	optional bool confirmed = 3;
+	optional google.protobuf.BoolValue confirmed = 3;
 	
 	RecipeSortingType sorting_type = 4;
-	optional string category = 5;
-	optional string text_filter = 6;
+	optional google.protobuf.StringValue category = 5;
+	optional google.protobuf.StringValue text_filter = 6;
 }
 
 message GetPublishedRecipeListModel {

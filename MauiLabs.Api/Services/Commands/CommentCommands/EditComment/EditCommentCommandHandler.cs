@@ -14,11 +14,11 @@ namespace MauiLabs.Api.Services.Commands.CommentCommands.EditComment
 
         public async Task Handle(EditCommentCommand request, CancellationToken cancellationToken)
         {
-            var commentFilter = (Comment p) => p.ProfileId == request.ProfileId && p.RecipeId == request.RecipeId;
             var requestType = typeof(EditCommentCommand);
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var comment = await dbcontext.Comments.FirstOrDefaultAsync(item => commentFilter.Invoke(item));
+                var comment = await dbcontext.Comments.FirstOrDefaultAsync(item => item.ProfileId == request.ProfileId 
+                    && item.RecipeId == request.RecipeId);
                 if (comment == null) throw new ApiServiceException("Комментарий не найден", requestType);
 
                 comment.Rating = request.Rating;

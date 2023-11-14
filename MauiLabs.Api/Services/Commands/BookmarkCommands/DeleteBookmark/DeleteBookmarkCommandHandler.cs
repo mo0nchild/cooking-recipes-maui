@@ -13,12 +13,12 @@ namespace MauiLabs.Api.Services.Commands.BookmarkCommands.DeleteBookmark
 
         public async Task Handle(DeleteBookmarkCommand request, CancellationToken cancellationToken)
         {
-            var deleteFilter = (Bookmark p) => p.ProfileId == request.ProfileId && p.RecipeId == request.RecipeId;
             var requestType = typeof(DeleteBookmarkCommand);
-
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var result = await dbcontext.Bookmarks.Where(item => deleteFilter.Invoke(item)).ExecuteDeleteAsync();
+                var result = await dbcontext.Bookmarks.Where(item => item.ProfileId == request.ProfileId 
+                    && item.RecipeId == request.RecipeId).ExecuteDeleteAsync();
+
                 if (result <= 0) throw new ApiServiceException("Заметка не найдена", requestType);
             }
         }
