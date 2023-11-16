@@ -23,6 +23,7 @@ namespace MauiLabs.Api.Services.Commands.FriendCommands.AddFriend
                 var profile = await dbcontext.UserProfiles.FirstOrDefaultAsync(p => p.ReferenceLink == request.ReferenceLink);
                 if (profile == null) throw new ApiServiceException("Профиль друга не найден", requestType);
 
+                if (profile.Id == request.RequesterId) throw new ApiServiceException("Нельзя добавлять себя в друзья", requestType);
                 var collision = await dbcontext.FriendsList.Include(item => item.Addressee).Include(item => item.Requester)
                     .FirstOrDefaultAsync(item => 
                         (item.RequesterId == request.RequesterId && item.Addressee.ReferenceLink == request.ReferenceLink) ||

@@ -16,6 +16,7 @@ namespace MauiLabs.Api.Services.Commands.RecommendCommands.AddRecommend
         public async Task Handle(AddRecommendCommand request, CancellationToken cancellationToken)
         {
             var requestType = typeof(AddRecommendCommand);
+            if (request.ToUserId == request.FromUserId) throw new ApiServiceException("Нельзя отправлять рекомендации себе", requestType);
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
                 if (await dbcontext.UserProfiles.FirstOrDefaultAsync(item => item.Id == request.FromUserId) == null)
