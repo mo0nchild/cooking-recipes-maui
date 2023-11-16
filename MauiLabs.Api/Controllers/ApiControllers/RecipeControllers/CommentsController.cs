@@ -10,6 +10,7 @@ using MauiLabs.Api.Services.Commands.CommentCommands.EditComment;
 using MauiLabs.Api.Services.Requests.CommentRequests.GetComment;
 using MauiLabs.Api.Services.Requests.CommentRequests.GetProfileCommentsList;
 using MauiLabs.Api.Services.Requests.CommentRequests.GetRecipeCommentsList;
+using MauiLabs.Api.Services.Requests.CommentRequests.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -148,15 +149,19 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetCommentHandler([FromQuery] GetCommentRequestModel request)
         {
-            var mappedRequest = this.mapper.Map<GetCommentRequest>(request);
-            try { return this.Ok(this.mapper.Map<GetCommentResponseModel>(await this.mediator.Send(mappedRequest))); }
-            catch (ValidationException errorInfo) 
+            CommentInfo? requestResult = default!;
+            try {
+                requestResult = await this.mediator.Send(this.mapper.Map<GetCommentRequest>(request));
+                if (requestResult == null) throw new ValidationException("Комментарий не найден");
+            }
+            catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
+            return this.Ok(this.mapper.Map<GetCommentResponseModel>(requestResult));
         }
         /// <summary>
-        /// Получение информации о комментарии при помощи токена при помощи токена
+        /// Получение информации о комментарии при помощи токена
         /// </summary>
         /// <param name="request">Данные для получения информации о комментарии</param>
         /// <returns>Информация о комментарии</returns>
@@ -168,11 +173,16 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             var mappedRequest = this.mapper.Map<GetCommentRequest>(request);
             mappedRequest.ProfileId = this.ProfileId;
 
-            try { return this.Ok(this.mapper.Map<GetCommentResponseModel>(await this.mediator.Send(mappedRequest))); }
+            CommentInfo? requestResult = default!;
+            try {
+                requestResult = await this.mediator.Send(mappedRequest);
+                if (requestResult == null) throw new ValidationException("Комментарий не найден");
+            }
             catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
             }
+            return this.Ok(this.mapper.Map<GetCommentResponseModel>(requestResult));
         }
         /// <summary>
         /// Получение списка комментарий пользователя
