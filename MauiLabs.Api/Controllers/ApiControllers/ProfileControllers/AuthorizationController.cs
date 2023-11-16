@@ -18,9 +18,9 @@ using MauiLabs.Api.Controllers.ApiModels.Authorization.Responses;
 using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace MauiLabs.Api.Controllers.ApiControllers
+namespace MauiLabs.Api.Controllers.ApiControllers.ProfileControllers
 {
-    using JwtBearerConfig = MauiLabs.Api.Commons.Authentication.ConfigureJwtBearer.JwtBearerConfig;
+    using JwtBearerConfig = ConfigureJwtBearer.JwtBearerConfig;
 
     [Route("cookingrecipes/auth"), AllowAnonymous]
     [ApiController]
@@ -33,7 +33,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public AuthorizationController(IMediator mediator, IMapper mapper, IOptions<JwtBearerConfig> tokenOptions) : base()
         {
             (this.mediator, this.mapper) = (mediator, mapper);
-            this._tokenConfig = tokenOptions.Value;
+            _tokenConfig = tokenOptions.Value;
         }
         /// <summary>
         /// Авторизация пользователя для дальнейшей работы в системе
@@ -46,32 +46,34 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         public async Task<IActionResult> LoginHandler([FromQuery] LoginRequestModel request)
         {
             AuthorizationInfo? result = default!;
-            try {
-                result = await this.mediator.Send(this.mapper.Map<AuthorizationRequest>(request));
+            try
+            {
+                result = await mediator.Send(mapper.Map<AuthorizationRequest>(request));
                 if (result == null) throw new ValidationException("Пользователь не найден");
             }
             catch (ValidationException errorInfo)
             {
-                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+                return this.Problem(errorInfo.Message, statusCode: StatusCodes.Status400BadRequest);
             }
             var resultClaims = new List<Claim>()
             {
-                new Claim(ClaimTypes.PrimarySid, result.Id.ToString()), 
+                new Claim(ClaimTypes.PrimarySid, result.Id.ToString()),
                 new Claim(ClaimTypes.Role, "User"),
             };
             if (result.IsAdmin) resultClaims.Add(new Claim(ClaimTypes.Role, "Admin"));
 
-            var encodingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._tokenConfig.SecretKey));
+            var encodingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenConfig.SecretKey));
             var securityToken = new JwtSecurityToken(
-                issuer: this._tokenConfig.Issuer,
-                audience: this._tokenConfig.Audience,
+                issuer: _tokenConfig.Issuer,
+                audience: _tokenConfig.Audience,
                 claims: resultClaims,
                 signingCredentials: new SigningCredentials(encodingKey, SecurityAlgorithms.HmacSha256));
 
-            return this.Ok(new LoginResponseModel() 
+            return this.Ok(new LoginResponseModel()
             {
                 JwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken),
-                IsAdmin = result.IsAdmin, ProfileId = result.Id,
+                IsAdmin = result.IsAdmin,
+                ProfileId = result.Id,
             });
         }
         /// <summary>
@@ -80,14 +82,14 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         /// <param name="request">Данные для регистрации пользователя</param>
         /// <returns>Токен авторизации</returns>
         [Route("registration"), HttpPost]
-        [ProducesResponseType(typeof(LoginResponseModel), (int)StatusCodes.Status200OK)]
-        [ProducesResponseType((int)StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(LoginResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RegistrationHandler([FromBody] RegistrationRequestModel request)
         {
-            try { await this.mediator.Send(this.mapper.Map<RegistrationCommand>(request)); }
-            catch (ValidationException errorInfo) 
+            try { await mediator.Send(mapper.Map<RegistrationCommand>(request)); }
+            catch (ValidationException errorInfo)
             {
-                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
+                return this.Problem(errorInfo.Message, statusCode: StatusCodes.Status400BadRequest);
             }
             var newRequest = new LoginRequestModel() { Login = request.Login, Password = request.Password };
             return await this.LoginHandler(newRequest);

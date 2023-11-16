@@ -1,5 +1,5 @@
 ﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Controllers.ApiModels.Commons;
+using MauiLabs.Api.Controllers.ApiModels.Commons.ProfileModels;
 using MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetBookmarksList;
 using MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models;
 

@@ -184,7 +184,9 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetProfileCommentsHandler([FromQuery] GetProfileCommentsRequestModel request)
         {
-            try { return this.Ok(await this.mediator.Send(this.mapper.Map<GetProfileCommentsListRequest>(request))); }
+            var mappedRequest = this.mapper.Map<GetProfileCommentsListRequest>(request);
+
+            try { return this.Ok(this.mapper.Map<GetCommentsResponseModel>(await this.mediator.Send(mappedRequest))); }
             catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
@@ -203,7 +205,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
             var mappedRequest = this.mapper.Map<GetProfileCommentsListRequest>(request);
             mappedRequest.ProfileId = this.ProfileId;
 
-            try { return this.Ok(await this.mediator.Send(mappedRequest)); }
+            try { return this.Ok(this.mapper.Map<GetCommentsResponseModel>(await this.mediator.Send(mappedRequest))); }
             catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
@@ -219,7 +221,9 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetRecipeCommentsHandler([FromQuery] GetRecipeCommentsRequestModel request)
         {
-            try { return this.Ok(await this.mediator.Send(this.mapper.Map<GetRecipeCommentsListRequest>(request))); }
+            var mappedRequest = this.mapper.Map<GetRecipeCommentsListRequest>(request);
+
+            try { return this.Ok(this.mapper.Map<GetCommentsResponseModel>(await this.mediator.Send(mappedRequest))); }
             catch (ValidationException errorInfo)
             {
                 return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);

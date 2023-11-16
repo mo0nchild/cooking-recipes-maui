@@ -7,10 +7,10 @@ namespace MauiLabs.Api.Services.Commands.RecommendCommands.AddRecommend
 {
     public partial class AddRecommendCommand : IRequest, IMappingTarget<Recommendation>
     {
-        public string Text { get; set; } = default!;
-        public int RecipeId { get; set; } = default!;
+        public required string Text { get; set; } = default!;
+        public required int RecipeId { get; set; } = default!;
 
-        public int FromUserId { get; set; } = default!;
-        public int ToUserId { get; set; } = default!;
+        public required int FromUserId { get; set; } = default!;
+        public required int ToUserId { get; set; } = default!;
     }
 }

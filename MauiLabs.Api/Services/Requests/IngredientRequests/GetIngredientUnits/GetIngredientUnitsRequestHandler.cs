@@ -14,13 +14,13 @@ namespace MauiLabs.Api.Services.Requests.IngredientRequests.GetIngredientUnits
 
         public async Task<IngredientUnitsCollection> Handle(GetIngredientUnitsRequest request, CancellationToken cancellationToken)
         {
-            using (var dbcontext = await _factory.CreateDbContextAsync(cancellationToken))
+            using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
                 var result = await dbcontext.IngredientUnits.ToListAsync();
                 return new IngredientUnitsCollection()
                 {
                     AllCount = result.Count,
-                    IngredientUnits = _mapper.Map<List<IngredientUnitInfo>>(result),
+                    IngredientUnits = this._mapper.Map<List<IngredientUnitInfo>>(result),
                 };
             }
         }

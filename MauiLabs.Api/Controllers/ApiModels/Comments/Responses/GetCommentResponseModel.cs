@@ -1,5 +1,5 @@
 ﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Controllers.ApiModels.Commons;
+using MauiLabs.Api.Controllers.ApiModels.Commons.ProfileModels;
 using MauiLabs.Api.Services.Requests.CommentRequests.Models;
 using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
 

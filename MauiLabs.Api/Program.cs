@@ -1,5 +1,6 @@
 using Calzolari.Grpc.AspNetCore.Validation;
 using MauiLabs.Api.Commons.Authentication;
+using MauiLabs.Api.Commons.ConfigureOptions;
 using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.RemoteServices;
 using MauiLabs.Api.RemoteServices.Implementations.CookingRecipe;
@@ -31,6 +32,7 @@ public static class Program : object
 
         builder.Services.Configure<JwtBearerConfig>(builder.Configuration.GetSection("Authentication"));
         builder.Services.ConfigureOptions<ConfigureJwtBearer>();
+        builder.Services.ConfigureOptions<ConfigureApiAccess>();
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
         builder.Services.AddAuthorization(options =>
@@ -79,6 +81,8 @@ public static class Program : object
         await builder.Services.AddApiServices(builder.Configuration);
 
         var application = builder.Build();
+        application.UseHttpsRedirection().UseStaticFiles();
+
         if (application.Environment.IsDevelopment())
         {
             application.UseSwagger();
@@ -88,8 +92,7 @@ public static class Program : object
                 options.InjectStylesheet("/styles/swagger-darkui.css");
             });
         }
-        application.UseHttpsRedirection().UseStaticFiles();
-        application.UseRequestLogging();
+        else application.UseApiAccess().UseRequestLogging();
         application.UseAuthentication().UseRouting().UseAuthorization();
 
         application.UseEndpoints(options => options.MapRemoteServices().MapControllers());

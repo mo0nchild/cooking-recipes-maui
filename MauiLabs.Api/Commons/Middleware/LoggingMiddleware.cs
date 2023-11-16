@@ -6,22 +6,22 @@ namespace MauiLabs.Api.Commons.Middleware
 {
     public partial class RequestLoggingMiddleware: object
     {
-        private readonly RequestDelegate _requestDelegate = default!;
-        private readonly IRequestLogging _requestLogging = default!;
+        protected internal readonly RequestDelegate requestDelegate = default!;
+        protected internal readonly IRequestLogging requestLogging = default!;
 
         public RequestLoggingMiddleware(RequestDelegate requestDelegate, IRequestLogging requestLogging) : base()
         {
-            this._requestDelegate = requestDelegate;
-            this._requestLogging = requestLogging;
+            this.requestDelegate = requestDelegate;
+            this.requestLogging = requestLogging;
         }
         public virtual async Task InvokeAsync(HttpContext context)
         {
-            await this._requestLogging.LogRequest(new LogRequestMessage()
+            await this.requestLogging.LogRequest(new LogRequestMessage()
             {
                 UserInfo = (context.Connection.RemoteIpAddress ?? IPAddress.Loopback).ToString(),
                 DateTime = DateTime.UtcNow, MethodName = context.Request.Path,
             });
-            await this._requestDelegate.Invoke(context);
+            await this.requestDelegate.Invoke(context);
         }
     }
     public static class UseRequestLoggingMiddlewareExtension : object

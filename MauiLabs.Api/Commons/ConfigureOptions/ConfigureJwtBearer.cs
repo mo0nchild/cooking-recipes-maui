@@ -19,7 +19,7 @@ namespace MauiLabs.Api.Commons.Authentication
             public string SecretKey { get; set; } = default!;
         }
         public virtual void Configure(string? name, JwtBearerOptions options) => this.Configure(options);
-        public void Configure(JwtBearerOptions options)
+        public virtual void Configure(JwtBearerOptions options)
         {
             //options.RequireHttpsMetadata = true;
             options.TokenValidationParameters = new TokenValidationParameters()

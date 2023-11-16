@@ -1,7 +1,7 @@
 ﻿using MauiLabs.Api.Commons.Mapping;
 using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
 
-namespace MauiLabs.Api.Controllers.ApiModels.Commons
+namespace MauiLabs.Api.Controllers.ApiModels.Commons.ProfileModels
 {
     /// <summary>
     /// Информация о профиле пользователя

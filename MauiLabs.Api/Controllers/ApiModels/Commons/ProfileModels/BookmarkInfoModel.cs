@@ -1,8 +1,11 @@
 ﻿using MauiLabs.Api.Commons.Mapping;
+using MauiLabs.Api.Controllers.ApiModels.Commons.RecipeModels;
+using MauiLabs.Api.Controllers.ApiModels.CookingRecipe.Requests;
+using MauiLabs.Api.Controllers.ApiModels.CookingRecipe.Responses;
 using MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models;
 using MauiLabs.Dal.Entities;
 
-namespace MauiLabs.Api.Controllers.ApiModels.Commons
+namespace MauiLabs.Api.Controllers.ApiModels.Commons.ProfileModels
 {
     /// <summary>
     /// Информация о заметке кулинарного рецепта
@@ -18,10 +21,10 @@ namespace MauiLabs.Api.Controllers.ApiModels.Commons
         /// Дата добавления заметки
         /// </summary>
         public required DateTime AddTime { get; set; } = default!;
-        
+
         /// <summary>
         /// Данные рецепта, который добавлен как заметка
         /// </summary>
-        public required CookingRecipeInfoModel Recipe { get; set; } = default!;
+        public required GetRecipeResponseModel Recipe { get; set; } = default!;
     }
 }

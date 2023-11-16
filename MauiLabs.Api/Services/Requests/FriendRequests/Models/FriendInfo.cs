@@ -4,6 +4,7 @@ using MauiLabs.Dal.Entities;
 
 namespace MauiLabs.Api.Services.Requests.FriendRequests.Models
 {
+
     public partial class FriendInfo : IMappingTarget<FriendList>
     {
         public required int Id { get; set; } = default!;

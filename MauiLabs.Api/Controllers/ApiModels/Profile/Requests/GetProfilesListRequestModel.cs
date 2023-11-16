@@ -17,13 +17,15 @@ namespace MauiLabs.Api.Controllers.ApiModels.Profile.Requests
         /// <summary>
         /// Количество пропускаемых записей
         /// </summary>
-        [Required(ErrorMessage = "Необходимо указать количество пропускаемых записей")]
+        [Required(ErrorMessage = "Необходимо указать количество пропускаемых записей записей")]
+        [Range(0, int.MaxValue, ErrorMessage = "Значение [Skip] не может быть отрицательным")]
         public required int Skip { get; set; } = default!;
 
         /// <summary>
         /// Количество загружаемый записей
         /// </summary>
-        [Required(ErrorMessage = "Необходимо указать количество загружаемый записей")]
+        [Required(ErrorMessage = "Необходимо указать количество обработанных записей записей")]
+        [Range(0, int.MaxValue, ErrorMessage = "Значение [Take] не может быть отрицательным")]
         public required int Take { get; set; } = default!;
     }
 }

@@ -20,13 +20,14 @@ namespace MauiLabs.Api.Services.Requests.ProfileRequests.GetAllProfiles
         {
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var profiles = await dbcontext.UserProfiles.Where(item => 
-                    request.TextFilter == null ? true : Regex.IsMatch($"{item.Name} {item.Surname}", request.TextFilter))
-                    .Skip(request.Skip).Take(request.Take).ToListAsync();
+                var profiles = dbcontext.UserProfiles.Where(item 
+                    => request.TextFilter == null ? true : Regex.IsMatch($"{item.Name} {item.Surname}", request.TextFilter));
+
+                var result = await profiles.Skip(request.Skip).Take(request.Take).ToListAsync();
                 return new ProfileCollection() 
                 { 
-                    AllCount = await dbcontext.UserProfiles.CountAsync(),
-                    Profiles = this._mapper.Map<List<ProfileInfo>>(profiles) 
+                    AllCount = await profiles.CountAsync(),
+                    Profiles = this._mapper.Map<List<ProfileInfo>>(result) 
                 };
             }
         }

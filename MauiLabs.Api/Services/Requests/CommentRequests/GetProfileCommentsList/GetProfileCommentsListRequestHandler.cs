@@ -19,20 +19,20 @@ namespace MauiLabs.Api.Services.Requests.CommentRequests.GetProfileCommentsList
         {
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var requestResult = await dbcontext.Comments.Where(item => item.ProfileId == request.ProfileId)
-                    .Include(item => item.Profile)
-                    .Skip(request.Skip).Take(request.Take).ToListAsync();
+                var requestResult = dbcontext.Comments.Where(item => item.ProfileId == request.ProfileId)
+                    .Include(item => item.Profile);
+                var filtredResult = await requestResult.Skip(request.Skip).Take(request.Take).ToListAsync() ;
                 var sortedResult = (request.SortingType switch
                 {
-                    CommentSortingType.ByRating => requestResult.OrderByDescending(item => item.Rating),
-                    CommentSortingType.ByDate => requestResult.OrderByDescending(item => item.PublicationTime),
+                    CommentSortingType.ByRating => filtredResult.OrderByDescending(item => item.Rating),
+                    CommentSortingType.ByDate => filtredResult.OrderByDescending(item => item.PublicationTime),
                     _ => throw new ApiServiceException("Не установлен режим сортировки", typeof(GetRecipeCommentsListRequest)),
                 })
                 .ToImmutableList();
                 return new CommentsList()
                 {
                     Comments = this._mapper.Map<List<CommentInfo>>(sortedResult),
-                    AllCount = requestResult.Count,
+                    AllCount = await requestResult.CountAsync(),
                 };
             }
         }

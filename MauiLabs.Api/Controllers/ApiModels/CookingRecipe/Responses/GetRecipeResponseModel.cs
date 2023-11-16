@@ -1,28 +1,29 @@
 ﻿using MauiLabs.Api.Commons.Mapping;
+using MauiLabs.Api.Controllers.ApiModels.Commons.RecipeModels;
 using MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models;
 
-namespace MauiLabs.Api.Controllers.ApiModels.Commons
+namespace MauiLabs.Api.Controllers.ApiModels.CookingRecipe.Responses
 {
     /// <summary>
-    /// Полные данные о кулинарном рецепте
+    /// Информация о кулинарном рецепте
     /// </summary>
-    public partial class CookingRecipeInfoModel : IMappingTarget<CookingRecipeInfo>
+    public partial class GetRecipeResponseModel : IMappingTarget<CookingRecipeInfo>
     {
         /// <summary>
         /// Идентификатор рецепта
         /// </summary>
         public required int Id { get; set; } = default!;
-        
+
         /// <summary>
         /// Название рецепта
         /// </summary>
         public required string Name { get; set; } = default!;
-        
+
         /// <summary>
         /// Описание рецепта
         /// </summary>
         public string? Description { get; set; } = default!;
-        
+
         /// <summary>
         /// Изображение рецепта
         /// </summary>
@@ -32,12 +33,12 @@ namespace MauiLabs.Api.Controllers.ApiModels.Commons
         /// Дата и время публикации записи
         /// </summary>
         public required DateTime PublicationTime { get; set; } = default!;
-        
+
         /// <summary>
         /// Среднее значение рейтинга рецепта
         /// </summary>
         public required double Rating { get; set; } = default!;
-        
+
         /// <summary>
         /// Значение, которое определяет - подтвержден рецепт администратором
         /// </summary>
@@ -47,7 +48,7 @@ namespace MauiLabs.Api.Controllers.ApiModels.Commons
         /// Список необходимых ингредиентов
         /// </summary>
         public required List<IngredientInfoModel> Ingredients { get; set; } = new();
-        
+
         /// <summary>
         /// Информация о пользователе, который опубликовал рецепт
         /// </summary>
