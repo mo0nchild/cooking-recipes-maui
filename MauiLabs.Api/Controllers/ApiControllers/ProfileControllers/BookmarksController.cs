@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.Controllers.ApiModels.Authorization;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Responses;
@@ -22,7 +23,7 @@ using static MauiLabs.Api.Commons.Authentication.ConfigureJwtBearer;
 namespace MauiLabs.Api.Controllers.ApiControllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
-    [Route("cookingrecipes/bookmarks"), ApiController]
+    [Route("cookingrecipes/bookmarks"), ApiController, TypeFilter(typeof(ProfileCheckFilter))]
     public partial class BookmarksController(IMediator mediator, IMapper mapper) : ControllerBase
     {
         protected internal readonly IMediator mediator = mediator;

@@ -30,7 +30,13 @@ public static class Program : object
         builder.Services.AddControllers();
         builder.Services.AddProblemDetails();
 
-        builder.Services.Configure<JwtBearerConfig>(builder.Configuration.GetSection("Authentication"));
+        //builder.Services.Configure<JwtBearerConfig>(builder.Configuration.GetSection("Authentication"));
+        builder.Services.Configure<JwtBearerConfig>(options =>
+        {
+            var authOptions = builder.Configuration.GetSection("Authentication").Get<JwtBearerConfig>()!;
+            options.SecretKey = Guid.NewGuid().ToString();
+            (options.Issuer, options.Audience) = (authOptions.Issuer, authOptions.Audience);
+        });
         builder.Services.ConfigureOptions<ConfigureJwtBearer>();
         builder.Services.ConfigureOptions<ConfigureApiAccess>();
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Comments.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Comments.Responses;
@@ -21,7 +22,7 @@ using System.Security.Claims;
 namespace MauiLabs.Api.Controllers.ApiControllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
-    [Route("cookingrecipes/comments"), ApiController]
+    [Route("cookingrecipes/comments"), ApiController, TypeFilter(typeof(ProfileCheckFilter))]
     public partial class CommentsController(IMediator mediator, IMapper mapper) : ControllerBase
     {
         protected internal readonly IMediator mediator = mediator;

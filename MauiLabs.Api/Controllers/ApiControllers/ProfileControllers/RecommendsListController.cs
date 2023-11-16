@@ -2,6 +2,7 @@
 using FluentValidation;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests;
 using MauiLabs.Api.Controllers.ApiModels.RecommendsList.Requests;
 using MauiLabs.Api.Controllers.ApiModels.RecommendsList.Responses;
@@ -24,7 +25,7 @@ using System.Security.Claims;
 namespace MauiLabs.Api.Controllers.ApiControllers.ProfileControllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
-    [Route("cookingrecipes/recommends"), ApiController]
+    [Route("cookingrecipes/recommends"), ApiController, TypeFilter(typeof(ProfileCheckFilter))]
     public partial class RecommendsListController(IMediator mediator, IMapper mapper) : ControllerBase
     {
         protected internal readonly IMediator mediator = mediator;

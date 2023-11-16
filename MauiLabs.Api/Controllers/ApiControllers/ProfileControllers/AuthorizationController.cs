@@ -46,8 +46,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers.ProfileControllers
         public async Task<IActionResult> LoginHandler([FromQuery] LoginRequestModel request)
         {
             AuthorizationInfo? result = default!;
-            try
-            {
+            try {
                 result = await mediator.Send(mapper.Map<AuthorizationRequest>(request));
                 if (result == null) throw new ValidationException("Пользователь не найден");
             }
@@ -72,8 +71,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers.ProfileControllers
             return this.Ok(new LoginResponseModel()
             {
                 JwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken),
-                IsAdmin = result.IsAdmin,
-                ProfileId = result.Id,
+                IsAdmin = result.IsAdmin, ProfileId = result.Id,
             });
         }
         /// <summary>

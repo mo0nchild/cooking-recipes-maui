@@ -2,6 +2,7 @@
 using FluentValidation;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.Controllers.ApiModels.Comments.Requests;
 using MauiLabs.Api.Controllers.ApiModels.FriendsList.Requests;
 using MauiLabs.Api.Controllers.ApiModels.FriendsList.Responses;
@@ -21,7 +22,7 @@ using System.Security.Claims;
 namespace MauiLabs.Api.Controllers.ApiControllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
-    [Route("cookingrecipes/friends"), ApiController]
+    [Route("cookingrecipes/friends"), ApiController, TypeFilter(typeof(ProfileCheckFilter))]
     public partial class FriendsListController(IMediator mediator, IMapper mapper) : ControllerBase
     {
         protected internal readonly IMediator mediator = mediator;
