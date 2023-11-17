@@ -20,8 +20,8 @@ namespace MauiLabs.Api.Services.Requests.ProfileRequests.GetAllProfiles
         {
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var profiles = dbcontext.UserProfiles.Where(item 
-                    => request.TextFilter == null ? true : Regex.IsMatch(item.Name + " " + item.Surname, request.TextFilter));
+                var profiles = dbcontext.UserProfiles.Where(item => request.TextFilter == null 
+                    ? true : Regex.IsMatch(item.Name + " " + item.Surname, request.TextFilter, RegexOptions.IgnoreCase));
 
                 var result = await profiles.Skip(request.Skip).Take(request.Take).ToListAsync();
                 return new ProfileCollection() 

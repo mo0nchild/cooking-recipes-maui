@@ -12,6 +12,7 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models
 
         public string? Description { get; set; } = default!;
         public byte[]? Image { get; set; } = default!;
+        public string? Category { get; set; } = default!;
 
         public required DateTime PublicationTime { get; set; } = default!;
         public required double Rating { get; set; } = default!;
@@ -26,6 +27,8 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models
             var averageFilter = (CookingRecipe p) => p.Comments.Sum(op => (double)op.Rating / p.Comments.Count());
 
             profile.CreateMap<CookingRecipe, CookingRecipeInfo>()
+                .ForMember(item => item.Category, options => options.MapFrom(p => p.RecipeCategory == null
+                    ? null : p.RecipeCategory.Name))
                 .ForMember(item => item.Rating, options => options.MapFrom(p => averageFilter.Invoke(p)));
         }
     }

@@ -25,6 +25,11 @@ namespace MauiLabs.Api.Controllers.ApiModels.CookingRecipe.Responses
         public string? Description { get; set; } = default!;
 
         /// <summary>
+        /// Категория рецепта
+        /// </summary>
+        public string? Category { get; set; } = default!;
+
+        /// <summary>
         /// Изображение рецепта
         /// </summary>
         public byte[]? Image { get; set; } = default!;

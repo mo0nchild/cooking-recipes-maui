@@ -19,6 +19,7 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetPublishedRecip
                 var requestResult = await dbcontext.CookingRecipes.Where(item => item.PublisherId == request.PublisherId)
                     .Include(item => item.Publisher)
                     .Include(item => item.Comments)
+                    .Include(item => item.RecipeCategory)
                     .Include(item => item.Ingredients).ToListAsync();
                 return new CookingRecipesList()
                 {

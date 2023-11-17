@@ -16,7 +16,7 @@ using MauiLabs.Api.Services.Requests.ProfileRequests.AuthorizationProfile;
 using MauiLabs.Api.Controllers.ApiModels.Authorization.Requests;
 using MauiLabs.Api.Controllers.ApiModels.Authorization.Responses;
 using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
-using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 
 namespace MauiLabs.Api.Controllers.ApiControllers.ProfileControllers
 {

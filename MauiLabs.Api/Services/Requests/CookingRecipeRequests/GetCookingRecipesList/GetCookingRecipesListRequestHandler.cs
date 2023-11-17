@@ -26,9 +26,11 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetCookingRecipes
                 var requestResult = dbcontext.CookingRecipes.Include(item => item.RecipeCategory)
                     .Where(item => request.Confirmed == null ? true : item.Confirmed == request.Confirmed)
                     .Where(item => request.Category == null ? true : item.RecipeCategory!.Name == request.Category)
-                    .Where(item => request.TextFilter == null ? true : Regex.IsMatch(item.Name, request.TextFilter))
+                    .Where(item => request.TextFilter == null 
+                        ? true : Regex.IsMatch(item.Name, request.TextFilter, RegexOptions.IgnoreCase))
                     .Include(item => item.Publisher)
                     .Include(item => item.Comments)
+                    .Include(item => item.RecipeCategory)
                     .Include(item => item.Ingredients);
                 var filtredResult = await requestResult.Skip(request.Skip).Take(request.Take).ToListAsync();
                 var orderedResult = (request.SortingType switch

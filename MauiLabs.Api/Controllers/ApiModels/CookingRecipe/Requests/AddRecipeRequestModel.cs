@@ -50,7 +50,7 @@ namespace MauiLabs.Api.Controllers.ApiModels.CookingRecipe.Requests
             foreach(var item in this.Ingredients)
             {
                 var results = new List<ValidationResult>();
-                if (Validator.TryValidateObject(item.Value, new ValidationContext(item), results, true))
+                if (Validator.TryValidateObject(item.Value, new ValidationContext(item.Value), results, true))
                 {
                     validationResult.AddRange(results);
                 }

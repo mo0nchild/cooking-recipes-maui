@@ -23,12 +23,12 @@ namespace MauiLabs.Api.Controllers.ApiModels.Commons.ProfileModels
         /// <summary>
         /// Данные пользователя отправителя
         /// </summary>
-        public required ProfileInfo FromUser { get; set; } = default!;
+        public required ProfileInfoModel FromUser { get; set; } = default!;
 
         /// <summary>
         /// Данные пользователя получателя
         /// </summary>
-        public required ProfileInfo ToUser { get; set; } = default!;
+        public required ProfileInfoModel ToUser { get; set; } = default!;
 
         /// <summary>
         /// Данные кулинарного рецепта

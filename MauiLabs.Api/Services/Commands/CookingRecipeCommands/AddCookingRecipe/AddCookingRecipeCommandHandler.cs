@@ -35,7 +35,7 @@ namespace MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe
                     var ingredientUnit = await dbcontext.IngredientUnits.FirstOrDefaultAsync(p => p.Name == ingredient.Value.Unit);
                     if (ingredientUnit == null)
                     {
-                        throw new ApiServiceException($"Единица измерения не найдена: {ingredient.Key}", requestType);
+                        throw new ApiServiceException($"Единица измерения не найдена: {ingredient.Value.Unit}", requestType);
                     }
                     mappedModel.Ingredients.Add(new IngredientsList() 
                     {

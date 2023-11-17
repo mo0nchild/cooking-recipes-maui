@@ -22,8 +22,10 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetBookmarksList
                 var requestResult = await dbcontext.Bookmarks.Where(item => item.ProfileId == request.ProfileId)
                     .Include(item => item.Recipe).ThenInclude(item => item.Publisher)
                     .Include(item => item.Recipe).ThenInclude(item => item.Comments)
+                    .Include(item => item.Recipe).ThenInclude(item => item.RecipeCategory)
                     .Include(item => item.Recipe).ThenInclude(item => item.Ingredients)
-                    .Where(item => request.TextFilter == null ? true : Regex.IsMatch(item.Recipe.Name, request.TextFilter)).ToListAsync();
+                    .Where(item => request.TextFilter == null 
+                        ? true : Regex.IsMatch(item.Recipe.Name, request.TextFilter, RegexOptions.IgnoreCase)).ToListAsync();
                 var sortedResult = (request.ReverseOrder switch
                 {
                     false => requestResult.OrderByDescending(item => item.AddTime),
