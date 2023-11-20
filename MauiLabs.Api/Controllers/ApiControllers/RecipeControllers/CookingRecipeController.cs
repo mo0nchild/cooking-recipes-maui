@@ -3,9 +3,9 @@ using FluentValidation;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MauiLabs.Api.Commons.Middleware;
-using MauiLabs.Api.Controllers.ApiModels.CookingRecipe.Requests;
-using MauiLabs.Api.Controllers.ApiModels.CookingRecipe.Responses;
 using MauiLabs.Api.Controllers.ApiModels.FriendsList.Requests;
+using MauiLabs.Api.Controllers.ApiModels.RecipeModels.CookingRecipe.Requests;
+using MauiLabs.Api.Controllers.ApiModels.RecipeModels.CookingRecipe.Responses;
 using MauiLabs.Api.RemoteServices.Implementations.CookingRecipe;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.ConfirmeCookingRecipe;
@@ -51,7 +51,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers.RecipeControllers
         [Route("add"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddRecipeHandler([FromBody] AddRecipeRequestModel request)
+        public async Task<IActionResult> AddRecipeHandler([FromBody] AddRecipeByIdRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddCookingRecipeCommand>(request)); }
             catch (ValidationException errorInfo)
@@ -68,7 +68,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers.RecipeControllers
         [Route("addbytoken"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddRecipeByTokenHandler([FromBody] AddRecipeByTokenRequestModel request)
+        public async Task<IActionResult> AddRecipeByTokenHandler([FromBody] AddRecipeRequestModel request)
         {
             var mappedRequest = this.mapper.Map<AddCookingRecipeCommand>(request);
             mappedRequest.PublisherId = this.ProfileId;

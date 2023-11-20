@@ -13,10 +13,10 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Text;
 using MauiLabs.Api.Services.Commands.ProfileCommands.RegistrationProfile;
 using MauiLabs.Api.Services.Requests.ProfileRequests.AuthorizationProfile;
-using MauiLabs.Api.Controllers.ApiModels.Authorization.Requests;
-using MauiLabs.Api.Controllers.ApiModels.Authorization.Responses;
 using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
 using FluentValidation;
+using MauiLabs.Api.Controllers.ApiModels.ProfileModels.Authorization.Requests;
+using MauiLabs.Api.Controllers.ApiModels.ProfileModels.Authorization.Responses;
 
 namespace MauiLabs.Api.Controllers.ApiControllers.ProfileControllers
 {

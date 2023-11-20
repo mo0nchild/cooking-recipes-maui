@@ -1,6 +1,4 @@
-﻿using MauiLabs.Dal;
-using MauiLabs.Dal.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
@@ -19,27 +17,19 @@ namespace MauiLabs.View.ViewModels
 {
     public partial class UserListVm : INotifyPropertyChanged
     {
-        private readonly IDbContextFactory<CookingRecipeDbContext> _factory = default!;
-
-        public ObservableCollection<UserProfile> UserProfiles { get; set; } = new();
         public ICommand AddProfile { get; set; } = default!;
         public ICommand SelectProfile { get; set; } = default!;
 
-        public UserListVm(IDbContextFactory<CookingRecipeDbContext> factory) : base()
+        public UserListVm() : base()
         {
             this.AddProfile = new Command(this.AddProfileHandler);
             this.SelectProfile = new Command(this.SelectProfileHandler);
-
-            this._factory = factory;
             Task.Run(this.InitianlizeAsync).Wait();
         }
 
         protected virtual async Task InitianlizeAsync()
         {
-            using (var dbcontext = await this._factory.CreateDbContextAsync())
-            {
-                this.UserProfiles = new ObservableCollection<UserProfile>(await dbcontext.UserProfiles.ToListAsync());
-            }
+            await Task.Run(() => { });
         }
 
         public virtual async void SelectProfileHandler(object @string)

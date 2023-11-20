@@ -1,4 +1,3 @@
-using MauiLabs.Dal.Entities;
 using MauiLabs.View.ViewModels;
 
 namespace MauiLabs.View.Pages;

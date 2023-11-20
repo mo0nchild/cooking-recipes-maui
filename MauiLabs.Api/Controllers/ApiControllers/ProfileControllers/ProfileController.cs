@@ -2,8 +2,8 @@
 using FluentValidation;
 using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks;
-using MauiLabs.Api.Controllers.ApiModels.Profile.Requests;
-using MauiLabs.Api.Controllers.ApiModels.Profile.Responses;
+using MauiLabs.Api.Controllers.ApiModels.ProfileModels.Profile.Requests;
+using MauiLabs.Api.Controllers.ApiModels.ProfileModels.Profile.Responses;
 using MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark;
 using MauiLabs.Api.Services.Commands.ProfileCommands.ChangePassword;
 using MauiLabs.Api.Services.Commands.ProfileCommands.DeleteProfile;
@@ -36,7 +36,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("editbytoken"), HttpPut]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> EditProfileByTokenHandler([FromBody] EditProfileByTokenRequestModel request)
+        public async Task<IActionResult> EditProfileByTokenHandler([FromBody] EditProfileRequestModel request)
         {
             var mappedRequest = this.mapper.Map<EditProfileCommand>(request);
             mappedRequest.Id = this.ProfileId;
@@ -131,7 +131,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("edit"), HttpPut]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> EditProfileHandler([FromBody] EditProfileRequestModel request)
+        public async Task<IActionResult> EditProfileHandler([FromBody] EditProfileByIdRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<EditProfileCommand>(request)); }
             catch (ValidationException errorInfo)
@@ -166,7 +166,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("editbytoken/password"), HttpPatch]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> ChangePasswordByTokenHandler([FromBody] ChangePasswordByTokenRequestModel request)
+        public async Task<IActionResult> ChangePasswordByTokenHandler([FromBody] ChangePasswordRequestModel request)
         {
             var mappedRequest = this.mapper.Map<ChangePasswordCommand>(request);
             mappedRequest.Id = this.ProfileId;
@@ -187,7 +187,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("edit/password"), HttpPatch]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> ChangePasswordHandler([FromBody] ChangePasswordRequestModel request)
+        public async Task<IActionResult> ChangePasswordHandler([FromBody] ChangePasswordByIdRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<ChangePasswordCommand>(request)); }
             catch (ValidationException errorInfo)

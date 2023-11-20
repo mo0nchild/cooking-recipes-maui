@@ -2,8 +2,8 @@
 using FluentValidation;
 using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.Controllers.ApiModels.Authorization;
-using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests;
-using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Responses;
+using MauiLabs.Api.Controllers.ApiModels.ProfileModels.Bookmarks.Requests;
+using MauiLabs.Api.Controllers.ApiModels.ProfileModels.Bookmarks.Responses;
 using MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark;
 using MauiLabs.Api.Services.Commands.BookmarkCommands.DeleteBookmark;
 using MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetBookmarksList;
@@ -39,7 +39,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("add"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddBookmarkHandler([FromBody] AddBookmarkRequestModel request)
+        public async Task<IActionResult> AddBookmarkHandler([FromBody] AddBookmarkByIdRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddBookmarkCommand>(request)); }
             catch (ValidationException errorInfo) 
@@ -56,7 +56,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("addbytoken"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddBookmarkByTokenHandler([FromBody] AddBookmarkByTokenRequestModel request)
+        public async Task<IActionResult> AddBookmarkByTokenHandler([FromBody] AddBookmarkRequestModel request)
         {
             var mappedRequest = this.mapper.Map<AddBookmarkCommand>(request);
             mappedRequest.ProfileId = this.ProfileId;
@@ -77,7 +77,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("delete"), HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteBookmarkHandler([FromQuery] DeleteBookmarkRequestModel request)
+        public async Task<IActionResult> DeleteBookmarkHandler([FromQuery] DeleteBookmarkByIdRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<DeleteBookmarkCommand>(request)); }
             catch (ValidationException errorInfo)
@@ -94,7 +94,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("deletebytoken"), HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteBookmarkByTokenHandler([FromQuery] DeleteBookmarkByTokenRequestModel request)
+        public async Task<IActionResult> DeleteBookmarkByTokenHandler([FromQuery] DeleteBookmarkRequestModel request)
         {
             var mappedRequest = this.mapper.Map<DeleteBookmarkCommand>(request);
             mappedRequest.ProfileId = this.ProfileId;
@@ -114,7 +114,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("getlistbytoken"), HttpGet]
         [ProducesResponseType(typeof(GetBookmarksResponseModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetBookmarksListByTokenHandler([FromQuery] GetBookmarksByTokenRequestModel request)
+        public async Task<IActionResult> GetBookmarksListByTokenHandler([FromQuery] GetBookmarksRequestModel request)
         {
             var mappedRequest = this.mapper.Map<GetBookmarksListRequest>(request);
             mappedRequest.ProfileId = this.ProfileId;
@@ -133,7 +133,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("getlist"), HttpGet]
         [ProducesResponseType(typeof(GetBookmarksResponseModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetBookmarksListHandler([FromQuery] GetBookmarksRequestModel request)
+        public async Task<IActionResult> GetBookmarksListHandler([FromQuery] GetBookmarksByIdRequestModel request)
         {
             var mappedRequest = this.mapper.Map<GetBookmarksListRequest>(request);
 

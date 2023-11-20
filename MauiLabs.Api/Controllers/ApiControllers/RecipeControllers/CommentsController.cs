@@ -2,8 +2,8 @@
 using FluentValidation;
 using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests;
-using MauiLabs.Api.Controllers.ApiModels.Comments.Requests;
-using MauiLabs.Api.Controllers.ApiModels.Comments.Responses;
+using MauiLabs.Api.Controllers.ApiModels.RecipeModels.Comments.Requests;
+using MauiLabs.Api.Controllers.ApiModels.RecipeModels.Comments.Responses;
 using MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark;
 using MauiLabs.Api.Services.Commands.CommentCommands.AddComment;
 using MauiLabs.Api.Services.Commands.CommentCommands.DeleteComment;
@@ -38,7 +38,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("add"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddCommentHandler([FromBody] AddCommentRequestModel request)
+        public async Task<IActionResult> AddCommentHandler([FromBody] AddCommentByIdRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddCommentCommand>(request)); }
             catch (ValidationException errorInfo)
@@ -55,7 +55,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("addbytoken"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddCommentByTokenHandler([FromBody] AddCommentByTokenRequestModel request)
+        public async Task<IActionResult> AddCommentByTokenHandler([FromBody] AddCommentRequestModel request)
         {
             var mappedRequest = this.mapper.Map<AddCommentCommand>(request);
             mappedRequest.ProfileId = this.ProfileId;
@@ -76,7 +76,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("delete"), HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteCommentHandler([FromQuery] DeleteCommentRequestModel request)
+        public async Task<IActionResult> DeleteCommentHandler([FromQuery] DeleteCommentByIdRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<DeleteCommentCommand>(request)); }
             catch (ValidationException errorInfo)
@@ -93,7 +93,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("deletebytoken"), HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteCommentByTokenHandler([FromQuery] DeleteCommentByTokenRequestModel request)
+        public async Task<IActionResult> DeleteCommentByTokenHandler([FromQuery] DeleteCommentRequestModel request)
         {
             try { await this.mediator.Send(new DeleteCommentCommand() { ProfileId = this.ProfileId, RecipeId = request.RecipeId }); }
             catch (ValidationException errorInfo)
@@ -111,7 +111,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("edit"), HttpPut]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> EditCommentHandler([FromBody] EditCommentRequestModel request)
+        public async Task<IActionResult> EditCommentHandler([FromBody] EditCommentByIdRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<EditCommentCommand>(request)); }
             catch (ValidationException errorInfo)
@@ -128,7 +128,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("editbytoken"), HttpPut]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> EditCommentByTokenHandler([FromBody] EditCommentByTokenRequestModel request)
+        public async Task<IActionResult> EditCommentByTokenHandler([FromBody] EditCommentRequestModel request)
         {
             var mappedResult = this.mapper.Map<EditCommentCommand>(request);
             mappedResult.ProfileId = this.ProfileId;
@@ -148,7 +148,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("get"), HttpGet]
         [ProducesResponseType(typeof(GetCommentResponseModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetCommentHandler([FromQuery] GetCommentRequestModel request)
+        public async Task<IActionResult> GetCommentHandler([FromQuery] GetCommentByIdRequestModel request)
         {
             CommentInfo? requestResult = default!;
             try {
@@ -169,7 +169,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("getbytoken"), HttpGet]
         [ProducesResponseType(typeof(GetCommentResponseModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetCommentByTokenHandler([FromQuery] GetCommentByTokenRequestModel request)
+        public async Task<IActionResult> GetCommentByTokenHandler([FromQuery] GetCommentRequestModel request)
         {
             var mappedRequest = this.mapper.Map<GetCommentRequest>(request);
             mappedRequest.ProfileId = this.ProfileId;
@@ -193,7 +193,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("getlist/byprofile"), HttpGet]
         [ProducesResponseType(typeof(GetCommentsResponseModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetProfileCommentsHandler([FromQuery] GetProfileCommentsRequestModel request)
+        public async Task<IActionResult> GetProfileCommentsHandler([FromQuery] GetProfileCommentsByIdRequestModel request)
         {
             var mappedRequest = this.mapper.Map<GetProfileCommentsListRequest>(request);
 
@@ -211,7 +211,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("getlistbytoken/byprofile"), HttpGet]
         [ProducesResponseType(typeof(GetCommentsResponseModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetProfileCommentsByTokenHandler([FromQuery] GetProfileCommentsByTokenRequestModel request)
+        public async Task<IActionResult> GetProfileCommentsByTokenHandler([FromQuery] GetProfileCommentsRequestModel request)
         {
             var mappedRequest = this.mapper.Map<GetProfileCommentsListRequest>(request);
             mappedRequest.ProfileId = this.ProfileId;

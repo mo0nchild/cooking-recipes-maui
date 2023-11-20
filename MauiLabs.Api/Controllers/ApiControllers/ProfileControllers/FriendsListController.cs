@@ -4,8 +4,8 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.Controllers.ApiModels.Comments.Requests;
-using MauiLabs.Api.Controllers.ApiModels.FriendsList.Requests;
-using MauiLabs.Api.Controllers.ApiModels.FriendsList.Responses;
+using MauiLabs.Api.Controllers.ApiModels.ProfileModels.FriendsList.Requests;
+using MauiLabs.Api.Controllers.ApiModels.ProfileModels.FriendsList.Responses;
 using MauiLabs.Api.Services.Commands.CommentCommands.AddComment;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe;
 using MauiLabs.Api.Services.Commands.FriendCommands.AddFriend;
@@ -38,7 +38,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("add"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddFriendHandler([FromBody] AddFriendRequestModel request)
+        public async Task<IActionResult> AddFriendHandler([FromBody] AddFriendByIdRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddFriendCommand>(request)); }
             catch (ValidationException errorInfo)
@@ -55,7 +55,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers
         [Route("addbytoken"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddFriendByTokenHandler([FromBody] AddFriendByTokenRequestModel request)
+        public async Task<IActionResult> AddFriendByTokenHandler([FromBody] AddFriendRequestModel request)
         {
             var mappedRequest = this.mapper.Map<AddFriendCommand>(request);
             mappedRequest.RequesterId = this.ProfileId;

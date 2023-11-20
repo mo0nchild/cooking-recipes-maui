@@ -3,22 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiLabs.View.Pages.MainPage"
              Title="Начальная страница">
+    <ContentPage.Resources>
 
+    </ContentPage.Resources>
     <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
-
-            <Button
-                x:Name="OpenAnotherPage"
-                WidthRequest="300" HeightRequest="180"
-                BorderColor="#D78ADB" BorderWidth="3"
-                Text="Перейти на страницу c пользователями"
-                SemanticProperties.Hint="НАжмите кнопку для перехода на страницу"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
-
+        <VerticalStackLayout Spacing="25" Padding="30,0" VerticalOptions="Center">
+            <ActivityIndicator x:Name="activity" Color="Crimson" IsRunning="False" />
+            <Button Text="Отправить" HeightRequest="200" WidthRequest="200" Clicked="OnCounterClicked" />
         </VerticalStackLayout>
     </ScrollView>
 

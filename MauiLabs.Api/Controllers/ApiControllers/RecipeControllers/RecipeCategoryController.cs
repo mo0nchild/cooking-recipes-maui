@@ -2,8 +2,8 @@
 using FluentValidation;
 using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.Controllers.ApiModels.Profile.Requests;
-using MauiLabs.Api.Controllers.ApiModels.RecipeCategory.Requests;
-using MauiLabs.Api.Controllers.ApiModels.RecipeCategory.Responses;
+using MauiLabs.Api.Controllers.ApiModels.RecipeModels.RecipeCategory.Requests;
+using MauiLabs.Api.Controllers.ApiModels.RecipeModels.RecipeCategory.Responses;
 using MauiLabs.Api.Services.Commands.ProfileCommands.EditProfile;
 using MauiLabs.Api.Services.Commands.RecipeCategoryCommands.AddRecipeCategory;
 using MauiLabs.Api.Services.Commands.RecipeCategoryCommands.DeleteRecipeCategory;

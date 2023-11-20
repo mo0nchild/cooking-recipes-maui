@@ -4,8 +4,8 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests;
-using MauiLabs.Api.Controllers.ApiModels.RecommendsList.Requests;
-using MauiLabs.Api.Controllers.ApiModels.RecommendsList.Responses;
+using MauiLabs.Api.Controllers.ApiModels.ProfileModels.RecommendsList.Requests;
+using MauiLabs.Api.Controllers.ApiModels.ProfileModels.RecommendsList.Responses;
 using MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark;
 using MauiLabs.Api.Services.Commands.FriendCommands.DeleteFriend;
 using MauiLabs.Api.Services.Commands.RecommendCommands.AddRecommend;
@@ -41,7 +41,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers.ProfileControllers
         [Route("add"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddRecommendHandler([FromBody] AddRecommendRequestModel request)
+        public async Task<IActionResult> AddRecommendHandler([FromBody] AddRecommendByIdRequestModel request)
         {
             try { await this.mediator.Send(this.mapper.Map<AddRecommendCommand>(request)); }
             catch (ValidationException errorInfo)
@@ -58,7 +58,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers.ProfileControllers
         [Route("addbytoken"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddRecommendByTokenHandler([FromBody] AddRecommendByTokenRequestModel request)
+        public async Task<IActionResult> AddRecommendByTokenHandler([FromBody] AddRecommendRequestModel request)
         {
             var mappedRequest = this.mapper.Map<AddRecommendCommand>(request);
             mappedRequest.FromUserId = this.ProfileId;

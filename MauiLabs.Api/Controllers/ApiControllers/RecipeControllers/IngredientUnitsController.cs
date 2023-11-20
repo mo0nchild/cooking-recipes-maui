@@ -2,8 +2,8 @@
 using FluentValidation;
 using MauiLabs.Api.Commons.Middleware;
 using MauiLabs.Api.Controllers.ApiModels.Bookmarks;
-using MauiLabs.Api.Controllers.ApiModels.Ingredients.Requests;
-using MauiLabs.Api.Controllers.ApiModels.Ingredients.Responses;
+using MauiLabs.Api.Controllers.ApiModels.RecipeModels.IngredientUnits.Requests;
+using MauiLabs.Api.Controllers.ApiModels.RecipeModels.IngredientUnits.Responses;
 using MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark;
 using MauiLabs.Api.Services.Commands.IngredientCommands.AddIngredientUnit;
 using MauiLabs.Api.Services.Commands.IngredientCommands.DeleteIngredientUnit;

@@ -1,10 +1,12 @@
-﻿using MauiLabs.Dal;
-using MauiLabs.View.Pages;
+﻿using MauiLabs.View.Pages;
+using MauiLabs.View.Services;
 using MauiLabs.View.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Reflection;
+using System.Resources;
 
 namespace MauiLabs.View
 {
@@ -12,6 +14,7 @@ namespace MauiLabs.View
     {
         public static MauiApp CreateMauiApp()
         {
+            var assembly = Assembly.GetExecutingAssembly();
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -20,10 +23,13 @@ namespace MauiLabs.View
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-            builder.Configuration.AddJsonFile("appsettings.json");
+            using (var stream = assembly.GetManifestResourceStream("MauiLabs.View.appsettings.json")) 
+            {
+                var config = new ConfigurationBuilder().AddJsonStream(stream);
+                builder.Configuration.AddConfiguration(config.Build());
+            }
 		    builder.Logging.AddDebug();
-
-            builder.Services.AddDataAccessLayer(builder.Configuration);
+            builder.Services.AddViewServices(builder.Configuration).Wait();
             builder.Services
                 .AddTransient<UserProfilePage>()
                 .AddTransient<UserListPage>()
