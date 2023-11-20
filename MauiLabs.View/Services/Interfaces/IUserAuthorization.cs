@@ -1,4 +1,5 @@
-﻿using MauiLabs.Api.Controllers.ApiModels.Authorization.Requests;
+﻿
+using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;

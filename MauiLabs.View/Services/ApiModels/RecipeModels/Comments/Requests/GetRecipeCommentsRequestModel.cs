@@ -1,9 +1,9 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.CommentRequests.GetRecipeCommentsList;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.Comments.Requests
 {
+    public enum CommentSortingType : sbyte { ByDate, ByRating }
+
     /// <summary>
     /// Данные для получения списка комментарий рецепта
     /// </summary>

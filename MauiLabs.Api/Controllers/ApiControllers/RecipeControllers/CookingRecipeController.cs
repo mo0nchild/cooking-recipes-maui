@@ -3,7 +3,6 @@ using FluentValidation;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MauiLabs.Api.Commons.Middleware;
-using MauiLabs.Api.Controllers.ApiModels.FriendsList.Requests;
 using MauiLabs.Api.Controllers.ApiModels.RecipeModels.CookingRecipe.Requests;
 using MauiLabs.Api.Controllers.ApiModels.RecipeModels.CookingRecipe.Responses;
 using MauiLabs.Api.RemoteServices.Implementations.CookingRecipe;

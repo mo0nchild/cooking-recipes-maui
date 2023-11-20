@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MauiLabs.Api.Commons.Middleware;
-using MauiLabs.Api.Controllers.ApiModels.Bookmarks;
 using MauiLabs.Api.Controllers.ApiModels.RecipeModels.IngredientUnits.Requests;
 using MauiLabs.Api.Controllers.ApiModels.RecipeModels.IngredientUnits.Responses;
 using MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark;

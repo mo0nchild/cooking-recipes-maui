@@ -1,4 +1,7 @@
-﻿namespace MauiLabs.View.Services.ApiModels.Commons.ProfileModels
+﻿using MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Responses;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace MauiLabs.View.Services.ApiModels.Commons.ProfileModels
 {
     /// <summary>
     /// Данные рекомендации рецепта
@@ -28,6 +31,6 @@
         /// <summary>
         /// Данные кулинарного рецепта
         /// </summary>
-        public required CookingRecipeInfo Recipe { get; set; } = default!;
+        public required GetRecipeResponseModel Recipe { get; set; } = default!;
     }
 }

@@ -6,6 +6,7 @@ namespace MauiLabs.View.Services.ApiModels.Commons.RecipeModels
     /// Информация о комментарии рецепта
     /// </summary>
     public partial class CommentInfoModel : object
+    {
         /// <summary>
         /// Идентификатор комментария
         /// </summary>

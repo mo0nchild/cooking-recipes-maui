@@ -1,5 +1,4 @@
-﻿using MauiLabs.Api.Controllers.ApiModels.Authorization.Requests;
-using MauiLabs.View.Services.ConfigureOptions;
+﻿using MauiLabs.View.Services.ConfigureOptions;
 using MauiLabs.View.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using System;
@@ -10,8 +9,9 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using MauiLabs.Api.Controllers.ApiModels.Authorization.Responses;
 using MauiLabs.View.Services.ApiModels.Commons;
+using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Responses;
+using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Requests;
 
 namespace MauiLabs.View.Services.Implements
 {

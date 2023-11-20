@@ -15,5 +15,10 @@ namespace MauiLabs.View.Services.ApiModels.RecipeModels.IngredientUnits.Response
         /// Количество всех единиц измерения
         /// </summary>
         public required int AllCount { get; set; } = default!;
+
+        public partial class IngredientUnitInfo : object
+        {
+            public required string Name { get; set; } = default!;
+        }
     }
 }

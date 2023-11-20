@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Controllers.ApiModels.Authorization.Requests;
 using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
 using MediatR;
 

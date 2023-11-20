@@ -2,6 +2,8 @@
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests
 {
+    public enum RecipeSortingType : sbyte { ByDate, ByName, ByRating }
+
     /// <summary>
     /// Данные для получения списка кулинарный рецептов
     /// </summary>

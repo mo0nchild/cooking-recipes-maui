@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MauiLabs.Api.Controllers.ApiModels.Authorization;
 using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
 using MauiLabs.Dal;
 using MauiLabs.Dal.Entities;

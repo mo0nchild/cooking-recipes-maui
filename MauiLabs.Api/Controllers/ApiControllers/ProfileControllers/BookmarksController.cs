@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MauiLabs.Api.Commons.Middleware;
-using MauiLabs.Api.Controllers.ApiModels.Authorization;
 using MauiLabs.Api.Controllers.ApiModels.ProfileModels.Bookmarks.Requests;
 using MauiLabs.Api.Controllers.ApiModels.ProfileModels.Bookmarks.Responses;
 using MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark;

@@ -3,7 +3,6 @@ using FluentValidation;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MauiLabs.Api.Commons.Middleware;
-using MauiLabs.Api.Controllers.ApiModels.Bookmarks.Requests;
 using MauiLabs.Api.Controllers.ApiModels.ProfileModels.RecommendsList.Requests;
 using MauiLabs.Api.Controllers.ApiModels.ProfileModels.RecommendsList.Responses;
 using MauiLabs.Api.Services.Commands.BookmarkCommands.AddBookmark;

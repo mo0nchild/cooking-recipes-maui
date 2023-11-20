@@ -3,7 +3,6 @@ using FluentValidation;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MauiLabs.Api.Commons.Middleware;
-using MauiLabs.Api.Controllers.ApiModels.Comments.Requests;
 using MauiLabs.Api.Controllers.ApiModels.ProfileModels.FriendsList.Requests;
 using MauiLabs.Api.Controllers.ApiModels.ProfileModels.FriendsList.Responses;
 using MauiLabs.Api.Services.Commands.CommentCommands.AddComment;
