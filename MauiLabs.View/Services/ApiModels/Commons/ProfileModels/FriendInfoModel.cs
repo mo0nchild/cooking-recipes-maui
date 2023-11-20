@@ -1,13 +1,9 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.FriendRequests.Models;
-using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
-
-namespace MauiLabs.View.Services.ApiModels.Commons.ProfileModels
+﻿namespace MauiLabs.View.Services.ApiModels.Commons.ProfileModels
 {
     /// <summary>
     /// Данные о друге пользователя
     /// </summary>
-    public partial class FriendInfoModel : IMappingTarget<FriendInfo>
+    public partial class FriendInfoModel : object
     {
         /// <summary>
         /// Идентификатор друга

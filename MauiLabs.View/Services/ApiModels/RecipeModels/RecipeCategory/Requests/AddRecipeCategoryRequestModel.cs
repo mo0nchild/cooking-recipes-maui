@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.RecipeCategoryCommands.AddRecipeCategory;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.RecipeCategory.Requests
 {
     /// <summary>
     /// Данные для добавления категории рецептов
     /// </summary>
-    public partial class AddRecipeCategoryRequestModel : IMappingTarget<AddRecipeCategoryCommand>
+    public partial class AddRecipeCategoryRequestModel : object
     {
         /// <summary>
         /// Название категории

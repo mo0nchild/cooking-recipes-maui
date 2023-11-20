@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetCookingRecipe;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests
 {
     /// <summary>
     /// Данные для получения информации о кулинарном рецепте
     /// </summary>
-    public partial class GetRecipeRequestModel : IMappingTarget<GetCookingRecipeRequest>
+    public partial class GetRecipeRequestModel : object
     {
         /// <summary>
         /// Идентификатор кулинарного рецепта

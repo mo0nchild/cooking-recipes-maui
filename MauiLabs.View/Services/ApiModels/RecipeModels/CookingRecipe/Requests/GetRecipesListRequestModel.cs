@@ -1,14 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.CommentRequests.GetRecipeCommentsList;
-using MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetCookingRecipesList;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests
 {
     /// <summary>
     /// Данные для получения списка кулинарный рецептов
     /// </summary>
-    public partial class GetRecipesListRequestModel : IMappingTarget<GetCookingRecipesListRequest>
+    public partial class GetRecipesListRequestModel : object
     {
         /// <summary>
         /// Количество пропускаемых записей

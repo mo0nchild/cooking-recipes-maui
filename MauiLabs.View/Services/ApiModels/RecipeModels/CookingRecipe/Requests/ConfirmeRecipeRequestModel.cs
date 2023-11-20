@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.CookingRecipeCommands.ConfirmeCookingRecipe;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests
 {
     /// <summary>
     /// Данные для изменения статуса кулинарного рецепта
     /// </summary>
-    public partial class ConfirmeRecipeRequestModel : IMappingTarget<ConfirmeCookingRecipeCommand>
+    public partial class ConfirmeRecipeRequestModel : object
     {
         /// <summary>
         /// Идентификатор кулинарного рецепта

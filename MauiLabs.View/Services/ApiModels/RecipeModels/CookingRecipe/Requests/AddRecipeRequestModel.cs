@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe;
-using MauiLabs.View.Services.ApiModels.Commons.RecipeModels;
+﻿using MauiLabs.View.Services.ApiModels.Commons.RecipeModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests
@@ -9,7 +6,7 @@ namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests
     /// <summary>
     /// Данные для добавления кулинарного рецепта
     /// </summary>
-    public partial class AddRecipeByIdRequestModel : AddRecipeRequestModel, IMappingTarget<AddCookingRecipeCommand>
+    public partial class AddRecipeByIdRequestModel : AddRecipeRequestModel
     {
         /// <summary>
         /// Идентификатор пользователя опубликовавшего рецепт
@@ -21,7 +18,7 @@ namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests
     /// <summary>
     /// Данные для добавления кулинарного рецепта при помощи токена
     /// </summary>
-    public partial class AddRecipeRequestModel : IMappingTarget<AddCookingRecipeCommand>, IValidatableObject
+    public partial class AddRecipeRequestModel : object
     {
         /// <summary>
         /// Название кулинарного рецепта
@@ -50,21 +47,5 @@ namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests
         /// Список ингредиентов
         /// </summary>
         public Dictionary<string, IngredientUnitModel> Ingredients { get; set; } = new();
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var validationResult = new List<ValidationResult>();
-            foreach (var item in Ingredients)
-            {
-                var results = new List<ValidationResult>();
-                if (Validator.TryValidateObject(item.Value, new ValidationContext(item.Value), results, true))
-                {
-                    validationResult.AddRange(results);
-                }
-                if (item.Key.Length > 50 || item.Key.Length < 3)
-                    validationResult.Add(new ValidationResult("Длина названия ингредиента в диапазоне от 3 до 50 символов"));
-            }
-            return validationResult;
-        }
     }
 }

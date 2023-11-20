@@ -1,7 +1,4 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe;
-using MauiLabs.Api.Services.Commands.CookingRecipeCommands.EditCookingRecipe;
-using MauiLabs.View.Services.ApiModels.Commons.RecipeModels;
+﻿using MauiLabs.View.Services.ApiModels.Commons.RecipeModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests
@@ -9,7 +6,7 @@ namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests
     /// <summary>
     /// Данные для редактирования кулинарного рецепта
     /// </summary>
-    public partial class EditRecipeRequestModel : IMappingTarget<EditCookingRecipeCommand>, IValidatableObject
+    public partial class EditRecipeRequestModel : object
     {
         /// <summary>
         /// Идентификатор кулинарного рецепта
@@ -44,21 +41,5 @@ namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests
         /// Список ингредиентов
         /// </summary>
         public Dictionary<string, IngredientUnitModel> Ingredients { get; set; } = new();
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var validationResult = new List<ValidationResult>();
-            foreach (var item in Ingredients)
-            {
-                var results = new List<ValidationResult>();
-                if (Validator.TryValidateObject(item.Value, new ValidationContext(item.Value), results, true))
-                {
-                    validationResult.AddRange(results);
-                }
-                if (item.Key.Length > 50 || item.Key.Length < 3)
-                    validationResult.Add(new ValidationResult("Длина названия ингредиента в диапазоне от 3 до 50 символов"));
-            }
-            return validationResult;
-        }
     }
 }

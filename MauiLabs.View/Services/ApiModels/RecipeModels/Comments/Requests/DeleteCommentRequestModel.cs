@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.CommentCommands.DeleteComment;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.Comments.Requests
 {
     /// <summary>
     /// Данные для удаления рецепта
     /// </summary>
-    public partial class DeleteCommentByIdRequestModel : DeleteCommentRequestModel, IMappingTarget<DeleteCommentCommand>
+    public partial class DeleteCommentByIdRequestModel : DeleteCommentRequestModel
     {
         /// <summary>
         /// Идентификатор профиля, который добавил комментарий

@@ -1,14 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.CommentRequests.Models;
-using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
-using MauiLabs.View.Services.ApiModels.Commons.ProfileModels;
+﻿using MauiLabs.View.Services.ApiModels.Commons.ProfileModels;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.Comments.Responses
 {
     /// <summary>
     /// Информация о комментарии рецепта
     /// </summary>
-    public partial class GetCommentResponseModel : IMappingTarget<CommentInfo>
+    public partial class GetCommentResponseModel : object
     {
         /// <summary>
         /// Идентификатор комментария

@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.RecipeCategoryCommands.DeleteRecipeCategory;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.RecipeCategory.Requests
 {
     /// <summary>
     /// Данные для удаления категории рецептов
     /// </summary>
-    public partial class DeleteRecipeCategoryRequestModel : IMappingTarget<DeleteRecipeCategoryCommand>
+    public partial class DeleteRecipeCategoryRequestModel : object
     {
         /// <summary>
         /// Название категории

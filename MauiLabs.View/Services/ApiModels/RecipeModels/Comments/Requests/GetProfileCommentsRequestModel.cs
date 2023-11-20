@@ -1,14 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.CommentRequests.GetProfileCommentsList;
-using MauiLabs.Api.Services.Requests.CommentRequests.GetRecipeCommentsList;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.Comments.Requests
 {
     /// <summary>
     /// Данные для получения списка комментарий пользователя
     /// </summary>
-    public partial class GetProfileCommentsByIdRequestModel : GetProfileCommentsRequestModel, IMappingTarget<GetProfileCommentsListRequest>
+    public partial class GetProfileCommentsByIdRequestModel : GetProfileCommentsRequestModel
     {
         /// <summary>
         /// Идентификатор пользователя
@@ -20,7 +17,7 @@ namespace MauiLabs.View.Services.ApiModels.RecipeModels.Comments.Requests
     /// <summary>
     /// Данные для получения списка комментарий пользователя при помощи токена
     /// </summary>
-    public partial class GetProfileCommentsRequestModel : IMappingTarget<GetProfileCommentsListRequest>
+    public partial class GetProfileCommentsRequestModel : object
     {
         /// <summary>
         /// Количество пропущенных записей

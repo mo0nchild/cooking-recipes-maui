@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.IngredientCommands.AddIngredientUnit;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.IngredientUnits.Requests
 {
     /// <summary>
     /// Данные для добавления единицы измерения
     /// </summary>
-    public partial class AddIngredientUnitRequestModel : IMappingTarget<AddIngredientUnitCommand>
+    public partial class AddIngredientUnitRequestModel : object
     {
         /// <summary>
         /// Название единицы измерения

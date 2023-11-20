@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.RecommendCommands.DeleteRecommend;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.RecommendsList.Requests
 {
     /// <summary>
     /// Данные для удаления рекомендации рецепта
     /// </summary>
-    public partial class DeleteRecommendRequestModel : IMappingTarget<DeleteRecommendCommand>
+    public partial class DeleteRecommendRequestModel : object
     {
         /// <summary>
         /// Идентификатор записи рекомендации

@@ -1,14 +1,9 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models;
-using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
-using MauiLabs.Api.Services.Requests.RecommendRequests.Models;
-
-namespace MauiLabs.View.Services.ApiModels.Commons.ProfileModels
+﻿namespace MauiLabs.View.Services.ApiModels.Commons.ProfileModels
 {
     /// <summary>
     /// Данные рекомендации рецепта
     /// </summary>
-    public partial class RecommendInfoModel : IMappingTarget<RecommendInfo>
+    public partial class RecommendInfoModel : object
     {
         /// <summary>
         /// Идентификатор рекомендации рецепта

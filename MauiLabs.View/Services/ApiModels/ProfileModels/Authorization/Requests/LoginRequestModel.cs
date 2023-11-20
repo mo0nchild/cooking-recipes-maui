@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.ProfileRequests.AuthorizationProfile;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Requests
 {
     /// <summary> 
     /// Данные для авторизации в профиль
     /// </summary>
-    public partial class LoginRequestModel : IMappingTarget<AuthorizationRequest>
+    public partial class LoginRequestModel : object
     {
         /// <summary> 
         /// Логин пользователя 

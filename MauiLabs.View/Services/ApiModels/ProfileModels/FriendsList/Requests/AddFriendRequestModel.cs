@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.FriendCommands.AddFriend;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.FriendsList.Requests
 {
     /// <summary>
     /// Данные для добавления пользователя в друзья
     /// </summary>
-    public partial class AddFriendByIdRequestModel : AddFriendRequestModel, IMappingTarget<AddFriendCommand>
+    public partial class AddFriendByIdRequestModel : AddFriendRequestModel
     {
         /// <summary>
         /// Идентификатор пользователя, отправителя запроса
@@ -19,7 +17,7 @@ namespace MauiLabs.View.Services.ApiModels.ProfileModels.FriendsList.Requests
     /// <summary>
     /// Данные для добавления пользователя в друзья при помощи токена
     /// </summary>
-    public partial class AddFriendRequestModel : IMappingTarget<AddFriendCommand>
+    public partial class AddFriendRequestModel : object
     {
         /// <summary>
         /// Ссылка на профиль друга

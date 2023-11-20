@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.RecommendCommands.AddRecommend;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.RecommendsList.Requests
 {
     /// <summary>
     /// Данные для рекомендации рецепта
     /// </summary>
-    public partial class AddRecommendByIdRequestModel : AddRecommendRequestModel, IMappingTarget<AddRecommendCommand>
+    public partial class AddRecommendByIdRequestModel : AddRecommendRequestModel
     {
         /// <summary>
         /// Идентификатор пользователя отправителя
@@ -19,7 +17,7 @@ namespace MauiLabs.View.Services.ApiModels.ProfileModels.RecommendsList.Requests
     /// <summary>
     /// Данные для рекомендации рецепта при помощи токена
     /// </summary>
-    public partial class AddRecommendRequestModel : IMappingTarget<AddRecommendCommand>
+    public partial class AddRecommendRequestModel : object
     {
         /// <summary>
         /// Текст рекомендации рецепта

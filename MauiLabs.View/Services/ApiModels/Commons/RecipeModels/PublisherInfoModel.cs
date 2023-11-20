@@ -1,12 +1,9 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models;
-
-namespace MauiLabs.View.Services.ApiModels.Commons.RecipeModels
+﻿namespace MauiLabs.View.Services.ApiModels.Commons.RecipeModels
 {
     /// <summary>
     /// Информация об издателе рецепта
     /// </summary>
-    public partial class PublisherInfoModel : IMappingTarget<PublisherInfo>
+    public partial class PublisherInfoModel : object
     {
         /// <summary>
         /// Имя пользователя

@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.IngredientCommands.DeleteIngredientUnit;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.IngredientUnits.Requests
 {
     /// <summary>
     /// Данные для удаления единицы измерения
     /// </summary>
-    public partial class DeleteIngredientUnitRequestModel : IMappingTarget<DeleteIngredientUnitCommand>
+    public partial class DeleteIngredientUnitRequestModel : object
     {
         /// <summary>
         /// Название единицы измерения

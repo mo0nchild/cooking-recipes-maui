@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
-using MauiLabs.View.Services.ApiModels.Commons.ProfileModels;
+﻿using MauiLabs.View.Services.ApiModels.Commons.ProfileModels;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Responses
 {
     /// <summary>
     /// Список пользователей системы
     /// </summary>
-    public partial class GetProfilesListResponseModel : IMappingTarget<ProfileCollection>
+    public partial class GetProfilesListResponseModel : object
     {
         /// <summary>
         /// Данные пользователей в форме списка

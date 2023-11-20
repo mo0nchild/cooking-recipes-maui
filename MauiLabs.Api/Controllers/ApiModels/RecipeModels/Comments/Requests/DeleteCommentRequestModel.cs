@@ -20,7 +20,7 @@ namespace MauiLabs.Api.Controllers.ApiModels.RecipeModels.Comments.Requests
     /// <summary>
     /// Данные для удаления комментария с использованием токена
     /// </summary>
-    public partial class DeleteCommentRequestModel : object
+    public partial class DeleteCommentRequestModel : IMappingTarget<DeleteCommentCommand>
     {
         /// <summary>
         /// Идентификатор рецепта

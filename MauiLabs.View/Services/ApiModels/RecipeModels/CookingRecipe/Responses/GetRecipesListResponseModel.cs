@@ -1,12 +1,10 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models;
-
+﻿
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Responses
 {
     /// <summary>
     /// Список кулинарных рецептов
     /// </summary>
-    public partial class GetRecipesListResponseModel : IMappingTarget<CookingRecipesList>
+    public partial class GetRecipesListResponseModel : object
     {
         /// <summary>
         /// Данные о кулинарных рецептах в форме списка

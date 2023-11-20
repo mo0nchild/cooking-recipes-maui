@@ -1,14 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetBookmarksList;
-using MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models;
-using MauiLabs.View.Services.ApiModels.Commons.ProfileModels;
+﻿using MauiLabs.View.Services.ApiModels.Commons.ProfileModels;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.Bookmarks.Responses
 {
     /// <summary>
     /// Список заметок рецептов пользователя
     /// </summary>
-    public partial class GetBookmarksResponseModel : IMappingTarget<BookmarksList>
+    public partial class GetBookmarksResponseModel : object
     {
         /// <summary>
         /// Данные о заметках в форме списка

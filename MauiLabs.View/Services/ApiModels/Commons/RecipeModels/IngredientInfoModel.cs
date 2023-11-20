@@ -1,12 +1,9 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models;
-
-namespace MauiLabs.View.Services.ApiModels.Commons.RecipeModels
+﻿namespace MauiLabs.View.Services.ApiModels.Commons.RecipeModels
 {
     /// <summary>
     /// Информация об ингредиенте
     /// </summary>
-    public partial class IngredientInfoModel : IMappingTarget<IngredientInfo>
+    public partial class IngredientInfoModel : object
     {
         /// <summary>
         /// Необходимое количество ингредиента

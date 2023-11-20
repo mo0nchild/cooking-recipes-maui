@@ -1,12 +1,10 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
-
+﻿
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Responses
 {
     /// <summary>
     /// Данные профиля пользователя
     /// </summary>
-    public partial class GetProfileInfoResponseModel : IMappingTarget<ProfileInfo>
+    public partial class GetProfileInfoResponseModel : object
     {
         /// <summary>
         /// Идентификатор пользователя

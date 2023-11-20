@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.RecommendRequests.Models;
-using MauiLabs.View.Services.ApiModels.Commons.ProfileModels;
+﻿using MauiLabs.View.Services.ApiModels.Commons.ProfileModels;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.RecommendsList.Responses
 {
     /// <summary>
     /// Список рекомендаций рецептов пользователя
     /// </summary>
-    public partial class GetRecommendsListResponseModel : IMappingTarget<RecommendInfoList>
+    public partial class GetRecommendsListResponseModel : object
     {
         /// <summary>
         /// Данные рекомендаций рецептов в форме списка

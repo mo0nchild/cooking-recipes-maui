@@ -1,12 +1,9 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.ProfileRequests.Models;
-
-namespace MauiLabs.View.Services.ApiModels.Commons.ProfileModels
+﻿namespace MauiLabs.View.Services.ApiModels.Commons.ProfileModels
 {
     /// <summary>
     /// Информация о профиле пользователя
     /// </summary>
-    public partial class ProfileInfoModel : IMappingTarget<ProfileInfo>
+    public partial class ProfileInfoModel : object
     {
         /// <summary>
         /// Идентицикатор пользователя

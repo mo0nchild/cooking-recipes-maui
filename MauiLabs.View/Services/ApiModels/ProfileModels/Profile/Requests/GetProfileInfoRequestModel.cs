@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.ProfileRequests.GetProfileInfo;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Requests
 {
     /// <summary>
     /// Данные для получения информации профиля пользователя
     /// </summary>
-    public partial class GetProfileInfoRequestModel : IMappingTarget<GetProfileInfoRequest>
+    public partial class GetProfileInfoRequestModel : object
     {
         /// <summary>
         /// Идентификатор пользователя

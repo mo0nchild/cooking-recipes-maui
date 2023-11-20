@@ -1,39 +1,4 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.ProfileCommands.EditProfile;
-using System.ComponentModel.DataAnnotations;
-
-/* Необъединенное слияние из проекта "MauiLabs.View (net7.0-windows10.0.19041.0)"
-До:
-using System.ComponentModel;
-
-namespace MauiLabs.Api.Controllers.ApiModels.ProfileModels.Profile.Requests
-После:
-using System.ComponentModel;
-using MauiLabs;
-using MauiLabs.Api;
-using MauiLabs.Api.Controllers;
-using MauiLabs.Api.Controllers.ApiModels;
-using MauiLabs.Api.Controllers.ApiModels.ProfileModels;
-using MauiLabs.Api.Controllers.ApiModels.ProfileModels.Profile;
-using MauiLabs.Api.Controllers.ApiModels.ProfileModels.Profile.Requests;
-using MauiLabs.View.Services.ApiModels.ProfileModels.Profile;
-
-namespace MauiLabs.View.Services.ApiModels.ProfileModels.Profile
-*/
-
-/* Необъединенное слияние из проекта "MauiLabs.View (net7.0-windows10.0.19041.0)"
-До:
-using System.ComponentModel;
-После:
-using System.ComponentModel;
-using MauiLabs;
-using MauiLabs.View;
-using MauiLabs.View.Services;
-using MauiLabs.View.Services.ApiModels;
-using MauiLabs.View.Services.ApiModels.ProfileModels;
-using MauiLabs.View.Services.ApiModels.ProfileModels.Profile;
-using MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Requests;
-*/
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Requests
@@ -41,7 +6,7 @@ namespace MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Requests
     /// <summary>
     /// Данные для реактирования профиля пользователя 
     /// </summary>
-    public partial class EditProfileByIdRequestModel : EditProfileRequestModel, IMappingTarget<EditProfileCommand>
+    public partial class EditProfileByIdRequestModel : EditProfileRequestModel
     {
         /// <summary>
         /// Идентификатор пользователя
@@ -53,7 +18,7 @@ namespace MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Requests
     /// <summary>
     /// Данные для реактирования профиля пользователя при помощи токена 
     /// </summary>
-    public partial class EditProfileRequestModel : IMappingTarget<EditProfileCommand>
+    public partial class EditProfileRequestModel : object
     {
         /// <summary> 
         /// Имя пользователя

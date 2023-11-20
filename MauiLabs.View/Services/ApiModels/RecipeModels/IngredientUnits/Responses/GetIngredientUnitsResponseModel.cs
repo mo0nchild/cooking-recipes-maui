@@ -1,12 +1,10 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.IngredientRequests.Models;
-
+﻿
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.IngredientUnits.Responses
 {
     /// <summary>
     /// Список всех единиц измерения
     /// </summary>
-    public partial class GetIngredientUnitsResponseModel : IMappingTarget<IngredientUnitsCollection>
+    public partial class GetIngredientUnitsResponseModel : object
     {
         /// <summary>
         /// Данные единиц измерения в форме списка

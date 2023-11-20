@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.CommentRequests.Models;
-using MauiLabs.View.Services.ApiModels.Commons.RecipeModels;
+﻿using MauiLabs.View.Services.ApiModels.Commons.RecipeModels;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.Comments.Responses
 {
     /// <summary>
     /// Список комментарий о рецепте
     /// </summary>
-    public partial class GetCommentsResponseModel : IMappingTarget<CommentsList>
+    public partial class GetCommentsResponseModel : object
     {
         /// <summary>
         /// Данные о комментариях в форме списка

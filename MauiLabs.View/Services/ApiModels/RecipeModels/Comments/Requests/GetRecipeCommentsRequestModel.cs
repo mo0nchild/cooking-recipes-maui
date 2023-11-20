@@ -7,7 +7,7 @@ namespace MauiLabs.View.Services.ApiModels.RecipeModels.Comments.Requests
     /// <summary>
     /// Данные для получения списка комментарий рецепта
     /// </summary>
-    public partial class GetRecipeCommentsRequestModel : IMappingTarget<GetRecipeCommentsListRequest>
+    public partial class GetRecipeCommentsRequestModel : object
     {
         /// <summary>
         /// Идентификатор рецепта

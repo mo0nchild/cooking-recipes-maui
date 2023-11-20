@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.ProfileCommands.ChangePassword;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Requests
 {
     /// <summary>
     /// Данные для изменения пароля профиля пользователя
     /// </summary>
-    public partial class ChangePasswordByIdRequestModel : ChangePasswordRequestModel, IMappingTarget<ChangePasswordCommand>
+    public partial class ChangePasswordByIdRequestModel : ChangePasswordRequestModel
     {
         /// <summary>
         /// Идентификатор пользователя
@@ -19,7 +17,7 @@ namespace MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Requests
     /// <summary>
     /// Данные для изменения пароля профиля пользователя при помощи токена
     /// </summary>
-    public partial class ChangePasswordRequestModel : IMappingTarget<ChangePasswordCommand>
+    public partial class ChangePasswordRequestModel : object
     {
         /// <summary>
         /// Старый пароль авторизации профиля

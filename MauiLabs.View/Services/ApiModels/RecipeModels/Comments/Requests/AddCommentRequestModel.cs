@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.CommentCommands.AddComment;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.RecipeModels.Comments.Requests
 {
     /// <summary>
     /// Данные для добавления комментария к рецепту
     /// </summary>
-    public partial class AddCommentByIdRequestModel : AddCommentRequestModel, IMappingTarget<AddCommentCommand>
+    public partial class AddCommentByIdRequestModel : AddCommentRequestModel
     {
         /// <summary>
         /// Идентификатор пользователя, который оставил комментарий
@@ -19,7 +17,7 @@ namespace MauiLabs.View.Services.ApiModels.RecipeModels.Comments.Requests
     /// <summary>
     /// Данные для добавления комментария к рецепту при помощи токена
     /// </summary>
-    public partial class AddCommentRequestModel : IMappingTarget<AddCommentCommand>
+    public partial class AddCommentRequestModel : object
     {
         /// <summary>
         /// Текст комментария (описание)

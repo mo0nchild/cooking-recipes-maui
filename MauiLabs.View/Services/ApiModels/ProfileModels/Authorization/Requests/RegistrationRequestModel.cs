@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.ProfileCommands.RegistrationProfile;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
@@ -10,7 +7,7 @@ namespace MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Requests
     /// <summary>
     /// Данные для регистрации профиля пользователя
     /// </summary>
-    public partial class RegistrationRequestModel : IMappingTarget<RegistrationCommand>
+    public partial class RegistrationRequestModel : object
     {
         /// <summary> 
         /// Имя пользователя

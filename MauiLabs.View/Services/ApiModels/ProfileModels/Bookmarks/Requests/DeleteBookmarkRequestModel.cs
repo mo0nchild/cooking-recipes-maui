@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Commands.BookmarkCommands.DeleteBookmark;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.Bookmarks.Requests
 {
     /// <summary>
     /// Данные об удаляемой заметки рецепта
     /// </summary>
-    public partial class DeleteBookmarkByIdRequestModel : DeleteBookmarkRequestModel, IMappingTarget<DeleteBookmarkCommand>
+    public partial class DeleteBookmarkByIdRequestModel : DeleteBookmarkRequestModel
     {
         /// <summary>
         /// Идентификатор пользователя, от которого происходит удаление
@@ -19,7 +17,7 @@ namespace MauiLabs.View.Services.ApiModels.ProfileModels.Bookmarks.Requests
     /// <summary>
     /// Данные об удаляемой заметки рецепта при помощи токена
     /// </summary>
-    public partial class DeleteBookmarkRequestModel : IMappingTarget<DeleteBookmarkCommand>
+    public partial class DeleteBookmarkRequestModel : object
     {
         /// <summary>
         /// Идентификатор удаляемого рецепта

@@ -1,13 +1,11 @@
-﻿using MauiLabs.Api.Commons.Mapping;
-using MauiLabs.Api.Services.Requests.ProfileRequests.GetAllProfiles;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Requests
 {
     /// <summary>
     /// Данные для получения списка пользователей
     /// </summary>
-    public partial class GetProfilesListRequestModel : IMappingTarget<GetAllProfilesRequest>
+    public partial class GetProfilesListRequestModel : object
     {
         /// <summary>
         /// Фильтр по имени пользователя
