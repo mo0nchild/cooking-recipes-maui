@@ -7,9 +7,7 @@ namespace MauiLabs.View
         public AppShell() : base()
         {
             this.InitializeComponent();
-
-            Routing.RegisterRoute("main/userlist", typeof(UserListPage));
-            Routing.RegisterRoute("maui/userlist/userprofile", typeof(UserProfilePage));
+            // Routing.RegisterRoute("profile/authorization", typeof(AuthorizationPage));
         }
     }
 }

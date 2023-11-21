@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using MauiLabs.View.Services.ApiModels.Commons;
 using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Responses;
 using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Requests;
+using MauiLabs.View.Services.Commons;
 
 namespace MauiLabs.View.Services.Implements
 {
@@ -27,27 +28,33 @@ namespace MauiLabs.View.Services.Implements
             this.httpClientFactory = httpFactory;
             this.webApiOptions = options.Value;
         }
-        public virtual async Task AuthorizeUser(string login, string password)
+        public virtual async Task<LoginResponseModel> AuthorizeUser(LoginRequestModel model)
         {
             using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
             {
-                using var response = await httpClient.GetAsync($"cookingrecipes/auth/login?Login={login}&Password={password}");
+                var requestPath = string.Format("cookingrecipes/auth/login?Login={0}&Password={1}", model.Login, model.Password);
+                using var response = await httpClient.GetAsync(requestPath);
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
+                    throw new ViewServiceException(errorMessage.Detail);
+                }
+                return await response.Content.ReadFromJsonAsync<LoginResponseModel>(jsonOptions);
+            }
+        }
+
+        public virtual async Task<LoginResponseModel> RegistrationUser(RegistrationRequestModel model)
+        {
+            using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
+            {
+                using var response = await httpClient.PostAsJsonAsync($"cookingrecipes/auth/registration", model);
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
                     throw new Exception(errorMessage.Detail);
                 }
-                var resultMessage = await response.Content.ReadFromJsonAsync<LoginResponseModel>(jsonOptions);
-                await SecureStorage.Default.SetAsync("JwtToken", resultMessage.JwtToken);
-
-                await SecureStorage.Default.SetAsync("UserId", resultMessage.ProfileId.ToString());
-                await SecureStorage.Default.SetAsync("IsAdmin", resultMessage.IsAdmin.ToString());
+                return await response.Content.ReadFromJsonAsync<LoginResponseModel>(jsonOptions);
             }
-        }
-
-        public virtual Task RegistrationUser(RegistrationRequestModel model)
-        {
-            throw new NotImplementedException();
         }
     }
 }

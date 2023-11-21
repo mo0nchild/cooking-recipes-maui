@@ -1,5 +1,6 @@
 ﻿
 using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Requests;
+using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace MauiLabs.View.Services.Interfaces
 {
     public interface IUserAuthorization
     {
-        public Task AuthorizeUser(string login, string password);
-        public Task RegistrationUser(RegistrationRequestModel model);
+        public Task<LoginResponseModel> RegistrationUser(RegistrationRequestModel model);
+        public Task<LoginResponseModel> AuthorizeUser(LoginRequestModel model);
     }
 }

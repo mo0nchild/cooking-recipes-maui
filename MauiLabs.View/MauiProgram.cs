@@ -17,7 +17,7 @@ namespace MauiLabs.View
             var assembly = Assembly.GetExecutingAssembly();
             var builder = MauiApp.CreateBuilder();
             builder
-                .UseMauiApp<App>()
+                .UseMauiApp<CookingRecipeApp>()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -30,13 +30,9 @@ namespace MauiLabs.View
             }
 		    builder.Logging.AddDebug();
             builder.Services.AddViewServices(builder.Configuration).Wait();
-            builder.Services
-                .AddTransient<UserProfilePage>()
-                .AddTransient<UserListPage>()
-                .AddTransient<MainPage>();
 
-            builder.Services.AddTransient<UserListVm>();
-            builder.Services.AddTransient<UserProfileVm>();
+            builder.Services.AddViewPages(builder.Configuration).Wait();
+            builder.Services.AddViewModels(builder.Configuration).Wait();
             return builder.Build();
         }
     }

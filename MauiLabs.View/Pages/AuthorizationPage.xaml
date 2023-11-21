@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             x:Class="MauiLabs.View.Pages.AuthorizationPage"
+             Title="Авторизация" Shell.BackgroundColor="{x:StaticResource Key=FirstColor}">
+    <ContentPage.Resources>
+    </ContentPage.Resources>
+    <ScrollView Orientation="Vertical" BackgroundColor="{x:StaticResource Key=SecondColor}">
+
+        <StackLayout Orientation="Vertical" HorizontalOptions="Fill" Margin="30, 50">
+            <Label HorizontalTextAlignment="Center"
+                   TextColor="White" FontSize="26" FontAttributes="Bold" 
+                   HorizontalOptions="Center" WidthRequest="300">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Укажите данные для" TextColor="White"/>
+                        <Span Text="{x:Static system:Environment.NewLine}"/>
+                        <Span Text="Входа в аккаунт" TextColor="{x:StaticResource FirstColor}"
+                              TextDecorations="Underline"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <FlexLayout AlignItems="Center" HorizontalOptions="Center" Direction="Column">
+                <Border x:Name="MainFrame" StrokeThickness="2" MaximumWidthRequest="600" Padding="30"
+                       BackgroundColor="{x:StaticResource Key=FirstColor}" HeightRequest="260" Margin="0, 30, 0, 20"
+                       FlexLayout.AlignSelf="Stretch">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <Border.Stroke>
+                        <SolidColorBrush Color="White" />
+                    </Border.Stroke>
+
+                    <VerticalStackLayout Spacing="25">
+
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Логин:" FontSize="16" TextColor="White" />
+                            <Border BackgroundColor="White" Padding="2">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+                                <Entry Placeholder="Укажите логин" PlaceholderColor="{x:StaticResource FirstColor}"
+                                       FontSize="18" BackgroundColor="White" Text="{x:Binding UserLogin}" 
+                                       TextColor="{x:StaticResource SecondColor}"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Пароль:" FontSize="16" TextColor="White" />
+                            <Border BackgroundColor="White" Padding="2">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+                                <Entry Placeholder="Укажите пароль" IsPassword="True" PlaceholderColor="{x:StaticResource FirstColor}" 
+                                       FontSize="18" BackgroundColor="White" Text="{x:Binding UserPassword}"
+                                       TextColor="{x:StaticResource SecondColor}"/>
+                            </Border>
+                            
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+
+                </Border>
+                <Button CornerRadius="16" BackgroundColor="{x:StaticResource Key=FirstColor}" 
+                        IsVisible="{Binding IsVisible}"
+                        FlexLayout.AlignSelf="Stretch" Text="Войти в профиль" BorderColor="White"
+                        TextColor="White" FontSize="20" BorderWidth="2" HeightRequest="60"
+                        Command="{Binding AuthorizateCommand}"/>
+            </FlexLayout>
+        </StackLayout>
+            
+    </ScrollView>
+</ContentPage>

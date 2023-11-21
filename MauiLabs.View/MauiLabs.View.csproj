@@ -1,5 +1,4 @@
-﻿
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net7.0-android33.0</TargetFrameworks>
@@ -13,7 +12,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
-		<ApplicationTitle>cs-maui-labs</ApplicationTitle>
+		<ApplicationTitle>Книга рецептов</ApplicationTitle>
+
+		<RunAOTCompilation>false</RunAOTCompilation>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.MauiLabs.View</ApplicationId>
@@ -23,7 +24,7 @@
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
@@ -37,7 +38,6 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -81,21 +81,23 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\UserProfilePage.xaml.cs">
-	    <DependentUpon>UserProfilePage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\UserListPage.xaml.cs">
-	    <DependentUpon>UserListPage.xaml</DependentUpon>
-	  </Compile>
+	  <MauiXaml Update="Pages\AuthorizationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\RegistrationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Pages\UserProfilePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\UserListPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+	  <Folder Include="Resources\Images\" />
+	  <Folder Include="Resources\Styles\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="CookingRecipeApp.xaml.cs">
+	    <DependentUpon>CookingRecipeApp.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

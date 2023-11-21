@@ -1,8 +1,8 @@
 ﻿namespace MauiLabs.View
 {
-    public partial class App : Application
+    public partial class CookingRecipeApp : Application
     {
-        public App() : base()
+        public CookingRecipeApp() : base()
         {
             this.InitializeComponent();
 
