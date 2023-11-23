@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MauiLabs.View.Commons.ContentViews.LoadingContentView" 
+             Opacity="0" IsVisible="False">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <Color x:Key="LoadingBackground">#881A1A1D</Color>
+            <Style x:Key="PanelStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{x:StaticResource SecondColor}"/>
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Stroke" Value="White"/>
+                <Setter Property="StrokeThickness" Value="1"/>
+                <Setter Property="Padding" Value="10"/>
+            </Style>
+            <Style x:Key="LoadingLabelStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontSize" Value="16"/>
+            </Style>
+            <Style x:Key="CancelButtonStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="BorderColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="1"/>
+                <Setter Property="CornerRadius" Value="10"/>
+                <Setter Property="BackgroundColor" Value="{x:StaticResource FirstColor}"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <FlexLayout BackgroundColor="{x:StaticResource LoadingBackground}" AlignItems="Center" 
+                Direction="Column" JustifyContent="Center" 
+                IsEnabled="{Binding IsLoading, Converter={StaticResource Key=InvertedBoolConverter}}">
+        <Border x:Name="LoadingPanel" Style="{x:StaticResource PanelStyle}" Scale="0" MaximumWidthRequest="400">
+            <FlexLayout AlignItems="Center" Direction="Column" JustifyContent="Center" MaximumHeightRequest="280">
+                <ActivityIndicator IsRunning="{Binding IsLoading}" HeightRequest="20" WidthRequest="20"
+                                   Color="{x:StaticResource FirstColor}" Margin="0, 10"/>
+                
+                <Label Text="Подождите..." Style="{x:StaticResource LoadingLabelStyle}"/>
+                <Button Text="Отмена" Style="{x:StaticResource CancelButtonStyle}" 
+                        Command="{Binding CancelCommand}" Margin="0, 10" />
+            </FlexLayout>
+        </Border>
+    </FlexLayout>
+</ContentView>

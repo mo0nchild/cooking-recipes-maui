@@ -1,4 +1,4 @@
-﻿using MauiLabs.View.ViewModels.ProfilesViewModels;
+﻿using MauiLabs.View.Commons.ViewModels.ProfilesViewModels;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MauiLabs.View.ViewModels
+namespace MauiLabs.View.Commons.ViewModels
 {
     public static class DependencyInjection : object
     {

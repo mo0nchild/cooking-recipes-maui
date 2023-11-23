@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace MauiLabs.View.Services.ApiModels.Commons
 {
+#nullable enable
     public partial class ProblemDetails : object
     {
         public required string Title { get; set; } = default!;
-        public required string Detail { get; set; } = default!;
+        public string? Detail { get; set; } = default!;
 
         public required int Status { get; set; } = default!;
     }
+#nullable disable
 }

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:MauiLabs.View.Commons.ContentViews"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MauiLabs.View.Pages.ProfilePages.AuthorizationPage"
+             Title="Авторизация" Shell.BackgroundColor="{x:StaticResource Key=FirstColor}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="BackgroundColor" Value="{x:StaticResource Key=FirstColor}" />
+                <Setter Property="BorderColor" Value="White" />
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="2" />
+            </Style>
+            <Style x:Key="TextFieldStyle" TargetType="Entry">
+                <Setter Property="PlaceholderColor" Value="{x:StaticResource Key=FirstColor}"/>
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{x:StaticResource Key=SecondColor}" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid>
+        <Image Source="background.png" Aspect="AspectFill"/>
+        <ScrollView Orientation="Vertical" BackgroundColor="Transparent">
+            
+            <StackLayout x:Name="LoginPanel" Opacity="0.0" Scale="1.5" Orientation="Vertical" HorizontalOptions="Fill" Margin="30, 50" >
+                <Label HorizontalTextAlignment="Center"
+                        TextColor="White" FontSize="26" FontAttributes="Bold" 
+                        HorizontalOptions="Center" WidthRequest="300">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Укажите данные для" TextColor="White"/>
+                            <Span Text="{x:Static system:Environment.NewLine}"/>
+                            <Span Text="Входа в аккаунт" TextColor="{x:StaticResource FirstColor}" TextDecorations="Underline"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <FlexLayout AlignItems="Center" HorizontalOptions="Center" Direction="Column">
+                    <Border x:Name="MainFrame" StrokeThickness="2" MaximumWidthRequest="400" Padding="30"
+                            BackgroundColor="{x:StaticResource Key=FirstColor}" HeightRequest="280" Margin="0, 30, 0, 20"
+                            FlexLayout.AlignSelf="Stretch">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
+                        <Border.Stroke>
+                            <SolidColorBrush Color="White" />
+                        </Border.Stroke>
+
+                        <VerticalStackLayout Spacing="10">
+                            <custom:ValidationEntryView x:Name="LoginTextField" ErrorText="Значение от 5 до 50 символов"
+                                IsValidated="{x:Binding IsLoginValid}" TextValue="{x:Binding UserLogin}"
+                                CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                                DefaultText="Укажите логин" LabelText="Логин:" />
+
+                            <custom:ValidationEntryView x:Name="PasswordTextField" ErrorText="Значение от 5 до 50 символов"
+                                IsValidated="{x:Binding IsPasswordValid}" TextValue="{x:Binding UserPassword}"
+                                CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                                DefaultText="Укажите пароль" LabelText="Пароль:" IsHidden="True"/>
+                        </VerticalStackLayout>
+
+                    </Border>
+                    <Button x:Name="LoginButton" Clicked="LoginButton_Clicked"
+                        FlexLayout.AlignSelf="Stretch" Text="Войти в профиль" HeightRequest="60" MaximumWidthRequest="400"
+                        Style="{x:StaticResource Key=ButtonStyle}" Command="{Binding AuthorizateCommand}"
+                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                </FlexLayout>
+            </StackLayout>
+        </ScrollView>
+        <custom:LoadingContentView IsLoading="{x:Binding IsLoading}" CancelCommand="{x:Binding CancelCommand}"/>
+    </Grid>
+</ContentPage>

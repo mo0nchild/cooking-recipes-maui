@@ -16,6 +16,7 @@ using MauiLabs.View.Services.Commons;
 
 namespace MauiLabs.View.Services.Implements
 {
+#nullable enable
     using WebApiOptions = ConfigureWebApi.WebApiOptions;
     public partial class UserAuthorization : IUserAuthorization
     {
@@ -28,33 +29,35 @@ namespace MauiLabs.View.Services.Implements
             this.httpClientFactory = httpFactory;
             this.webApiOptions = options.Value;
         }
-        public virtual async Task<LoginResponseModel> AuthorizeUser(LoginRequestModel model)
+        public virtual async Task<LoginResponseModel?> AuthorizeUser(LoginRequestModel model, CancellationToken token)
         {
             using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
             {
                 var requestPath = string.Format("cookingrecipes/auth/login?Login={0}&Password={1}", model.Login, model.Password);
-                using var response = await httpClient.GetAsync(requestPath);
+                using var response = await httpClient.GetAsync(requestPath, token);
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
-                    throw new ViewServiceException(errorMessage.Detail);
+                    throw new ViewServiceException(errorMessage?.Detail ?? errorMessage?.Title);
                 }
                 return await response.Content.ReadFromJsonAsync<LoginResponseModel>(jsonOptions);
             }
         }
 
-        public virtual async Task<LoginResponseModel> RegistrationUser(RegistrationRequestModel model)
+        public virtual async Task<LoginResponseModel?> RegistrationUser(RegistrationRequestModel model, CancellationToken token)
         {
             using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
             {
-                using var response = await httpClient.PostAsJsonAsync($"cookingrecipes/auth/registration", model);
+                using var response = await httpClient.PostAsJsonAsync($"cookingrecipes/auth/registration", model, token);
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
+                    if (token.IsCancellationRequested) return null;
                     var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
-                    throw new Exception(errorMessage.Detail);
+                    throw new ViewServiceException(errorMessage?.Detail ?? errorMessage?.Title);
                 }
                 return await response.Content.ReadFromJsonAsync<LoginResponseModel>(jsonOptions);
             }
         }
     }
+#nullable disable
 }

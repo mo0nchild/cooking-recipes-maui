@@ -1,10 +1,10 @@
 ﻿using MauiLabs.View.Pages;
 
-namespace MauiLabs.View
+namespace MauiLabs.View.Pages.ProfilePages
 {
-    public partial class AppShell : Shell
+    public partial class ProfileShell : Shell
     {
-        public AppShell() : base()
+        public ProfileShell() : base()
         {
             this.InitializeComponent();
             // Routing.RegisterRoute("profile/authorization", typeof(AuthorizationPage));

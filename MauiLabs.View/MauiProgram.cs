@@ -1,6 +1,7 @@
-﻿using MauiLabs.View.Pages;
+﻿using CommunityToolkit.Maui;
+using MauiLabs.View.Commons.ViewModels;
+using MauiLabs.View.Pages;
 using MauiLabs.View.Services;
-using MauiLabs.View.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -18,6 +19,7 @@ namespace MauiLabs.View
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<CookingRecipeApp>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
