@@ -9,11 +9,17 @@ namespace MauiLabs.View.Commons.ContentViews
     {
         public static readonly BindableProperty IsValidatedProperty = BindableProperty.Create(
             nameof(IsValidated), typeof(bool), typeof(ValidationEntryView),
-            defaultValue: false, defaultBindingMode: BindingMode.OneWayToSource);
+            defaultValue: false, defaultBindingMode: BindingMode.OneWayToSource,
+            propertyChanged: Test);
 
         public static readonly BindableProperty TextValueProperty = BindableProperty.Create(
             nameof(TextValue), typeof(string), typeof(ValidationEntryView),
             defaultValue: string.Empty, defaultBindingMode: BindingMode.OneWayToSource);
+
+        private static void Test(BindableObject bindable, object oldValue, object newValue)
+        {
+            Console.WriteLine();
+        }
 
         public static readonly BindableProperty ErrorTextProperty = BindableProperty.Create(
             nameof(ErrorText), typeof(string), typeof(ValidationEntryView));

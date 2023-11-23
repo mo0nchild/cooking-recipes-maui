@@ -16,12 +16,14 @@
             <Setter Property="FontSize" Value="12" />
             <Style.Triggers>
                 <DataTrigger TargetType="Label" Value="True"
-                             Binding="{x:Binding IsValidatedProperty, Source={x:Reference this}, Mode=OneWay}">
-                    <Setter Property="FontAttributes" Value="None"/>
+                             Binding="{x:Binding IsValidated, Source={x:Reference this}}">
+                    <Setter Property="FontAttributes" Value="Bold"/>
+                    <Setter Property="TextColor" Value="GreenYellow"/>
                 </DataTrigger>
                 <DataTrigger TargetType="Label" Value="False"
-                             Binding="{x:Binding IsValidatedProperty, Source={x:Reference this}, Mode=OneWay}">
-                    <Setter Property="FontAttributes" Value="Bold" />
+                             Binding="{x:Binding IsValidated, Source={x:Reference this}}">
+                    <Setter Property="FontAttributes" Value="None" />
+                    <Setter Property="TextColor" Value="White" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -42,12 +44,9 @@
                    ClearButtonVisibility="WhileEditing" x:Name="TextField" IsPassword="{x:Binding IsHidden}"
                    Style="{x:StaticResource Key=TextFieldStyle}" MaxLength="{x:Binding MaxLenght}">
                 <Entry.Behaviors>
-                    <toolkit:MultiValidationBehavior x:Name="ValidationError">
-                        <toolkit:TextValidationBehavior RegexPattern="{x:Binding Regex, Mode=OneWay}"
-                            Flags="ValidateOnValueChanged" 
-                            MinimumLength="{x:Binding MinLenght}" 
-                            MaximumLength="{x:Binding MaxLenght}"/>
-                    </toolkit:MultiValidationBehavior>
+                    <toolkit:TextValidationBehavior 
+                        RegexPattern="{x:Binding Regex}" Flags="ValidateOnValueChanged" x:Name="ValidationError"
+                        MinimumLength="{x:Binding MinLenght}" MaximumLength="{x:Binding MaxLenght}"/>
                 </Entry.Behaviors>
             </Entry>
         </Border>
