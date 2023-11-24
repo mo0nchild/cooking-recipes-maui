@@ -8,7 +8,6 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetCookingRecipes
     {
         public required int Skip { get; set; } = default!;
         public required int Take { get; set; } = default!;
-        public bool? Confirmed { get; set; } = default!;
 
         public required RecipeSortingType SortingType { get; set; } = default!;
         public string? Category { get; set; } = default!;

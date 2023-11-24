@@ -24,13 +24,10 @@ namespace MauiLabs.Api.Services.Commands.CookingRecipeCommands.EditCookingRecipe
                 cookingrecipe.Name = request.Name;
                 cookingrecipe.Description = request.Description;
 
-                if (request.Category != null)
-                {
-                    var category = await dbcontext.RecipeCategories.FirstOrDefaultAsync(item => item.Name == request.Category);
-                    if (category == null) throw new ApiServiceException("Категория не найдена", requestType);
+                var category = await dbcontext.RecipeCategories.FirstOrDefaultAsync(item => item.Name == request.Category);
+                if (category == null) throw new ApiServiceException("Категория не найдена", requestType);
 
-                    cookingrecipe.RecipeCategoryId = category.Id;
-                }
+                cookingrecipe.RecipeCategoryId = category.Id;
                 foreach (var ingredient in request.Ingredients)
                 {
                     await dbcontext.Ingredients.Include(item => item.IngredientUnit).Where(p => p.CookingRecipeId == cookingrecipe.Id

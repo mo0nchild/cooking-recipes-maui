@@ -44,7 +44,8 @@ namespace MauiLabs.Api.Controllers.ApiModels.RecipeModels.CookingRecipe.Requests
         /// Категория рецепта
         /// </summary>
         [MaxLength(50, ErrorMessage = "Длина названия категории рецепта до 50 символов")]
-        public string? Category { get; set; } = default!;
+        [Required(ErrorMessage = "Необходимо указать названия категории рецепта")]
+        public string Category { get; set; } = default!;
 
         /// <summary>
         /// Список ингредиентов

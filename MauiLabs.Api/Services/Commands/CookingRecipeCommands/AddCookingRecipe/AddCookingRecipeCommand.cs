@@ -11,7 +11,7 @@ namespace MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe
         public required string Name { get; set; } = string.Empty;
         public string? Description { get; set; } = string.Empty;
         public byte[]? Image { get; set; } = default!;
-        public string? Category { get; set; } = default!;
+        public string Category { get; set; } = default!;
 
         public required int PublisherId { get; set; } = default!;
         public Dictionary<string, IngredientUnitInfo> Ingredients { get; set; } = new();

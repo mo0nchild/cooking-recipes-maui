@@ -8,7 +8,7 @@ namespace MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe
         {
             this.RuleFor(item => item.Name).MaximumLength(50).NotEmpty()
                 .WithMessage("Неверное значение названия рецепта");
-            this.RuleFor(item => item.Category).MaximumLength(50)
+            this.RuleFor(item => item.Category).MaximumLength(50).NotEmpty()
                 .WithMessage("Неверное значение названия категории");
 
             this.RuleFor(item => item.Ingredients).ForEach(item =>

@@ -14,7 +14,7 @@ namespace MauiLabs.Api.Services.Commands.CookingRecipeCommands.EditCookingRecipe
         public string? Description { get; set; } = string.Empty;
         public byte[]? Image { get; set; } = default!;
 
-        public required string? Category { get; set; } = default!;
+        public required string Category { get; set; } = default!;
         public Dictionary<string, IngredientUnitInfo> Ingredients { get; set; } = new();
 
         public virtual void ConfigureMapping(Profile profile)

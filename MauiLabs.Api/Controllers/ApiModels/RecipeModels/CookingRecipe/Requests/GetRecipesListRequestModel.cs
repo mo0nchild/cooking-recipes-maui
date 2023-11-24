@@ -25,11 +25,6 @@ namespace MauiLabs.Api.Controllers.ApiModels.RecipeModels.CookingRecipe.Requests
         public required int Take { get; set; } = default!;
 
         /// <summary>
-        /// Фильтр по состоянию рецепта
-        /// </summary>
-        public bool? Confirmed { get; set; } = default!;
-
-        /// <summary>
         /// Порядок сортировки списка
         /// </summary>
         [Required(ErrorMessage = "Необходимо указать правила сортировки найденных записей")]
