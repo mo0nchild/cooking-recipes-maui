@@ -12,7 +12,7 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models
 
         public string? Description { get; set; } = default!;
         public byte[]? Image { get; set; } = default!;
-        public string? Category { get; set; } = default!;
+        public string Category { get; set; } = default!;
 
         public required DateTime PublicationTime { get; set; } = default!;
         public required double Rating { get; set; } = default!;

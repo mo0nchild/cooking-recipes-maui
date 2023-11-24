@@ -41,17 +41,6 @@ namespace MauiLabs.Api.RemoteServices.Implementations.CookingRecipe
             }
             return new Empty();
         }
-
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
-        public override async Task<Empty> AddCookingRecipe(AddCookingRecipeModel request, ServerCallContext context)
-        {
-            try { await this._mediator.Send(this._mapper.Map<AddCookingRecipeCommand>(request)); }
-            catch (ValidationException errorInfo)
-            {
-                throw new RpcException(Status.DefaultCancelled, errorInfo.Message);
-            }
-            return new Empty();
-        }
         public override async Task<Empty> DeleteCookingRecipe(DeleteCookingRecipeModel request, ServerCallContext context)
         {
             var userFilter = (CookingRecipeInfo info) => info.Id == request.Id;

@@ -18,8 +18,8 @@ namespace MauiLabs.Dal.Entities
         public string? Description { get; set; } = string.Empty;
         public byte[]? Image { get; set; } = default!;
 
-        public int? RecipeCategoryId { get; set; } = default!;
-        public virtual RecipeCategory? RecipeCategory { get; set; } = default!;
+        public int RecipeCategoryId { get; set; } = default!;
+        public virtual RecipeCategory RecipeCategory { get; set; } = default!;
         public int PublisherId { get; set; } = default!;
         public virtual UserProfile Publisher { get; set; } = default!;
 

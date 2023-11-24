@@ -20,7 +20,6 @@ namespace MauiLabs.Api.RemoteServices
             collection.AddValidator<AddFriendModel.ModelValidation>(ServiceLifetime.Scoped);
 
             collection.AddValidator<AddCookingRecipeByTokenModel.ModelValidation>(ServiceLifetime.Scoped);
-            collection.AddValidator<AddCookingRecipeModel.ModelValidation>(ServiceLifetime.Scoped);
             collection.AddValidator<EditCookingRecipeModel.ModelValidation>(ServiceLifetime.Scoped);
             return Task.FromResult(collection);
         }

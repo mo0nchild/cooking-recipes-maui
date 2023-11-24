@@ -15,35 +15,6 @@ using static MauiLabs.Api.RemoteServices.Implementations.CookingRecipe.AddCookin
 
 namespace MauiLabs.Api.RemoteServices.Implementations.CookingRecipe
 {
-    public partial class AddCookingRecipeModel : IMappingTarget<AddCookingRecipeCommand>
-    {
-        public sealed class ModelValidation : AbstractValidator<AddCookingRecipeModel>
-        {
-            public ModelValidation() : base()
-            {
-                this.RuleFor(item => item.Name).NotEmpty()
-                    .MaximumLength(50).WithMessage("Неверное значение названия рецепта: длина до 50 символов")
-                    .MinimumLength(3).WithMessage("Неверное значение названия рецепта: длина от 3 символов");
-                this.RuleFor(item => item.Category)
-                    .MaximumLength(50).WithMessage("Неверное значение названия категории: длина до 50 символов");
-
-                this.RuleFor(item => item.Ingredients).ForEach(item =>
-                {
-                    item.ChildRules(p => p.RuleFor(i => i.Key).NotEmpty()
-                        .MaximumLength(50).WithMessage("Неверное значение названия ингредиента: длина до 50 символов")
-                        .MinimumLength(3).WithMessage("Неверное значение названия ингредиента: длина от 3 символов"));
-                    item.ChildRules(p => p.RuleFor(i => i.Value.Unit).NotEmpty()
-                        .MaximumLength(20).WithMessage("Неверное значение названия единицы измерения: длина до 20 символов"));
-                });
-            }
-        }
-        public void ConfigureMapping(Profile profile)
-        {
-            profile.CreateMap<ByteString, byte[]?>().ConvertUsing(item => item.ToByteArray());
-            profile.CreateMap<Types.IngredientUnitModel, IngredientUnitInfo>();
-            profile.CreateMap<AddCookingRecipeModel, AddCookingRecipeCommand>();
-        }
-    }
     public partial class AddCookingRecipeByTokenModel : IMappingTarget<AddCookingRecipeCommand>
     {
         public sealed class ModelValidation : AbstractValidator<AddCookingRecipeByTokenModel>

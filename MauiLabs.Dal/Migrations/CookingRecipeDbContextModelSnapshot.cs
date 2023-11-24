@@ -153,7 +153,7 @@ namespace MauiLabs.Dal.Migrations
                     b.Property<int>("PublisherId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("RecipeCategoryId")
+                    b.Property<int>("RecipeCategoryId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -431,7 +431,8 @@ namespace MauiLabs.Dal.Migrations
                     b.HasOne("MauiLabs.Dal.Entities.RecipeCategory", "RecipeCategory")
                         .WithMany("Recipes")
                         .HasForeignKey("RecipeCategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Publisher");
 
