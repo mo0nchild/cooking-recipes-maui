@@ -4,7 +4,6 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using MauiLabs.Api.Commons.Mapping;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe;
-using MauiLabs.Api.Services.Commands.CookingRecipeCommands.ConfirmeCookingRecipe;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.DeleteCookingRecipe;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.EditCookingRecipe;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.Models;
@@ -74,7 +73,6 @@ namespace MauiLabs.Api.RemoteServices.Implementations.CookingRecipe
             profile.CreateMap<AddCookingRecipeByTokenModel, AddCookingRecipeCommand>();
         }
     }
-    public partial class ConfirmeCookingRecipeModel : IMappingTarget<ConfirmeCookingRecipeCommand> { }
     public partial class DeleteCookingRecipeModel : IMappingTarget<DeleteCookingRecipeCommand> { }
     public partial class EditCookingRecipeModel : IMappingTarget<EditCookingRecipeCommand> 
     {

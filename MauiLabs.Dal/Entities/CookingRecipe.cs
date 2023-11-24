@@ -12,12 +12,10 @@ namespace MauiLabs.Dal.Entities
     public partial class CookingRecipe : object
     {
         public int Id { get; set; } = default!;
+        public string Name { get; set; } = string.Empty;
 
         public DateTime PublicationTime { get; set; } = default!;
-        public string Name { get; set; } = string.Empty;
         public string? Description { get; set; } = string.Empty;
-
-        public bool Confirmed { get; set; } = default!;
         public byte[]? Image { get; set; } = default!;
 
         public int? RecipeCategoryId { get; set; } = default!;

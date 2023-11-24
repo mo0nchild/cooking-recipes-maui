@@ -34,10 +34,6 @@ message AddCookingRecipeByTokenModel {
 	}
 	map<string, IngredientUnitModel> ingredients = 6;
 }
-message ConfirmeCookingRecipeModel {
-	int32 id = 1;
-	bool status = 2;
-}
 message DeleteCookingRecipeModel {
 	int32 id = 1;
 }
@@ -59,10 +55,9 @@ message EditCookingRecipeModel {
 service CookingRecipeCommands {
 	rpc AddCookingRecipeByToken(AddCookingRecipeByTokenModel) returns (google.protobuf.Empty);
 	rpc AddCookingRecipe(AddCookingRecipeModel) returns (google.protobuf.Empty);
-	rpc DeleteCookingRecipe(DeleteCookingRecipeModel) returns (google.protobuf.Empty);
 
+	rpc DeleteCookingRecipe(DeleteCookingRecipeModel) returns (google.protobuf.Empty);
 	rpc EditCookingRecipe(EditCookingRecipeModel) returns (google.protobuf.Empty);
-	rpc ConfirmeCookingRecipe(ConfirmeCookingRecipeModel) returns (google.protobuf.Empty);
 }
 
 message CookingRecipeInfoModel {
@@ -84,7 +79,6 @@ message CookingRecipeInfoModel {
 	optional google.protobuf.StringValue description = 3;
 	google.protobuf.Timestamp publication_time = 4;
 	double rating = 5;
-	optional bool confirmed = 6; 
 
 	repeated IngredientInfoModel ingredients = 7;
 	int32 publisher_id = 8;
@@ -108,9 +102,8 @@ message GetCookingRecipesListModel {
 	}
 	int32 skip = 1;
 	int32 take = 2;
-	optional google.protobuf.BoolValue confirmed = 3;
-	
 	RecipeSortingType sorting_type = 4;
+	
 	optional google.protobuf.StringValue category = 5;
 	optional google.protobuf.StringValue text_filter = 6;
 }

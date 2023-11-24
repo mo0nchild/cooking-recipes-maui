@@ -7,7 +7,6 @@ using MauiLabs.Api.Controllers.ApiModels.RecipeModels.CookingRecipe.Requests;
 using MauiLabs.Api.Controllers.ApiModels.RecipeModels.CookingRecipe.Responses;
 using MauiLabs.Api.RemoteServices.Implementations.CookingRecipe;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe;
-using MauiLabs.Api.Services.Commands.CookingRecipeCommands.ConfirmeCookingRecipe;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.DeleteCookingRecipe;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.EditCookingRecipe;
 using MauiLabs.Api.Services.Commands.FriendCommands.AddFriend;
@@ -35,35 +34,17 @@ namespace MauiLabs.Api.Controllers.ApiControllers.RecipeControllers
         protected virtual async Task CheckProfileRoleAsync(Func<CookingRecipeInfo, bool> checker)
         {
             var recommends = await this.mediator.Send(new GetPublishedRecipeListRequest() { PublisherId = this.ProfileId });
-
-            if (!this.HttpContext.User.IsInRole("Admin")! && recommends.Recipes.FirstOrDefault(p => checker.Invoke(p)) == null)
+            if (recommends.Recipes.FirstOrDefault(p => checker.Invoke(p)) == null)
             {
                 throw new ValidationException("Рецепт не принадлежит пользователю");
             }
         }
         /// <summary>
-        /// [Admin] Добавление кулинарного рецепта
+        /// [Admin] Добавление кулинарного рецепта при помощи токена
         /// </summary>
         /// <param name="request">Данные кулинарного рецепта</param>
         /// <returns>Статус добавления кулинарного рецепта</returns>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
-        [Route("add"), HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddRecipeHandler([FromBody] AddRecipeByIdRequestModel request)
-        {
-            try { await this.mediator.Send(this.mapper.Map<AddCookingRecipeCommand>(request)); }
-            catch (ValidationException errorInfo)
-            {
-                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
-            }
-            return this.Ok("Запись кулинарного рецепта успешно добавлена");
-        }
-        /// <summary>
-        /// Добавление кулинарного рецепта при помощи токена
-        /// </summary>
-        /// <param name="request">Данные кулинарного рецепта</param>
-        /// <returns>Статус добавления кулинарного рецепта</returns>
         [Route("addbytoken"), HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -80,28 +61,11 @@ namespace MauiLabs.Api.Controllers.ApiControllers.RecipeControllers
             return this.Ok("Запись кулинарного рецепта успешно добавлена");
         }
         /// <summary>
-        /// [Admin] Изменение статуса кулинарного рецепта
-        /// </summary>
-        /// <param name="request">Данные кулинарного рецепта</param>
-        /// <returns>Статус изменения кулинарного рецепта</returns>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
-        [Route("confirme"), HttpPatch]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddRecipeByTokenHandler([FromQuery] ConfirmeRecipeRequestModel request)
-        {
-            try { await this.mediator.Send(this.mapper.Map<ConfirmeCookingRecipeCommand>(request)); }
-            catch (ValidationException errorInfo)
-            {
-                return this.Problem(errorInfo.Message, statusCode: (int)StatusCodes.Status400BadRequest);
-            }
-            return this.Ok("Статус кулинарного рецепта успешно изменен");
-        }
-        /// <summary>
-        /// Удаление кулинарного рецепта с проверкой доступа
+        /// [Admin] Удаление кулинарного рецепта с проверкой доступа
         /// </summary>
         /// <param name="request">Данные кулинарного рецепта</param>
         /// <returns>Статус удаления кулинарного рецепта</returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("delete"), HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -119,10 +83,11 @@ namespace MauiLabs.Api.Controllers.ApiControllers.RecipeControllers
             return this.Ok("Запись кулинарного рецепта успешно удалена");
         }
         /// <summary>
-        /// Редактирование кулинарного рецепта с проверкой доступа
+        /// [Admin] Редактирование кулинарного рецепта с проверкой доступа
         /// </summary>
         /// <param name="request">Данные кулинарного рецепта</param>
         /// <returns>Статус редактирования кулинарного рецепта</returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
         [Route("edit"), HttpPut]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]

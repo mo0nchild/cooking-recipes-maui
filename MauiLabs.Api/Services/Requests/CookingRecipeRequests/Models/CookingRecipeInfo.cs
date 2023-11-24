@@ -16,7 +16,6 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models
 
         public required DateTime PublicationTime { get; set; } = default!;
         public required double Rating { get; set; } = default!;
-        public required bool Confirmed { get; set; } = default!;
 
         public required List<IngredientInfo> Ingredients { get; set; } = new();
         public required PublisherInfo Publisher { get; set; } = default!;

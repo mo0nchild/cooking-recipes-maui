@@ -3,7 +3,6 @@ using FluentValidation;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.AddCookingRecipe;
-using MauiLabs.Api.Services.Commands.CookingRecipeCommands.ConfirmeCookingRecipe;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.DeleteCookingRecipe;
 using MauiLabs.Api.Services.Commands.CookingRecipeCommands.EditCookingRecipe;
 using MauiLabs.Api.Services.Commands.RecommendCommands.DeleteRecommend;
@@ -18,7 +17,7 @@ using System.Security.Claims;
 
 namespace MauiLabs.Api.RemoteServices.Implementations.CookingRecipe
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "User")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
     public partial class CookingRecipeServiceCommands(IMediator mediator, IMapper mapper, IHttpContextAccessor accessor)
         : CookingRecipeCommands.CookingRecipeCommandsBase
     {
@@ -47,17 +46,6 @@ namespace MauiLabs.Api.RemoteServices.Implementations.CookingRecipe
         public override async Task<Empty> AddCookingRecipe(AddCookingRecipeModel request, ServerCallContext context)
         {
             try { await this._mediator.Send(this._mapper.Map<AddCookingRecipeCommand>(request)); }
-            catch (ValidationException errorInfo)
-            {
-                throw new RpcException(Status.DefaultCancelled, errorInfo.Message);
-            }
-            return new Empty();
-        }
-
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Admin")]
-        public override async Task<Empty> ConfirmeCookingRecipe(ConfirmeCookingRecipeModel request, ServerCallContext context)
-        {
-            try { await this._mediator.Send(this._mapper.Map<ConfirmeCookingRecipeCommand>(request)); }
             catch (ValidationException errorInfo)
             {
                 throw new RpcException(Status.DefaultCancelled, errorInfo.Message);
@@ -93,8 +81,7 @@ namespace MauiLabs.Api.RemoteServices.Implementations.CookingRecipe
         protected virtual async Task CheckProfileRoleAsync(Func<CookingRecipeInfo, bool> checker)
         {
             var recommends = await this._mediator.Send(new GetPublishedRecipeListRequest() { PublisherId = this.ProfileId });
-
-            if (!this.ProfileIsAdmin && recommends.Recipes.FirstOrDefault(p => checker.Invoke(p)) == null)
+            if (recommends.Recipes.FirstOrDefault(p => checker.Invoke(p)) == null)
             {
                 throw new ValidationException("Рецепт не принадлежит пользователю");
             }

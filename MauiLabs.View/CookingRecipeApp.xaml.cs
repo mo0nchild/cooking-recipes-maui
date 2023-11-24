@@ -14,8 +14,8 @@ namespace MauiLabs.View
             var applicationWindow = base.CreateWindow(activationState);
             if (DeviceInfo.Platform == DevicePlatform.WinUI)
             {
-                (applicationWindow.MaximumWidth, applicationWindow.MaximumHeight) = (500, 700);
-                (applicationWindow.Width, applicationWindow.Height) = (500, 700);
+                (applicationWindow.MaximumWidth, applicationWindow.MaximumHeight) = (500, 750);
+                (applicationWindow.Width, applicationWindow.Height) = (500, 750);
             }
             return applicationWindow;
         }
