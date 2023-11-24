@@ -8,25 +8,11 @@ import "google/protobuf/empty.proto";
 
 package cookingrecipe;
 
-message AddCookingRecipeModel {
-	string name = 1;
-	optional google.protobuf.StringValue description = 2;
-	optional bytes image = 3;
-
-	optional google.protobuf.StringValue category = 4;
-	int32 publisher_id = 5;
-
-	message IngredientUnitModel {
-		double value = 1;
-		string unit = 2;
-	}
-	map<string, IngredientUnitModel> ingredients = 6;
-}
 message AddCookingRecipeByTokenModel {
 	string name = 1;
+	string category = 4;
 	optional google.protobuf.StringValue description = 2;
 	optional bytes image = 3;
-	optional google.protobuf.StringValue category = 4;
 
 	message IngredientUnitModel {
 		double value = 1;
@@ -40,10 +26,10 @@ message DeleteCookingRecipeModel {
 message EditCookingRecipeModel {
 	int32 id = 1;
 	string name = 2;
+	string category = 5;
 
 	optional google.protobuf.StringValue description = 3;
 	optional bytes image = 4;
-	optional google.protobuf.StringValue category = 5;
 
 	message IngredientUnitModel {
 		double value = 1;
@@ -54,7 +40,6 @@ message EditCookingRecipeModel {
 
 service CookingRecipeCommands {
 	rpc AddCookingRecipeByToken(AddCookingRecipeByTokenModel) returns (google.protobuf.Empty);
-	rpc AddCookingRecipe(AddCookingRecipeModel) returns (google.protobuf.Empty);
 
 	rpc DeleteCookingRecipe(DeleteCookingRecipeModel) returns (google.protobuf.Empty);
 	rpc EditCookingRecipe(EditCookingRecipeModel) returns (google.protobuf.Empty);
