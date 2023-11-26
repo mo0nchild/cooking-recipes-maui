@@ -89,10 +89,16 @@
 	  <MauiXaml Update="Commons\ContentViews\ValidationEntryView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\ProfilePages\AuthorizationNavPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\ProfilePages\AuthorizationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\ProfilePages\RegistrationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\RecipePages\RecipesListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
@@ -107,9 +113,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\ProfilePages\ProfileShell.xaml.cs">
-	    <DependentUpon>ProfileShell.xaml</DependentUpon>
-	  </Compile>
 	  <Compile Update="CookingRecipeApp.xaml.cs">
 	    <DependentUpon>CookingRecipeApp.xaml</DependentUpon>
 	  </Compile>

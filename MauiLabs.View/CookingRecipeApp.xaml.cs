@@ -1,13 +1,14 @@
 ﻿using MauiLabs.View.Pages.ProfilePages;
+using MauiLabs.View.Pages.RecipePages;
 
 namespace MauiLabs.View
 {
     public partial class CookingRecipeApp : Application
     {
-        public CookingRecipeApp() : base()
+        public CookingRecipeApp(IServiceProvider serviceProvider) : base()
         {
             this.InitializeComponent();
-            this.MainPage = new ProfileShell();
+            this.MainPage = new CookingRecipeShell();
         }
         protected override Window CreateWindow(IActivationState activationState)
         {

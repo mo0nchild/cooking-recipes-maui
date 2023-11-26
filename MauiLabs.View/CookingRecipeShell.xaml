@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MauiLabs.View.CookingRecipeShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:recipePages="clr-namespace:MauiLabs.View.Pages.RecipePages"
+    xmlns:profilePages="clr-namespace:MauiLabs.View.Pages.ProfilePages"
+    Shell.TabBarIsVisible="True">
+
+    <TabBar Route="authorization"  Shell.BackgroundColor="{x:StaticResource FirstColor}">
+        <Tab Route="loginTab" Title="Авторизация" Icon="/Profile/login.png">
+            <ShellContent Route="loginPage" ContentTemplate="{DataTemplate profilePages:AuthorizationPage}"/>
+        </Tab>
+        <Tab Route="registrationTab" Title="Регистрация" Icon="/Profile/registration.png">
+            <ShellContent Route="registrationPage" ContentTemplate="{DataTemplate profilePages:RegistrationPage}"/>
+        </Tab>
+    </TabBar>
+    <TabBar Route="recipes" Shell.BackgroundColor="{x:StaticResource FirstColor}">
+        <Tab Route="recipesListTab" Title="Список рецептов">
+            <ShellContent Route="recipesListPage" ContentTemplate="{DataTemplate recipePages:RecipesListPage}"/>
+        </Tab>
+    </TabBar>
+</Shell>

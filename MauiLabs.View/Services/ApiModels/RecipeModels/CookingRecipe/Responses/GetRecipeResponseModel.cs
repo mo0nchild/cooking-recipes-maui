@@ -43,11 +43,6 @@ namespace MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Responses
         public required double Rating { get; set; } = default!;
 
         /// <summary>
-        /// Значение, которое определяет - подтвержден рецепт администратором
-        /// </summary>
-        public required bool Confirmed { get; set; } = default!;
-
-        /// <summary>
         /// Список необходимых ингредиентов
         /// </summary>
         public required List<IngredientInfoModel> Ingredients { get; set; } = new();

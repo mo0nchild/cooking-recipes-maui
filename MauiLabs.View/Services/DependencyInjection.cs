@@ -26,6 +26,7 @@ namespace MauiLabs.View.Services
                 options.BaseAddress = new Uri(clientOptions.BaseUrl);
             });
             collection.AddTransient<IUserAuthorization, UserAuthorization>();
+            collection.AddTransient<ICookingRecipes, CookingRecipes>();
             return Task.FromResult(collection);
         }
     }

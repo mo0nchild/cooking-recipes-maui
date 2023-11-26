@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiLabs.View.Pages.RecipePages.RecipesListPage"
+             xmlns:custom="clr-namespace:MauiLabs.View.Commons.ContentViews"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Список рецептов" Shell.BackgroundColor="{x:StaticResource Key=FirstColor}">
+    <ContentPage.Resources>
+        
+    </ContentPage.Resources>
+    <Grid>
+        <Image Source="background.png" Aspect="AspectFill"/>
+        <VerticalStackLayout>
+            <Button Text="Убить себя" Clicked="Button_Clicked" />
+            <ScrollView Orientation="Vertical" BackgroundColor="Transparent">
+
+                <CollectionView ItemsSource="{Binding }">
+                    
+                </CollectionView>
+            </ScrollView>
+        </VerticalStackLayout>
+        <custom:LoadingContentView IsLoading="{x:Binding IsLoading}" CancelCommand="{x:Binding CancelCommand}"/>
+    </Grid>
+</ContentPage>

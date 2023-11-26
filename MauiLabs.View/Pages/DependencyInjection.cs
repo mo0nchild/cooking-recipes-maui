@@ -1,4 +1,5 @@
 ﻿using MauiLabs.View.Pages.ProfilePages;
+using MauiLabs.View.Pages.RecipePages;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,9 @@ namespace MauiLabs.View.Pages
         public static Task<IServiceCollection> AddViewPages(this IServiceCollection collection, IConfiguration configuration)
         {
             collection.AddTransient<AuthorizationPage>();
+            collection.AddTransient<RegistrationPage>();
+
+            collection.AddTransient<RecipesListPage>();
 
             return Task.FromResult(collection);
         } 

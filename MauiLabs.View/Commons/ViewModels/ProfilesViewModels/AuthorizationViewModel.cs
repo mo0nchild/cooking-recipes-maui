@@ -1,4 +1,5 @@
-﻿using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Requests;
+﻿using MauiLabs.View.Pages.RecipePages;
+using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Requests;
 using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Responses;
 using MauiLabs.View.Services.Commons;
 using MauiLabs.View.Services.Interfaces;
@@ -42,15 +43,15 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
             this.IsLoading = true;
             LoginResponseModel requestResult = default!;
             try {
-                requestResult = await userAuthorization.AuthorizeUser(loginRequestModel, cancellationSource.Token);
-                await Application.Current.MainPage.DisplayAlert("Успех", requestResult.JwtToken, "Назад");
+                requestResult = await this.userAuthorization.AuthorizeUser(loginRequestModel, cancellationSource.Token);
+                await UserManager.AuthorizeUser(requestResult);
+                await Shell.Current.GoToAsync("//recipes", true);
             }
-            catch (InvalidOperationException errorInfo) { await Console.Out.WriteLineAsync(errorInfo.Message); }
             catch (ViewServiceException errorInfo)
             {
                 await Application.Current.MainPage.DisplayAlert("Произошла ошибка", errorInfo.Message, "Назад");
             }
-            catch (TaskCanceledException errorInfo) { await Console.Out.WriteLineAsync(errorInfo.Message); }
+            catch (Exception errorInfo) { await Console.Out.WriteLineAsync(errorInfo.Message); }
             this.IsLoading = false;
         }
         private protected bool isLoginValid = default!;

@@ -1,4 +1,5 @@
 ﻿using MauiLabs.View.Commons.ViewModels.ProfilesViewModels;
+using MauiLabs.View.Commons.ViewModels.RecipesViewModels;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace MauiLabs.View.Commons.ViewModels
         public static Task<IServiceCollection> AddViewModels(this IServiceCollection collection, IConfiguration configuration)
         {
             collection.AddTransient<AuthorizationViewModel>();
+
+            collection.AddTransient<RecipesListViewModel>();
 
             return Task.FromResult(collection);
         }
