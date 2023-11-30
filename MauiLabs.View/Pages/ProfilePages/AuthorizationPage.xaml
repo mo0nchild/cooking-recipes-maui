@@ -43,7 +43,7 @@
                     </Label.FormattedText>
                 </Label>
                 <FlexLayout AlignItems="Center" HorizontalOptions="Center" Direction="Column">
-                    <Border x:Name="MainFrame" StrokeThickness="2" MaximumWidthRequest="400" Padding="30"
+                    <Border StrokeThickness="2" MaximumWidthRequest="400" Padding="30"
                             BackgroundColor="{x:StaticResource Key=FirstColor}" HeightRequest="280" Margin="0, 30, 0, 20"
                             FlexLayout.AlignSelf="Stretch">
                         <Border.StrokeShape>

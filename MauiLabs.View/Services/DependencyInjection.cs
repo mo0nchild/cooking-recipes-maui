@@ -25,6 +25,8 @@ namespace MauiLabs.View.Services
                 options.DefaultRequestHeaders.Add("ApiKey", clientOptions.ApiKey);
                 options.BaseAddress = new Uri(clientOptions.BaseUrl);
             });
+            collection.AddTransient<IApiServiceCommunication, ApiServiceCommunication>();
+
             collection.AddTransient<IUserAuthorization, UserAuthorization>();
             collection.AddTransient<ICookingRecipes, CookingRecipes>();
             return Task.FromResult(collection);

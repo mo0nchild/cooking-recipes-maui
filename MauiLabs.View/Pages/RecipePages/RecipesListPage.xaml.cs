@@ -5,19 +5,20 @@ namespace MauiLabs.View.Pages.RecipePages;
 
 public partial class RecipesListPage : ContentPage
 {
-	public RecipesListPage(RecipesListViewModel viewModel) : base()
+    protected internal readonly RecipesListViewModel viewModel = default!;
+    public RecipesListPage(RecipesListViewModel viewModel) : base()
 	{
 		this.InitializeComponent();
-		this.BindingContext = viewModel;
+		this.BindingContext = this.viewModel = viewModel;
     }
 
-    private async void Button_Clicked(object sender, EventArgs e)
+    protected override void OnAppearing() => MainThread.BeginInvokeOnMainThread(() =>
     {
-        var shell = Shell.Current.Navigation;
-        await UserManager.SendRequest((token) =>
-        {
-            throw new ViewServiceException("shit", System.Net.HttpStatusCode.Unauthorized);
-        });
-        Console.WriteLine();
-    }
+        this.viewModel.LoadRecipesListCommand.Execute(this);
+    });
+
+    protected override void OnDisappearing() => MainThread.BeginInvokeOnMainThread(() =>
+    {
+        this.viewModel.CancelCommand.Execute(this);
+    });
 }

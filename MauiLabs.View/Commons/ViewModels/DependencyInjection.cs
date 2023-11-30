@@ -14,6 +14,7 @@ namespace MauiLabs.View.Commons.ViewModels
         public static Task<IServiceCollection> AddViewModels(this IServiceCollection collection, IConfiguration configuration)
         {
             collection.AddTransient<AuthorizationViewModel>();
+            collection.AddTransient<RegistrationViewModel>();
 
             collection.AddTransient<RecipesListViewModel>();
 

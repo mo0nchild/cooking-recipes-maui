@@ -26,11 +26,12 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">29.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<Nullable>disable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\cookingrecipe.png" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\cookingrecipe.png" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
@@ -42,13 +43,17 @@
 		<MauiFont Include="Resources\Fonts\*" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<!--<MauiAsset Include="Resources\Raw\**" />-->
+		<MauiAsset Include="Resources\Raw\**" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
 	  <None Remove="Resources\Images\Profile\login.png" />
 	  <None Remove="Resources\Images\Profile\registration.png" />
+	  <None Remove="Resources\Images\Recipe\starRegular.png" />
+	  <None Remove="Resources\Images\Recipe\starSolid.png" />
+	  <None Remove="Resources\Raw\defaultRecipe.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -78,12 +83,19 @@
 		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Commons\ContentViews\ExpanderView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Commons\ContentViews\LoadingContentView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Commons\ContentViews\RatingStarView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Commons\ContentViews\ValidationEntryView.xaml">
@@ -93,6 +105,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\ProfilePages\AuthorizationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\ProfilePages\ProfileInfo.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\ProfilePages\RegistrationPage.xaml">
@@ -108,8 +123,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiImage Include="Resources\Images\Profile\login.png" />
-	  <MauiImage Include="Resources\Images\Profile\registration.png" />
+	  <EmbeddedResource Include="Resources\Images\Recipe\defaultrecipe.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<MauiImage Include="Resources\Images\Profile\login.png" />
+		<MauiImage Include="Resources\Images\Profile\registration.png" />
+		<MauiImage Include="Resources\Images\background.png" />
+		<MauiImage Include="Resources\Images\Recipe\starregular.png" />
+		<MauiImage Include="Resources\Images\Recipe\starsolid.png" />
 	</ItemGroup>
 
 	<ItemGroup>

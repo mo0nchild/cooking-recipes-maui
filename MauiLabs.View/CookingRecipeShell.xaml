@@ -5,9 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:recipePages="clr-namespace:MauiLabs.View.Pages.RecipePages"
     xmlns:profilePages="clr-namespace:MauiLabs.View.Pages.ProfilePages"
-    Shell.TabBarIsVisible="True">
+    Shell.TabBarIsVisible="True" Shell.BackgroundColor="{x:StaticResource FirstColor}"
+    FlyoutBackgroundColor="{x:StaticResource SecondColor}">
 
-    <TabBar Route="authorization"  Shell.BackgroundColor="{x:StaticResource FirstColor}">
+    <TabBar Route="authorization" 
+            Shell.FlyoutItemIsVisible="False">
         <Tab Route="loginTab" Title="Авторизация" Icon="/Profile/login.png">
             <ShellContent Route="loginPage" ContentTemplate="{DataTemplate profilePages:AuthorizationPage}"/>
         </Tab>
@@ -15,9 +17,19 @@
             <ShellContent Route="registrationPage" ContentTemplate="{DataTemplate profilePages:RegistrationPage}"/>
         </Tab>
     </TabBar>
-    <TabBar Route="recipes" Shell.BackgroundColor="{x:StaticResource FirstColor}">
+    <FlyoutItem Route="recipes" Title="Рецепты">
+        <Tab Route="listTab" Title="Список рецептов">
+            <ShellContent Route="listPage"  ContentTemplate="{DataTemplate recipePages:RecipesListPage}"/>
+        </Tab>
+    </FlyoutItem>
+    <FlyoutItem Route="profile" Title="Профиль">
+        <Tab Route="infoTab" Title="Информация">
+            <ShellContent Route="infoPage" ContentTemplate="{DataTemplate profilePages:ProfileInfo}" />
+        </Tab>
+    </FlyoutItem>
+    <!--<TabBar Route="recipes" Shell.BackgroundColor="{x:StaticResource FirstColor}">
         <Tab Route="recipesListTab" Title="Список рецептов">
             <ShellContent Route="recipesListPage" ContentTemplate="{DataTemplate recipePages:RecipesListPage}"/>
         </Tab>
-    </TabBar>
+    </TabBar>-->
 </Shell>

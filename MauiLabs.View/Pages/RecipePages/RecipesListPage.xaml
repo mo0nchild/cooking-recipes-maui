@@ -5,20 +5,77 @@
              xmlns:custom="clr-namespace:MauiLabs.View.Commons.ContentViews"
              xmlns:system="clr-namespace:System;assembly=netstandard"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Title="Список рецептов" Shell.BackgroundColor="{x:StaticResource Key=FirstColor}">
+             Title="Список рецептов" 
+             Shell.BackgroundColor="{x:StaticResource Key=FirstColor}">
     <ContentPage.Resources>
         
     </ContentPage.Resources>
     <Grid>
         <Image Source="background.png" Aspect="AspectFill"/>
         <VerticalStackLayout>
-            <Button Text="Убить себя" Clicked="Button_Clicked" />
             <ScrollView Orientation="Vertical" BackgroundColor="Transparent">
-
-                <CollectionView ItemsSource="{Binding }">
+                <CollectionView ItemsSource="{Binding CookingRecipes}" HorizontalOptions="Fill">
+                    
+                    <CollectionView.Resources>
+                        <ResourceDictionary>
+                            <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageConverter" />
+                            <Style x:Key="CardBorderStyle" TargetType="Border">
+                                <Setter Property="StrokeThickness" Value="2"/>
+                                <Setter Property="BackgroundColor" Value="{x:StaticResource Key=FirstColor}"/>
+                                <Setter Property="Margin" Value="16, 10"/>
+                                <Setter Property="Padding" Value="10"/>
+                                <Setter Property="StrokeShape">
+                                    <Setter.Value>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Stroke">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="White" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="HorizontalOptions" Value="Fill"/>
+                                <Setter Property="HeightRequest" Value="100" />
+                            </Style>
+                        </ResourceDictionary>
+                    </CollectionView.Resources>
+                    
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource CardBorderStyle}">
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" HeightRequest="78" WidthRequest="78" StrokeThickness="2">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="16" />
+                                        </Border.StrokeShape>
+                                        <Border.Stroke>
+                                            <SolidColorBrush Color="White" />
+                                        </Border.Stroke>
+                                        <Image 
+                                            BackgroundColor="White" Aspect="AspectFill" HeightRequest="74" WidthRequest="74"
+                                            HorizontalOptions="Center" VerticalOptions="Center"  
+                                            Source="{Binding Image, Converter={x:StaticResource ByteArrayToImageConverter}}"/>
+                                    </Border>
+                                    <StackLayout Grid.Column="1" Orientation="Vertical" Spacing="5" HorizontalOptions="Fill">
+                                        <Label Text="{Binding Name}" TextColor="White" FontSize="18" 
+                                               TextDecorations="Underline" LineBreakMode="TailTruncation"/>
+                                        <Label Text="{Binding Description}" LineBreakMode="TailTruncation"/>
+                                        <custom:RatingStarView 
+                                            NullIcon="starregular.png" ValueIcon="starsolid.png" MaxValue="5" Value="3">
+                                        </custom:RatingStarView>
+                                    </StackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
                     
                 </CollectionView>
             </ScrollView>
+            
         </VerticalStackLayout>
         <custom:LoadingContentView IsLoading="{x:Binding IsLoading}" CancelCommand="{x:Binding CancelCommand}"/>
     </Grid>

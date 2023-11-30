@@ -1,14 +1,12 @@
-﻿using MauiLabs.View.Pages.RecipePages;
-using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Requests;
+﻿using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Requests;
 using MauiLabs.View.Services.ApiModels.ProfileModels.Authorization.Responses;
 using MauiLabs.View.Services.Commons;
 using MauiLabs.View.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,18 +14,19 @@ using System.Windows.Input;
 
 namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
 {
-    public partial class AuthorizationViewModel : INotifyPropertyChanged
+    public partial class RegistrationViewModel : INotifyPropertyChanged
     {
         protected internal readonly IUserAuthorization userAuthorization = default!;
         protected internal CancellationTokenSource cancellationSource = new();
-        public ICommand AuthorizateCommand { get; protected set; } = default!;
+
+        public ICommand RegistrationCommand { get; protected set; } = default!;
         public ICommand CancelCommand { get; protected set; } = default!;
 
         public event PropertyChangedEventHandler PropertyChanged = default;
-        public AuthorizationViewModel(IUserAuthorization authorization) : base()
+        public RegistrationViewModel(IUserAuthorization authorization) : base()
         {
             this.userAuthorization = authorization;
-            this.AuthorizateCommand = new Command(this.AuthorizateCommandHandler);
+            this.RegistrationCommand = new Command(this.RegistrationCommandHandler);
             this.CancelCommand = new Command(this.CancelCommandHandler);
         }
         protected virtual async void CancelCommandHandler(object sender) => await Task.Run(() =>
@@ -37,13 +36,15 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
 
             this.IsLoading = default;
         });
-        protected virtual async void AuthorizateCommandHandler(object sender)
+        protected virtual async void RegistrationCommandHandler(object sender)
         {
-            if (!this.IsLoginValid || !this.IsPasswordValid) return;
+            return;
+
+            if (this.ValidationState.Where(item => !item.Value).Count() > 0) return;
             this.IsLoading = true;
             LoginResponseModel requestResult = default!;
             try {
-                requestResult = await this.userAuthorization.AuthorizeUser(loginRequestModel, cancellationSource.Token);
+                requestResult = await this.userAuthorization.RegistrationUser(registrationRequestModel, cancellationSource.Token);
                 await UserManager.AuthorizeUser(requestResult);
                 await Shell.Current.GoToAsync("//recipes", true);
             }
@@ -54,26 +55,44 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
             catch (Exception errorInfo) { await Console.Out.WriteLineAsync(errorInfo.Message); }
             this.IsLoading = false;
         }
-        private protected bool isLoginValid = default!;
-        public bool IsLoginValid { get => this.isLoginValid; set { this.isLoginValid = value; OnPropertyChanged(); } }
+        private protected RegistrationRequestModel registrationRequestModel = new();
+        public string UserName 
+        {
+            set { this.registrationRequestModel.Name = value; this.OnPropertyChanged(); }
+            get => this.registrationRequestModel.Name;
+        }
+        public string UserSurname 
+        {
+            set { this.registrationRequestModel.Surname = value; this.OnPropertyChanged(); }
+            get => this.registrationRequestModel.Surname;
+        }
+        public string UserEmail 
+        {
+            set { this.registrationRequestModel.Email = value; this.OnPropertyChanged(); }
+            get => this.registrationRequestModel.Email; 
+        }
 
-        private protected bool isPasswordValid = default!;
-        public bool IsPasswordValid { get => this.isPasswordValid; set { this.isPasswordValid = value; OnPropertyChanged(); } }
-
-        private protected LoginRequestModel loginRequestModel = new();
         public string UserLogin
         {
-            get => this.loginRequestModel.Login;
-            set { this.loginRequestModel.Login = value; OnPropertyChanged(); }
+            set { this.registrationRequestModel.Login = value; this.OnPropertyChanged(); }
+            get => this.registrationRequestModel.Login;
         }
-        public string UserPassword
+        public string UserPassword 
         {
-            get => this.loginRequestModel.Password;
-            set { this.loginRequestModel.Password = value; OnPropertyChanged(); }
+            set { this.registrationRequestModel.Password = value; this.OnPropertyChanged(); }
+            get => this.registrationRequestModel.Password;
+        }
+
+        public byte[] UserImage 
+        {
+            set { this.registrationRequestModel.Image = value; this.OnPropertyChanged(); }
+            get => this.registrationRequestModel.Image;
         }
 
         private protected bool isLoading = default;
         public bool IsLoading { get => this.isLoading; set { this.isLoading = value; OnPropertyChanged(); } }
+
+        public Dictionary<string, bool> ValidationState { get; set; } = new();
 
         public virtual void OnPropertyChanged([CallerMemberName] string name = "")
         {
