@@ -21,6 +21,7 @@ namespace MauiLabs.View.Commons.ViewModels.RecipesViewModels
 {
     public partial class RecipesListViewModel : INotifyPropertyChanged
     {
+        public static readonly string DefaultRecipeImage = $"MauiLabs.View.Resources.Images.Recipe.defaultrecipe.jpg";
         public static readonly int RecordsOnPage = 10;
 
         protected internal readonly ICookingRecipes recipeService = default!;
@@ -29,13 +30,14 @@ namespace MauiLabs.View.Commons.ViewModels.RecipesViewModels
         public ICommand CancelCommand { get; protected set; } = default!;
         public ICommand LoadRecipesListCommand { get; protected set; } = default!;
 
+        public event EventHandler RecipesReloaded = delegate { };
         public event PropertyChangedEventHandler PropertyChanged = default;
         public RecipesListViewModel(ICookingRecipes recipeService) : base()
         {
             this.CancelCommand = new Command(this.CancelCommandHandler);
             this.LoadRecipesListCommand = new Command(() =>
             {
-                this.LaunchСancelableTask(async () => await this.LoadingRecipesList());
+                this.LaunchСancelableTask(() => this.LoadingRecipesList());
             });
             this.recipeService = recipeService;
         }
@@ -70,18 +72,15 @@ namespace MauiLabs.View.Commons.ViewModels.RecipesViewModels
                 },
                 CancelToken = cancellationSource.Token, ProfileToken = token,
             });
-            //Application.Current.Dispatcher.Dispatch(async () =>
-            //{
-                for (var index = 0; index < this.CookingRecipes.Count; index++) this.CookingRecipes.RemoveAt(0);
-                foreach (var recipeRecord in requestResult.Recipes)
-                {
-                    recipeRecord.Image = recipeRecord.Image.Length != 0 ? recipeRecord.Image
-                        : await this.FileToByteArray($"MauiLabs.View.Resources.Images.Recipe.defaultrecipe.jpg");
+            foreach (var recipeRecord in requestResult.Recipes)
+            {
+                recipeRecord.Image = recipeRecord.Image.Length != 0 
+                    ? recipeRecord.Image : await this.FileToByteArray(DefaultRecipeImage);
+            }
+            this.CookingRecipes = new(requestResult.Recipes);
+            this.AllCount = requestResult.AllCount;
 
-                    this.CookingRecipes.Add(recipeRecord);
-                }
-                this.AllCount = requestResult.AllCount;
-            //});
+            this.RecipesReloaded.Invoke(this, new EventArgs());
         });
         public ObservableCollection<GetRecipeResponseModel> CookingRecipes { get; protected set; } = new();
 

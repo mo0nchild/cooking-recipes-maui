@@ -14,7 +14,7 @@
         <Image Source="background.png" Aspect="AspectFill"/>
         <VerticalStackLayout>
             <ScrollView Orientation="Vertical" BackgroundColor="Transparent">
-                <CollectionView ItemsSource="{Binding CookingRecipes}" HorizontalOptions="Fill">
+                <CollectionView x:Name="RecipesListView" ItemsSource="{Binding CookingRecipes}" HorizontalOptions="Fill">
                     
                     <CollectionView.Resources>
                         <ResourceDictionary>

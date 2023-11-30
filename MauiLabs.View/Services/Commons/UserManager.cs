@@ -32,12 +32,28 @@ namespace MauiLabs.View.Services.Commons
         public static async Task<int?> ProfileId() => int.Parse(await SecureStorage.Default.GetAsync("ProfileId"));
         public static async Task<string> JwtToken() => await SecureStorage.Default.GetAsync("JwtToken");
 
+        private static async Task DisplayAlertAsync(string message)
+        {
+            if (Application.Current != null && Application.Current.MainPage != null)
+            {
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert("Произошла ошибка", message, "Назад");
+                });
+            }
+            await Console.Out.WriteLineAsync(message);
+        }
         public static async Task SendRequest(Func<string, Task> request, Func<Exception, Task>? cancelled = null)
         {
             try { await request.Invoke(await UserManager.JwtToken()); }
             catch (ViewServiceException errorInfo) when (errorInfo.ExceptionType != HttpStatusCode.Unauthorized)
             {
-                await Shell.Current.DisplayAlert("Произошла ошибка", errorInfo.Message, "Назад");
+                await UserManager.DisplayAlertAsync(errorInfo.Message);
+            }
+            catch (ViewServiceException errorInfo) when (errorInfo.ExceptionType == HttpStatusCode.Unauthorized)
+            {
+                await UserManager.DisplayAlertAsync("Пользователь не авторизирован");
+                await LogoutUser();
             }
             catch (Exception errorInfo) { await CatchRequestError(errorInfo, cancelled); }
         }
@@ -45,7 +61,7 @@ namespace MauiLabs.View.Services.Commons
         {
             if (!(errorInfo is InvalidOperationException) && !(errorInfo is TaskCanceledException))
             {
-                await Shell.Current.DisplayAlert("Произошла ошибка", errorInfo.Message, "Назад");
+                await UserManager.DisplayAlertAsync(errorInfo.Message);
                 await LogoutUser();
             }
             else if (cancelled != null) await cancelled.Invoke(errorInfo);

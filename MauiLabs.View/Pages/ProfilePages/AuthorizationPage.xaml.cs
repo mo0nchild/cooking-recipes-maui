@@ -32,6 +32,7 @@ public partial class AuthorizationPage : ContentPage
     });
     protected override void OnDisappearing()
     {
+        this.viewModel.CancelCommand.Execute(null);
         (this.LoginPanel.Opacity, this.LoginPanel.Scale) = (0, 1.5);
 
         this.PasswordTextField.TextValue = string.Empty;

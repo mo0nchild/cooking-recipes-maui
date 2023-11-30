@@ -8,8 +8,7 @@
     Shell.TabBarIsVisible="True" Shell.BackgroundColor="{x:StaticResource FirstColor}"
     FlyoutBackgroundColor="{x:StaticResource SecondColor}">
 
-    <TabBar Route="authorization" 
-            Shell.FlyoutItemIsVisible="False">
+    <TabBar Route="authorization" Shell.FlyoutItemIsVisible="False">
         <Tab Route="loginTab" Title="Авторизация" Icon="/Profile/login.png">
             <ShellContent Route="loginPage" ContentTemplate="{DataTemplate profilePages:AuthorizationPage}"/>
         </Tab>

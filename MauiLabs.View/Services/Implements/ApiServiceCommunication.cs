@@ -35,7 +35,9 @@ namespace MauiLabs.View.Services.Implements
             using var response = await httpClient.SendAsync(requestMessage, cancelToken);
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
+                //var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
+                var errorMessage = JsonConvert.DeserializeObject<ProblemDetails>(await response.Content.ReadAsStringAsync());
+
                 throw new ViewServiceException(errorMessage?.Detail ?? errorMessage?.Title, response.StatusCode);
             }
             return await contentTransform.Invoke(response.Content);

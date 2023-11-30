@@ -14,7 +14,8 @@ public partial class RegistrationPage : ContentPage
 		this.InitializeComponent();
         this.BindingContext = this.viewModel = viewModel;
 
-        this.Loaded += delegate (object sender, EventArgs args) { this.isPageLoaded = true; };
+        this.Unloaded += delegate { this.isPageLoaded = default!; };
+        this.Loaded += delegate { this.isPageLoaded = true; };
     }
     protected override void OnAppearing() => this.Dispatcher.Dispatch(async () =>
     {
@@ -31,13 +32,14 @@ public partial class RegistrationPage : ContentPage
         });
         (this.RegisterPanel.Opacity, this.RegisterPanel.Scale) = (1.0, 1.0);
     });
-    protected override void OnDisappearing()
+    protected override async void OnDisappearing() => await this.Dispatcher.DispatchAsync(() =>
     {
+        this.viewModel.CancelCommand.Execute(null);
         (this.RegisterPanel.Opacity, this.RegisterPanel.Scale) = (0, 1.5);
 
         this.PasswordTextField.TextValue = string.Empty;
         this.LoginTextField.TextValue = string.Empty;
-    }
+    });
     private async void RegisterButton_Clicked(object sender, EventArgs args)
     {
         var validationState = this.viewModel.ValidationState;
