@@ -14,8 +14,8 @@ public partial class RegistrationPage : ContentPage
 		this.InitializeComponent();
         this.BindingContext = this.viewModel = viewModel;
 
-        this.Unloaded += delegate { this.isPageLoaded = default!; };
-        this.Loaded += delegate { this.isPageLoaded = true; };
+        this.Loaded += delegate (object sender, EventArgs args) { this.isPageLoaded = true; };
+        this.viewModel.DisplayAlert += this.DiplayAlertHandler;
     }
     protected override void OnAppearing() => this.Dispatcher.Dispatch(async () =>
     {
@@ -32,15 +32,27 @@ public partial class RegistrationPage : ContentPage
         });
         (this.RegisterPanel.Opacity, this.RegisterPanel.Scale) = (1.0, 1.0);
     });
-    protected override async void OnDisappearing() => await this.Dispatcher.DispatchAsync(() =>
+    protected override async void OnDisappearing() => await this.Dispatcher.DispatchAsync(async () =>
     {
         this.viewModel.CancelCommand.Execute(null);
         (this.RegisterPanel.Opacity, this.RegisterPanel.Scale) = (0, 1.5);
 
         this.PasswordTextField.TextValue = string.Empty;
         this.LoginTextField.TextValue = string.Empty;
+
+        this.NameTextField.TextValue = string.Empty;
+        this.SurnameTextField.TextValue = string.Empty;
+        this.EmailTextField.TextValue = string.Empty;
+
+        this.Expander.ResetExpander();
+        this.viewModel.UserImage = null;
+        await this.PageScroller.ScrollToAsync(0, 0, false);
     });
-    private async void RegisterButton_Clicked(object sender, EventArgs args)
+    protected virtual async void DiplayAlertHandler(object sender, string message)
+    {
+        await this.DisplayAlert("Произошла ошибка", message, "Назад");
+    }
+    protected virtual async void RegisterButton_Clicked(object sender, EventArgs args)
     {
         var validationState = this.viewModel.ValidationState;
         if (validationState.Where(item => !item.Value).Count() > 0)

@@ -39,8 +39,8 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="10" />
             </Border.StrokeShape>
-            <Entry Placeholder="{x:Binding DefaultText}" Text="{x:Binding TextValue}" 
-                   IsEnabled="{x:Binding CanInput}" IsSpellCheckEnabled="False"
+            <Entry Placeholder="{x:Binding DefaultText}" Text="{x:Binding TextValue, Mode=TwoWay}" 
+                   IsEnabled="{x:Binding CanInput}" IsSpellCheckEnabled="False" IsReadOnly="{x:Binding IsReadonly}"
                    ClearButtonVisibility="WhileEditing" x:Name="TextField" IsPassword="{x:Binding IsHidden}"
                    Style="{x:StaticResource Key=TextFieldStyle}" MaxLength="{x:Binding MaxLenght}">
                 <Entry.Behaviors>

@@ -9,17 +9,11 @@ namespace MauiLabs.View.Commons.ContentViews
     {
         public static readonly BindableProperty IsValidatedProperty = BindableProperty.Create(
             nameof(IsValidated), typeof(bool), typeof(ValidationEntryView),
-            defaultValue: false, defaultBindingMode: BindingMode.OneWayToSource,
-            propertyChanged: Test);
+            defaultValue: false, defaultBindingMode: BindingMode.OneWayToSource);
 
         public static readonly BindableProperty TextValueProperty = BindableProperty.Create(
             nameof(TextValue), typeof(string), typeof(ValidationEntryView),
-            defaultValue: string.Empty, defaultBindingMode: BindingMode.OneWayToSource);
-
-        private static void Test(BindableObject bindable, object oldValue, object newValue)
-        {
-            Console.WriteLine();
-        }
+            defaultValue: string.Empty, defaultBindingMode: BindingMode.TwoWay);
 
         public static readonly BindableProperty ErrorTextProperty = BindableProperty.Create(
             nameof(ErrorText), typeof(string), typeof(ValidationEntryView));
@@ -45,6 +39,10 @@ namespace MauiLabs.View.Commons.ContentViews
              nameof(CanInput), typeof(bool),
              typeof(ValidationEntryView), defaultValue: true);
 
+        public static readonly BindableProperty IsReadonlyProperty = BindableProperty.Create(
+             nameof(IsReadonly), typeof(bool),
+             typeof(ValidationEntryView), defaultValue: false);
+
         public static readonly BindableProperty RegexProperty = BindableProperty.Create(
             nameof(Regex), typeof(string), 
             typeof(ValidationEntryView), defaultValue: string.Empty);
@@ -52,6 +50,7 @@ namespace MauiLabs.View.Commons.ContentViews
         public string TextValue { get => (string)GetValue(TextValueProperty); set => SetValue(TextValueProperty, value); }
         public bool IsHidden { get => (bool)GetValue(IsHiddenProperty); set => SetValue(IsHiddenProperty, value); }
         public bool CanInput { get => (bool)GetValue(CanInputProperty); set => SetValue(CanInputProperty, value); }
+        public bool IsReadonly { get => (bool)GetValue(IsReadonlyProperty); set => SetValue(IsReadonlyProperty, value); }
 
         public int MaxLenght { get => (int)GetValue(MaxLenghtProperty); set => SetValue(MaxLenghtProperty, value); }
         public int MinLenght { get => (int)GetValue(MinLenghtProperty); set => SetValue(MinLenghtProperty, value); }
@@ -73,7 +72,7 @@ namespace MauiLabs.View.Commons.ContentViews
         {
             this.InitializeComponent();
             var validationBinding = new Binding("IsValidated", source: this, mode: BindingMode.OneWayToSource);
-            var textValueBinding = new Binding("Text", source: this.TextField);
+            var textValueBinding = new Binding("Text", source: this.TextField, mode: BindingMode.TwoWay);
 
             this.ValidationError.SetBinding(ValidationBehavior.IsValidProperty, validationBinding);
             this.ValidationError.IsValid = default!;

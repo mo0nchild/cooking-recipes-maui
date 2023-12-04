@@ -15,6 +15,7 @@ namespace MauiLabs.View.Commons.ViewModels
         {
             collection.AddTransient<AuthorizationViewModel>();
             collection.AddTransient<RegistrationViewModel>();
+            collection.AddTransient<ProfileInfoViewModel>();
 
             collection.AddTransient<RecipesListViewModel>();
 

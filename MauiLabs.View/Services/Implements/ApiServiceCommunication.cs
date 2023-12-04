@@ -23,21 +23,25 @@ namespace MauiLabs.View.Services.Implements
         protected internal readonly IHttpClientFactory httpClientFactory = default!;
         protected internal readonly WebApiOptions webApiOptions = default!;
 
+        public virtual Uri BaseAddress { get; protected set; } = default!;
+
         private readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
         public ApiServiceCommunication(IHttpClientFactory httpFactory, IOptions<WebApiOptions> options) : base()
         {
             (this.httpClientFactory, this.webApiOptions) = (httpFactory, options.Value);
+
+            using var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient);
+            this.BaseAddress = httpClient.BaseAddress;
         }
         public virtual void Dispose() { }
-        protected virtual async Task<TResponse> SendRequestAsync<TResponse>(HttpClient httpClient, HttpRequestMessage requestMessage, 
+        public virtual async Task<TResponse> SendRequestAsync<TResponse>(HttpRequestMessage requestMessage, 
             CancellationToken cancelToken, Func<HttpContent, Task<TResponse>> contentTransform)
         {
+            using var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient);
             using var response = await httpClient.SendAsync(requestMessage, cancelToken);
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                //var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
                 var errorMessage = JsonConvert.DeserializeObject<ProblemDetails>(await response.Content.ReadAsStringAsync());
-
                 throw new ViewServiceException(errorMessage?.Detail ?? errorMessage?.Title, response.StatusCode);
             }
             return await contentTransform.Invoke(response.Content);
@@ -46,46 +50,30 @@ namespace MauiLabs.View.Services.Implements
         public virtual async Task<string> AddDataToServer<TRequest>(string requestPath, RequestInfo<TRequest> model) 
             where TRequest : class
         {
-            using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
-            {
-                using var request = model.CreateRequestMessage(HttpMethod.Post, $"{httpClient.BaseAddress}{requestPath}");
-                return await this.SendRequestAsync(httpClient, request, 
-                    model.CancelToken,  async (content) => await content.ReadAsStringAsync());
-            }
+            using var request = model.CreateRequestMessage(HttpMethod.Post, $"{this.BaseAddress}{requestPath}");
+            return await this.SendRequestAsync(request, model.CancelToken,  async (content) => await content.ReadAsStringAsync());
         }
         public virtual async Task<string> DeleteDataFromServer<TRequest>(string requestPath, RequestInfo<TRequest> model) 
             where TRequest : class
         {
-            using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
-            {
-                using var request = model.CreateRequestMessage(HttpMethod.Delete, $"{httpClient.BaseAddress}{requestPath}");
-                return await this.SendRequestAsync(httpClient, request,
-                    model.CancelToken, async (content) => await content.ReadAsStringAsync());
-            }
+            using var request = model.CreateRequestMessage(HttpMethod.Delete, $"{this.BaseAddress}{requestPath}");
+            return await this.SendRequestAsync(request, model.CancelToken, async (content) => await content.ReadAsStringAsync());
         }
         public virtual async Task<TResponse> GetDataFromServer<TRequest, TResponse>(string requestPath, RequestInfo<TRequest> model) 
             where TRequest : class
         {
-            using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
+            using var request = model.CreateRequestMessage(HttpMethod.Get, $"{this.BaseAddress}{requestPath}");
+            return await this.SendRequestAsync(request, model.CancelToken, async (content) => 
             {
-                using var request = model.CreateRequestMessage(HttpMethod.Get, $"{httpClient.BaseAddress}{requestPath}");
-                return await this.SendRequestAsync(httpClient, request, model.CancelToken, async (content) => 
-                {
-                    var response = await content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<TResponse>(response);
-                });
-            }
+                return JsonConvert.DeserializeObject<TResponse>(await content.ReadAsStringAsync());
+            });
         }
         public virtual async Task<string> UpdateDataToServer<TRequest>(string requestPath, RequestInfo<TRequest> model, 
             bool fullUpdate = true) where TRequest : class
         {
-            var httpMethod = fullUpdate ? HttpMethod.Put : HttpMethod.Patch;
-            using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
-            {
-                using var request = model.CreateRequestMessage(httpMethod, $"{httpClient.BaseAddress}{requestPath}");
-                return await this.SendRequestAsync(httpClient, request,
-                    model.CancelToken, async (content) => await content.ReadAsStringAsync());
-            }
+            using var request = model.CreateRequestMessage(fullUpdate ? HttpMethod.Put : HttpMethod.Patch, 
+                $"{this.BaseAddress}{requestPath}");
+            return await this.SendRequestAsync(request, model.CancelToken, async (content) => await content.ReadAsStringAsync());
         }
     }
 }

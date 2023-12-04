@@ -28,17 +28,6 @@ namespace MauiLabs.View.Services.Implements
         {
             var requestPath = string.Format("cookingrecipes/recipes/getlist");
             return await this.apiService.GetDataFromServer<GetRecipesListRequestModel, GetRecipesListResponseModel>(requestPath, model);
-            //using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
-            //{
-            //    using var requestMessage = model.CreateRequestMessage(HttpMethod.Get, $"{httpClient.BaseAddress}{requestPath}");
-            //    using var response = await httpClient.SendAsync(requestMessage, model.CancelToken);
-            //    if (response.StatusCode != HttpStatusCode.OK)
-            //    {
-            //        var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
-            //        throw new ViewServiceException(errorMessage?.Detail ?? errorMessage?.Title, response.StatusCode);
-            //    }
-            //    return await response.Content.ReadFromJsonAsync<GetRecipesListResponseModel>(jsonOptions);
-            //}
         }
         public virtual async Task<GetRecipeResponseModel> GetRecipeInfo(RequestInfo<GetRecipeRequestModel> model)
         {

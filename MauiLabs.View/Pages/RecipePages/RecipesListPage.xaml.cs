@@ -20,8 +20,9 @@ public partial class RecipesListPage : ContentPage
     {
         this.viewModel.LoadRecipesListCommand.Execute(this);
     });
-    protected override void OnDisappearing() => MainThread.BeginInvokeOnMainThread(() =>
+    protected override void OnDisappearing() => MainThread.BeginInvokeOnMainThread(async () =>
     {
         this.viewModel.CancelCommand.Execute(this);
+        await this.PageScroller.ScrollToAsync(0, 0, false);
     });
 }

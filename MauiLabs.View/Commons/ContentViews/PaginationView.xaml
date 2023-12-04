@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiLabs.View.Commons.ContentViews.PaginationView" x:Name="this">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="CornerRadius" Value="20"/>
+                <Setter Property="BorderColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="2"/>
+                <Setter Property="BackgroundColor" Value="{x:StaticResource FirstColor}"/>
+            </Style>
+            <Style x:Key="PageNumberStyle" TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="White"/>
+                <Setter Property="Keyboard" Value="Numeric"/>
+            </Style>
+            <Style x:Key="BorderStyle" TargetType="Border">
+                <Setter Property="Stroke" Value="White"/>
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BackgroundColor" Value="White"/>
+                <Setter Property="Margin" Value="5, 0"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <FlexLayout Direction="Row" JustifyContent="Center" AlignItems="Center">
+        <Button x:Name="PrevButton" Style="{x:StaticResource ButtonStyle}" />
+        <Border>
+            <Entry x:Name="PageNumber" Style="{x:StaticResource PageNumberStyle}" Text="0"/>
+        </Border>
+        <Button x:Name="NextButton" Style="{x:StaticResource ButtonStyle}" />
+    </FlexLayout>
+</ContentView>

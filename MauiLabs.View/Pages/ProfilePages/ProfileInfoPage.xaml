@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiLabs.View.Pages.ProfilePages.ProfileInfoPage"
+             xmlns:custom="clr-namespace:MauiLabs.View.Commons.ContentViews"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Информация о профиле" 
+             Shell.BackgroundColor="{x:StaticResource Key=FirstColor}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageConverter" />
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="BackgroundColor" Value="{x:StaticResource Key=FirstColor}" />
+                <Setter Property="BorderColor" Value="White" />
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="2" />
+            </Style>
+            <Style x:Key="TextFieldStyle" TargetType="Entry">
+                <Setter Property="PlaceholderColor" Value="{x:StaticResource Key=FirstColor}"/>
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{x:StaticResource Key=SecondColor}" />
+            </Style>
+            <Style x:Key="ImagePickerStyle" TargetType="ImageButton">
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="BorderColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="2"/>
+                <Setter Property="BackgroundColor" Value="{x:StaticResource FirstColor}"/>
+            </Style>
+            <Style x:Key="ImageButtonStyle" TargetType="ImageButton">
+                <Setter Property="HeightRequest" Value="{OnIdiom Desktop=46, Phone=68}" />
+                <Setter Property="Padding" Value="{OnIdiom Desktop=10, Phone=12}" />
+                <Setter Property="CornerRadius" Value="12"/>
+                <Setter Property="BorderColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="2"/>
+                <Setter Property="BackgroundColor" Value="{x:StaticResource FirstColor}"/>
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid>
+        <Image Source="background.png" Aspect="AspectFill"/>
+        <ScrollView Orientation="Vertical" BackgroundColor="Transparent" x:Name="PageScroller" 
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+            <StackLayout x:Name="ProfilePanel" Orientation="Vertical" HorizontalOptions="Fill" Margin="30, 10, 30, 40">
+                
+                <Border StrokeThickness="2" MaximumWidthRequest="260" Padding="20"
+                        BackgroundColor="{x:StaticResource Key=FirstColor}" Margin="0, 20, 0, 10"
+                        FlexLayout.AlignSelf="Stretch" Stroke="White">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Изображение профиля:" TextColor="White" FontSize="18" Margin="4, 0, 0, 5" TextDecorations="Underline"/>
+                        <Grid RowDefinitions="*">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.6*"/>
+                                <ColumnDefinition Width="0.4*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border HeightRequest="112" WidthRequest="112" Stroke="White" StrokeThickness="2"
+                                    BackgroundColor="White" Grid.Column="0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
+                                <Image Aspect="AspectFill" HeightRequest="112" WidthRequest="112" x:Name="ProfileImage"
+                                    Source="{Binding PreviewImage, Converter={x:StaticResource ByteArrayToImageConverter}}"/>
+                            </Border>
+                            
+                            <Grid RowDefinitions="*, *" ColumnDefinitions="*" Margin="5, 5" Grid.Column="1">
+                                <ImageButton Grid.Row="0" Grid.Column="0" 
+                                        Command="{x:Binding ImagePickerCommand}" Style="{x:StaticResource ImagePickerStyle}" 
+                                        Source="loadimageicon.png" Margin="4" Padding="3" WidthRequest="60" HeightRequest="46" 
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                                <ImageButton Grid.Row="1" Grid.Column="0"
+                                        Command="{x:Binding ImageClearCommand}" Style="{x:StaticResource ImagePickerStyle}" 
+                                        Source="clearicon.png"  WidthRequest="60" HeightRequest="46" Margin="4" Padding="8"
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                            </Grid>
+                            
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <custom:ExpanderView ButtonIcon="arrowicon.png" ExpanderHeight="240" ButtonText="Изменить пароль"
+                        Margin="0, 10, 0, 10" x:Name="PasswordExpander" MaximumWidthRequest="400" ButtonHeight="52"
+                        CanExpand="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                    <custom:ExpanderView.Item>
+                        <Border BackgroundColor="Transparent">
+
+                        </Border>
+                    </custom:ExpanderView.Item>
+                </custom:ExpanderView>
+
+                <Border StrokeThickness="2" MaximumWidthRequest="400" Padding="20" BackgroundColor="{x:StaticResource Key=FirstColor}" 
+                        Margin="0, 10, 0, 16" FlexLayout.AlignSelf="Stretch" Stroke="White">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Данные профиля:" TextColor="White" FontSize="18" Margin="0, 0, 0, 10" TextDecorations="Underline"/>
+
+                        <custom:ValidationEntryView x:Name="NameTextField" ErrorText="Значение от 4 до 50 символов"
+                                IsValidated="{x:Binding ValidationState[UserName]}" TextValue="{x:Binding UserName}"
+                                CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                                MinLenght="4" DefaultText="Укажите имя" LabelText="Имя пользователя:" 
+                                IsReadonly="{Binding ProfileLoaded}"/>
+
+                        <custom:ValidationEntryView x:Name="SurnameTextField" ErrorText="Значение от 4 до 50 символов"
+                                IsValidated="{x:Binding ValidationState[Surname]}" TextValue="{x:Binding UserSurname}"
+                                CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                                MinLenght="4" DefaultText="Укажите фамилию" LabelText="Фамилия пользователя:" 
+                                IsReadonly="{Binding ProfileLoaded}"/>
+
+                        <BoxView BackgroundColor="White" Margin="5, 14" CornerRadius="1" HeightRequest="2"/>
+
+                        <custom:ValidationEntryView x:Name="EmailTextField" ErrorText="Значение от 5 до 100 символов"
+                                IsValidated="{x:Binding ValidationState[Email]}" TextValue="{x:Binding UserEmail}"
+                                CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                                MaxLenght="100" Regex="^([\w\.\-]{4,})@([\w\-]+)((\.(\w){2,3})+)$"
+                                DefaultText="Пример: test@gmail.com" LabelText="Электронная почта:" 
+                                IsReadonly="{Binding ProfileLoaded}"/>
+                        
+                        <Button x:Name="ReferenceLinkButton" Clicked="ReferenceLinkButton_Clicked"
+                                Text="Ссылка для добавления друзей" HeightRequest="48" FontSize="16"
+                                Style="{x:StaticResource Key=ButtonStyle}" CornerRadius="10" Margin="0, 10"
+                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                        
+                    </VerticalStackLayout>
+                </Border>
+                
+                <Grid Margin="0, 0, 0, 20" ColumnDefinitions="*, *, *" RowDefinitions="*">
+                    <ImageButton Grid.Column="0" Grid.Row="0" Margin="3" WidthRequest="100"
+                        Source="deleteicon.png" Clicked="ExitProfile_Clicked" Style="{x:StaticResource ImageButtonStyle}"
+                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                    <ImageButton Grid.Column="1" Grid.Row="0" Margin="3" WidthRequest="{OnIdiom Desktop=140, Phone=130}"
+                        Source="reloadicon.png" Command="{Binding GetProfileCommand}" Style="{x:StaticResource ImageButtonStyle}"
+                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                    <ImageButton Grid.Column="2" Grid.Row="0" Margin="3" WidthRequest="100"
+                        Source="logouticon.png" Clicked="ExitProfile_Clicked" Style="{x:StaticResource ImageButtonStyle}"
+                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                </Grid>
+
+                <Button x:Name="UpdateButton" Clicked="UpdateButton_Clicked"
+                        FlexLayout.AlignSelf="Stretch" Text="Обновить данные" HeightRequest="54" MaximumWidthRequest="400"
+                        Style="{x:StaticResource Key=ButtonStyle}" Command="{Binding UpdateProfileCommand}"
+                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+
+            </StackLayout>
+        </ScrollView>
+        <custom:LoadingContentView IsLoading="{x:Binding IsLoading}" CancelCommand="{x:Binding CancelCommand}"/>
+    </Grid>
+</ContentPage>

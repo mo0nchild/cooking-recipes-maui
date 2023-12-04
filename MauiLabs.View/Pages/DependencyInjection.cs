@@ -15,6 +15,7 @@ namespace MauiLabs.View.Pages
         {
             collection.AddTransient<AuthorizationPage>();
             collection.AddTransient<RegistrationPage>();
+            collection.AddTransient<ProfileInfoPage>();
 
             collection.AddTransient<RecipesListPage>();
 

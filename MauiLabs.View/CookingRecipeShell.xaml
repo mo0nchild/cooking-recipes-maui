@@ -6,8 +6,71 @@
     xmlns:recipePages="clr-namespace:MauiLabs.View.Pages.RecipePages"
     xmlns:profilePages="clr-namespace:MauiLabs.View.Pages.ProfilePages"
     Shell.TabBarIsVisible="True" Shell.BackgroundColor="{x:StaticResource FirstColor}"
-    FlyoutBackgroundColor="{x:StaticResource SecondColor}">
+    FlyoutBackgroundColor="{x:StaticResource SecondColor}" x:Name="this">
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style x:Key="FlyoutHeaderLabel" TargetType="Label">
+                <Setter Property="TextColor" Value="{x:StaticResource FirstColor}"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="FontSize" Value="24"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+            <Style x:Key="FlyoutHeaderTextBorder" TargetType="Border">
+                <Setter Property="Stroke" Value="White"/>
+                <Setter Property="Padding" Value="20"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="14" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="StrokeThickness" Value="2"/>
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
 
+    <Shell.FlyoutHeader>
+        <Grid ColumnDefinitions="*" RowDefinitions="*">
+            <Image Aspect="AspectFill" Source="flyoutheader.jpg" />
+            <Border Style="{x:StaticResource FlyoutHeaderTextBorder}">
+                <StackLayout Orientation="Vertical" Spacing="4">
+                    <Label Text="Книга рецептов" Style="{x:StaticResource FlyoutHeaderLabel}" />
+                    <Label Text="В вашем кармане" TextColor="White" Style="{x:StaticResource FlyoutHeaderLabel}" />
+                </StackLayout>
+            </Border>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <FlexLayout Direction="Column" JustifyContent="Center" AlignItems="Stretch"
+                        Margin="0, 5">
+                <Border BackgroundColor="Transparent" Stroke="White" StrokeThickness="2" 
+                        Padding="10" WidthRequest="280">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Label Text="{Binding Title}" FontSize="16" TextColor="White"/>
+                </Border>
+            </FlexLayout>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <Shell.FlyoutFooter>
+        <Grid ColumnDefinitions="*" RowDefinitions="*">
+            <Border Stroke="White" StrokeThickness="1" Padding="10" BackgroundColor="Transparent">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+                <Label x:Name="AboutLabel" Text="Информация о программе" TextDecorations="Underline" FontSize="16"
+                    TextColor="White" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Border>
+        </Grid>
+    </Shell.FlyoutFooter>
+    
     <TabBar Route="authorization" Shell.FlyoutItemIsVisible="False">
         <Tab Route="loginTab" Title="Авторизация" Icon="/Profile/login.png">
             <ShellContent Route="loginPage" ContentTemplate="{DataTemplate profilePages:AuthorizationPage}"/>
@@ -23,12 +86,7 @@
     </FlyoutItem>
     <FlyoutItem Route="profile" Title="Профиль">
         <Tab Route="infoTab" Title="Информация">
-            <ShellContent Route="infoPage" ContentTemplate="{DataTemplate profilePages:ProfileInfo}" />
+            <ShellContent Route="infoPage" ContentTemplate="{DataTemplate profilePages:ProfileInfoPage}" />
         </Tab>
     </FlyoutItem>
-    <!--<TabBar Route="recipes" Shell.BackgroundColor="{x:StaticResource FirstColor}">
-        <Tab Route="recipesListTab" Title="Список рецептов">
-            <ShellContent Route="recipesListPage" ContentTemplate="{DataTemplate recipePages:RecipesListPage}"/>
-        </Tab>
-    </TabBar>-->
 </Shell>

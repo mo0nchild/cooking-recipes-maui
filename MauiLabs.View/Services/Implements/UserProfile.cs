@@ -6,6 +6,7 @@ using MauiLabs.View.Services.ConfigureOptions;
 using MauiLabs.View.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.Maui.Controls.PlatformConfiguration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,121 +21,59 @@ namespace MauiLabs.View.Services.Implements
     using WebApiOptions = ConfigureWebApi.WebApiOptions;
     public partial class UserProfile : IUserProfile
     {
-        protected internal readonly IHttpClientFactory httpClientFactory = default!;
-        protected internal readonly WebApiOptions webApiOptions = default!;
+        protected internal readonly IApiServiceCommunication apiService = default!;
+        public UserProfile(IApiServiceCommunication apiService) : base() => this.apiService = apiService;
 
-        private readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-        public UserProfile(IHttpClientFactory httpFactory, IOptions<WebApiOptions> options) : base()
+        public virtual async Task<string> ChangeProfilePassword(RequestInfo<ChangePasswordRequestModel> requestModel)
         {
-            this.httpClientFactory = httpFactory;
-            this.webApiOptions = options.Value;
+            var requestPath = string.Format("cookingrecipes/profile/editbytoken/password");
+            return await this.apiService.UpdateDataToServer<ChangePasswordRequestModel>(requestPath, requestModel, false);
         }
-        public virtual async Task<string> ChangeProfilePassword(string token, ChangePasswordRequestModel model)
+        public virtual async Task<string> DeleteProfileInfo(string token, CancellationToken cancelToken)
         {
-            using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
+            var requestPath = string.Format("cookingrecipes/profile/deletebytoken");
+            using var request = new HttpRequestMessage(HttpMethod.Delete, requestPath)
             {
-                using var requestModel = new HttpRequestMessage(HttpMethod.Patch, $"cookingrecipes/profile/editbytoken/password")
-                {
-                    Headers = { { "Authorization", $"Bearer {token}" } },
-                    Content = JsonContent.Create(model),
-                };
-                using var response = await httpClient.SendAsync(requestModel);
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
-                    throw new ViewServiceException(errorMessage.Detail);
-                }
-                return await response.Content.ReadAsStringAsync();
-            }
+                Headers = { { "Authorization", string.Format("Bearer {0}", token) } },
+            };
+            return await this.apiService.SendRequestAsync<string>(request, cancelToken, async msg => await msg.ReadAsStringAsync());
+            
         }
-        public virtual async Task<string> DeleteProfileInfo(string token)
+        public virtual async Task<string> EditProfileInfo(RequestInfo<EditProfileRequestModel> requestModel)
         {
-            using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
-            {
-                using var requestModel = new HttpRequestMessage(HttpMethod.Delete, $"cookingrecipes/profile/deletebytoken")
-                {
-                    Headers = { { "Authorization", $"Bearer {token}" } }
-                };
-                using var response = await httpClient.SendAsync(requestModel);
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
-                    throw new ViewServiceException(errorMessage.Detail);
-                }
-                return await response.Content.ReadAsStringAsync();
-            }
-        }
-        public virtual async Task<string> EditProfileInfo(string token, EditProfileRequestModel model)
-        {
-            using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
-            {
-                using var requestModel = new HttpRequestMessage(HttpMethod.Put, $"cookingrecipes/profile/editbytoken")
-                {
-                    Headers = { { "Authorization", $"Bearer {token}" } },
-                    Content = JsonContent.Create(model),
-                };
-                using var response = await httpClient.SendAsync(requestModel);
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
-                    throw new ViewServiceException(errorMessage.Detail);
-                }
-                return await response.Content.ReadAsStringAsync();
-            }
+            var requestPath = string.Format("cookingrecipes/profile/editbytoken");
+            return await this.apiService.UpdateDataToServer<EditProfileRequestModel>(requestPath, requestModel);
         }
 
-        public virtual async Task<GetProfileInfoResponseModel> GetProfileInfo(string token, int id)
+        public virtual async Task<GetProfileInfoResponseModel> GetProfileInfo(string token, int id, CancellationToken cancelToken)
         {
-            using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
+            var requestPath = string.Format("cookingrecipes/profile/get?Id={0}", id);
+            using var request = new HttpRequestMessage(HttpMethod.Get, requestPath)
             {
-                using var requestModel = new HttpRequestMessage(HttpMethod.Get, $"cookingrecipes/profile/get?Id={id}")
-                {
-                    Headers = { { "Authorization", $"Bearer {token}" } },
-                };
-                using var response = await httpClient.SendAsync(requestModel);
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
-                    throw new ViewServiceException(errorMessage.Detail);
-                }
-                return await response.Content.ReadFromJsonAsync<GetProfileInfoResponseModel>(jsonOptions);
-            }
+                Headers = { { "Authorization", string.Format("Bearer {0}", token) } },
+            };
+            return await this.apiService.SendRequestAsync(request, cancelToken, async content =>
+            {
+                return JsonConvert.DeserializeObject<GetProfileInfoResponseModel>(await content.ReadAsStringAsync());
+            });
         }
-        public virtual async Task<GetProfileInfoResponseModel> GetProfileInfoByToken(string token)
+        public virtual async Task<GetProfileInfoResponseModel> GetProfileInfoByToken(string token, CancellationToken cancelToken)
         {
-            using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
+            var requestPath = string.Format("cookingrecipes/profile/getbytoken");
+            using var request = new HttpRequestMessage(HttpMethod.Get, requestPath)
             {
-                using var requestModel = new HttpRequestMessage(HttpMethod.Get, $"cookingrecipes/profile/getbytoken")
-                {
-                    Headers = { { "Authorization", $"Bearer {token}" } },
-                };
-                using var response = await httpClient.SendAsync(requestModel);
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
-                    throw new ViewServiceException(errorMessage.Detail);
-                }
-                return await response.Content.ReadFromJsonAsync<GetProfileInfoResponseModel>(jsonOptions);
-            }
+                Headers = { { "Authorization", string.Format("Bearer {0}", token) } },
+            };
+            return await this.apiService.SendRequestAsync(request, cancelToken, async content =>
+            {
+                return JsonConvert.DeserializeObject<GetProfileInfoResponseModel>(await content.ReadAsStringAsync());
+            });
         }
-        public virtual async Task<GetProfilesListResponseModel> GetProfilesList(string token, GetProfilesListRequestModel model)
+        public virtual async Task<GetProfilesListResponseModel> GetProfilesList(RequestInfo<GetProfilesListRequestModel> requestModel)
         {
-            using (var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient))
-            {
-                var requestUrl = string.Format("cookingrecipes/profile/getlist?TextFilter={0}&Skip={1}&Take={2}",
-                    model.TextFilter, model.Skip, model.Take);
-                using var requestModel = new HttpRequestMessage(HttpMethod.Get, requestUrl)
-                {
-                    Headers = { { "Authorization", $"Bearer {token}" } },
-                };
-                using var response = await httpClient.SendAsync(requestModel);
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    var errorMessage = await response.Content.ReadFromJsonAsync<ProblemDetails>(jsonOptions);
-                    throw new ViewServiceException(errorMessage.Detail);
-                }
-                return await response.Content.ReadFromJsonAsync<GetProfilesListResponseModel>(jsonOptions);
-            }
+            var requestPath = string.Format("cookingrecipes/profile/getlist");
+            return await this.apiService
+                .GetDataFromServer<GetProfilesListRequestModel, GetProfilesListResponseModel>(requestPath, requestModel);
         }
     }
 }

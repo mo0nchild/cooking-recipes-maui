@@ -28,6 +28,8 @@ namespace MauiLabs.View.Services
             collection.AddTransient<IApiServiceCommunication, ApiServiceCommunication>();
 
             collection.AddTransient<IUserAuthorization, UserAuthorization>();
+            collection.AddTransient<IUserProfile, UserProfile>();
+
             collection.AddTransient<ICookingRecipes, CookingRecipes>();
             return Task.FromResult(collection);
         }

@@ -8,14 +8,15 @@
              Title="Список рецептов" 
              Shell.BackgroundColor="{x:StaticResource Key=FirstColor}">
     <ContentPage.Resources>
-        
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
     <Grid>
         <Image Source="background.png" Aspect="AspectFill"/>
         <VerticalStackLayout>
-            <ScrollView Orientation="Vertical" BackgroundColor="Transparent">
+            <ScrollView Orientation="Vertical" BackgroundColor="Transparent" x:Name="PageScroller"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
                 <CollectionView x:Name="RecipesListView" ItemsSource="{Binding CookingRecipes}" HorizontalOptions="Fill">
-                    
+
                     <CollectionView.Resources>
                         <ResourceDictionary>
                             <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageConverter" />
@@ -39,7 +40,7 @@
                             </Style>
                         </ResourceDictionary>
                     </CollectionView.Resources>
-                    
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource CardBorderStyle}">
@@ -72,11 +73,12 @@
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                    
                 </CollectionView>
             </ScrollView>
-            
         </VerticalStackLayout>
+        <!--<Border Margin="20">
+            <custom:PaginationView/>
+        </Border>-->
         <custom:LoadingContentView IsLoading="{x:Binding IsLoading}" CancelCommand="{x:Binding CancelCommand}"/>
     </Grid>
 </ContentPage>

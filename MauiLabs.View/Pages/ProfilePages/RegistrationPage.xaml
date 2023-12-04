@@ -10,6 +10,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageConverter" />
             <Style x:Key="ButtonStyle" TargetType="Button">
                 <Setter Property="CornerRadius" Value="16" />
                 <Setter Property="BackgroundColor" Value="{x:StaticResource Key=FirstColor}" />
@@ -24,11 +25,26 @@
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="TextColor" Value="{x:StaticResource Key=SecondColor}" />
             </Style>
+            <Style x:Key="ImagePickerStyle" TargetType="Button">
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="{x:StaticResource FirstColor}"/>
+            </Style>
+            <Style x:Key="ImageClearStyle" TargetType="ImageButton">
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="BorderColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="2"/>
+                <Setter Property="Source" Value="clearicon.png"/>
+                <Setter Property="Padding" Value="8"/>
+                <Setter Property="BackgroundColor" Value="{x:StaticResource FirstColor}"/>
+            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
     <Grid>
         <Image Source="background.png" Aspect="AspectFill"/>
-        <ScrollView Orientation="Vertical" BackgroundColor="Transparent">
+        <ScrollView Orientation="Vertical" BackgroundColor="Transparent" x:Name="PageScroller"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
             <StackLayout x:Name="RegisterPanel" Opacity="0.0" Scale="1.5" Orientation="Vertical" HorizontalOptions="Fill" Margin="30, 50" >
                 <Label HorizontalTextAlignment="Center" TextColor="White" FontSize="26" FontAttributes="Bold" 
                        HorizontalOptions="Center" WidthRequest="300">
@@ -40,7 +56,7 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <FlexLayout AlignItems="Center" HorizontalOptions="Center" Direction="Column">
+                <FlexLayout AlignItems="Stretch" HorizontalOptions="Center" Direction="Column">
                     <Border StrokeThickness="2" MaximumWidthRequest="400" Padding="30"
                             BackgroundColor="{x:StaticResource Key=FirstColor}" Margin="0, 20, 0, 20"
                             FlexLayout.AlignSelf="Stretch">
@@ -85,18 +101,42 @@
                                     CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
                                     MinLenght="4" DefaultText="Укажите фамилию" LabelText="Фамилия пользователя:" />
 
+                            <BoxView BackgroundColor="White" Margin="5, 14" CornerRadius="1" HeightRequest="2"/>
+
                             <custom:ValidationEntryView x:Name="EmailTextField" ErrorText="Значение от 5 до 100 символов"
                                     IsValidated="{x:Binding ValidationState[Email]}" TextValue="{x:Binding UserEmail}"
                                     CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
                                     MaxLenght="100" Regex="^([\w\.\-]{4,})@([\w\-]+)((\.(\w){2,3})+)$"
                                     DefaultText="Пример: test@gmail.com" LabelText="Электронная почта:" />
-                            <custom:ExpanderView ButtonIcon="arrowicon.png">
+                            <custom:ExpanderView ButtonIcon="arrowicon.png" ExpanderHeight="240" ButtonText="Изображение профиля"
+                                    Margin="0, 10, 0, 0" x:Name="Expander" 
+                                    CanExpand="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
                                 <custom:ExpanderView.Item>
-                                    <StackLayout>
-                                        <Label Text="Test"/>
-                                    </StackLayout>
+                                    <Border BackgroundColor="Transparent">
+                                        <FlexLayout Grid.Row="0" Grid.Column="0"
+                                                JustifyContent="Center" AlignItems="Center" Direction="Column" HeightRequest="220" >
+                                            <Border HeightRequest="100" WidthRequest="100" Stroke="White" StrokeThickness="2"
+                                                    BackgroundColor="White">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="20" />
+                                                </Border.StrokeShape>
+                                                <Image 
+                                                    Aspect="AspectFill" HeightRequest="{Binding ImageSize}" WidthRequest="{Binding ImageSize}"
+                                                    Source="{Binding PreviewImage, Converter={x:StaticResource ByteArrayToImageConverter}}"/>
+                                            </Border>
+                                            <Border BackgroundColor="Transparent" Margin="0, 4">
+                                                <Grid ColumnDefinitions="*, Auto">
+                                                    <Button Grid.Column="0" Command="{x:Binding ImagePickerCommand}" Text="Выбрать"
+                                                            Style="{x:StaticResource ImagePickerStyle}" HeightRequest="40" WidthRequest="140"
+                                                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                                                    <ImageButton Grid.Column="1" WidthRequest="50" HeightRequest="50"
+                                                            Command="{x:Binding ImageClearCommand}" Style="{x:StaticResource ImageClearStyle}" 
+                                                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                                                </Grid>
+                                            </Border>
+                                        </FlexLayout>
+                                    </Border>
                                 </custom:ExpanderView.Item>
-                                
                             </custom:ExpanderView>
                         </VerticalStackLayout>
                     </Border>

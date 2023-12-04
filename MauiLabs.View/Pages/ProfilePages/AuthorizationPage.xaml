@@ -28,7 +28,8 @@
     </ContentPage.Resources>
     <Grid>
         <Image Source="background.png" Aspect="AspectFill"/>
-        <ScrollView Orientation="Vertical" BackgroundColor="Transparent">
+        <ScrollView Orientation="Vertical" BackgroundColor="Transparent" x:Name="PageScroller"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
             
             <StackLayout x:Name="LoginPanel" Opacity="0.0" Scale="1.5" Orientation="Vertical" HorizontalOptions="Fill" Margin="30, 50" >
                 <Label HorizontalTextAlignment="Center"

@@ -3,17 +3,41 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiLabs.View.Commons.ContentViews.ExpanderView" 
              x:Name="this">
-    <StackLayout Orientation="Vertical" Spacing="5">
-        <Border Stroke="White" BackgroundColor="{x:StaticResource FirstColor}" Padding="10" x:Name="ExpandButton">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="10"/>
-            </Border.StrokeShape>
-            <HorizontalStackLayout HorizontalOptions="Fill" Spacing="5">
-                <Label Text="Раскрыть" HorizontalOptions="Center" FontSize="16" TextColor="White"/>
-                <Image Source="{x:Binding ButtonIcon, Source={x:Reference this}}" WidthRequest="12" HeightRequest="12" 
-                       Margin="0, 5, 0, 0"/>
-            </HorizontalStackLayout>
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BorderStyle" TargetType="Border">
+                <Setter Property="Stroke" Value="White"/>
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BackgroundColor" Value="{x:StaticResource FirstColor}"/>
+                <Setter Property="StrokeThickness" Value="2"/>
+            </Style>
+            <Style x:Key="TextStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="TextColor" Value="White"/>
+            </Style>
+            <Style x:Key="IconStyle" TargetType="Image">
+                <Setter Property="WidthRequest" Value="12"/>
+                <Setter Property="HeightRequest" Value="12"/>
+                <Setter Property="Margin" Value="5, 4"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <Grid RowSpacing="5" ColumnDefinitions="*" RowDefinitions="*" HorizontalOptions="Fill">
+        <Border Grid.Column="0" Grid.Row="0" x:Name="MainContent" HeightRequest="0"
+                Style="{StaticResource BorderStyle}" Content="{x:Binding Item, Source={x:Reference this}}"/>
+
+        <Border Grid.Column="0" Grid.Row="0" x:Name="ExpandButton" VerticalOptions="Start"
+                Style="{StaticResource BorderStyle}" HeightRequest="{x:Binding ButtonHeight, Source={x:Reference this}}">
+
+            <FlexLayout HorizontalOptions="Fill" Direction="Row" AlignItems="Center" JustifyContent="Center" Padding="10">
+                <Label Text="{x:Binding ButtonText, Source={x:Reference this}}" Style="{x:StaticResource TextStyle}"/>
+                <Image x:Name="ExpanderIcon" Style="{x:StaticResource IconStyle}"
+                       Source="{x:Binding ButtonIcon, Source={x:Reference this}}" />
+            </FlexLayout>
         </Border>
-        <Border Content="{x:Binding Item, Source={x:Reference this}}" Padding="3"/>
-    </StackLayout>
+    </Grid>
 </ContentView>

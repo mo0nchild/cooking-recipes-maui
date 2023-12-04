@@ -30,13 +30,14 @@ public partial class AuthorizationPage : ContentPage
         });
         (this.LoginPanel.Opacity, this.LoginPanel.Scale) = (1.0, 1.0);
     });
-    protected override void OnDisappearing()
+    protected override async void OnDisappearing()
     {
         this.viewModel.CancelCommand.Execute(null);
         (this.LoginPanel.Opacity, this.LoginPanel.Scale) = (0, 1.5);
 
         this.PasswordTextField.TextValue = string.Empty;
         this.LoginTextField.TextValue = string.Empty;
+        await this.PageScroller.ScrollToAsync(0, 0, false);
     }
     protected virtual async void LoginButton_Clicked(object sender, EventArgs args)
     {
