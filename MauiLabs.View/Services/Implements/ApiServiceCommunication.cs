@@ -34,13 +34,20 @@ namespace MauiLabs.View.Services.Implements
             this.BaseAddress = httpClient.BaseAddress;
         }
         public virtual void Dispose() { }
+
         public virtual async Task<TResponse> SendRequestAsync<TResponse>(HttpRequestMessage requestMessage, 
             CancellationToken cancelToken, Func<HttpContent, Task<TResponse>> contentTransform)
         {
-            using var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient);
-            using var response = await httpClient.SendAsync(requestMessage, cancelToken);
+            using var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient);            
+            var responseTask = httpClient.SendAsync(requestMessage, cancelToken);
+
+            if (await responseTask.WaitUntil(cancelToken)) throw new TaskCanceledException();
+
+            using var response = await responseTask;
             if (response.StatusCode != HttpStatusCode.OK)
             {
+                if (response.StatusCode != HttpStatusCode.BadRequest) throw new Exception("Не удается подключиться к серверу");
+
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var errorMessage = JsonConvert.DeserializeObject<ProblemDetails>(responseContent);
 
@@ -76,6 +83,17 @@ namespace MauiLabs.View.Services.Implements
             using var request = model.CreateRequestMessage(fullUpdate ? HttpMethod.Put : HttpMethod.Patch, 
                 $"{this.BaseAddress}{requestPath}");
             return await this.SendRequestAsync(request, model.CancelToken, async (content) => await content.ReadAsStringAsync());
+        }
+    }
+    public static class TaskCancellationExtension : object
+    {
+        public static async Task<bool> WaitUntil(this Task thisTask, CancellationToken token)
+        {
+            while (!thisTask.IsCompleted && !token.IsCancellationRequested)
+            {
+                await Task.Delay(100);
+            }
+            return thisTask.Status == TaskStatus.Canceled;
         }
     }
 }

@@ -74,7 +74,7 @@ namespace MauiLabs.View.Services.Commons
 
                 Request cancelled:          [Desktop] = TaskCanceledException, [Android] = WebException;  
             */
-            if (!(errorInfo is InvalidOperationException) && !(errorInfo is TaskCanceledException))
+            if (!(errorInfo is TaskCanceledException))
             {
                 await UserManager.DisplayAlertAsync(errorInfo.Message);
                 await LogoutUser();
