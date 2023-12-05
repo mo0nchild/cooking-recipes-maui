@@ -1,4 +1,5 @@
-﻿using MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Responses;
+﻿using MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Requests;
+using MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Responses;
 using MauiLabs.View.Services.Commons;
 using MauiLabs.View.Services.Interfaces;
 using Microsoft.EntityFrameworkCore.Query.Internal;
@@ -32,24 +33,29 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
         public ICommand ImageClearCommand { get; protected set; } = default!;
 
         public event EventHandler<string> DisplayAlert = delegate { };
+        public event EventHandler<string> DisplayInfo = delegate { };
         public event EventHandler ReloadView = delegate { };
+
         public event PropertyChangedEventHandler PropertyChanged;
         public ProfileInfoViewModel(IUserProfile profileService) : base()
         {
             this.profileService = profileService;
-            this.GetProfileCommand = new Command(() =>
-            {
-                this.LaunchСancelableTask(() => this.GetProfileCommandHandler());
-            });
+            this.GetProfileCommand = new Command(() => this.LaunchСancelableTask(() => this.GetProfileCommandHandler()));
             this.UpdateProfileCommand = new Command(() =>
             {
-
+                if (!this.ProfileLoaded) { this.DisplayAlert.Invoke(this, "Необходимо загрузить профиль"); return; }
+                if (this.ValidationState.Where(item => !item.Value).Count() > 0)
+                {
+                    this.DisplayAlert.Invoke(this, "Неверно заполнены поля"); return;
+                }
+                this.LaunchСancelableTask(() => this.UpdateProfileCommandHander());
             });
             this.CancelCommand = new Command(this.CancelCommandHandler);
 
             this.ImagePickerCommand = new Command(this.ImagePickerCommandHandler);
             this.ImageClearCommand = new Command(async () =>
             {
+                if (!this.ProfileLoaded) { this.DisplayAlert.Invoke(this, "Необходимо перезагрузить профиль"); return; }
                 this.UserImage = null;
                 this.PreviewImage = await this.FileToByteArray(DefaultProfileImage);
             });
@@ -77,6 +83,7 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
         }
         protected virtual async void ImagePickerCommandHandler(object sender)
         {
+            if(!this.ProfileLoaded) { this.DisplayAlert.Invoke(this, "Необходимо перезагрузить профиль"); return; }
             var fileFilter = (FileResult result, string extension) =>
             {
                 return result.FileName.EndsWith(extension, StringComparison.OrdinalIgnoreCase);
@@ -99,17 +106,42 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
             catch (Exception errorInfo) { this.DisplayAlert.Invoke(this, errorInfo.Message); }
         }
 
+        protected virtual async Task UpdateProfileCommandHander() => await UserManager.SendRequest(async (token) =>
+        {
+            var requestResult = await this.profileService.EditProfileInfo(new RequestInfo<EditProfileRequestModel>()
+            {
+                RequestModel = new EditProfileRequestModel()
+                {
+                    Name = this.UserName, Surname = this.UserSurname,
+                    Email = this.UserEmail, Image = this.UserImage,
+                },
+                ProfileToken = token, CancelToken = this.cancellationSource.Token,
+            });
+            this.DisplayInfo.Invoke(this, "Данные успешно обновлены");
+            this.ReloadView.Invoke(this, new EventArgs());
+        });
         protected virtual async Task GetProfileCommandHandler() => await UserManager.SendRequest(async (token) =>
         {
             var requestResult = await this.profileService.GetProfileInfoByToken(token, this.cancellationSource.Token);
-            this.UserImage = requestResult.Image.Length != 0 
-                ? requestResult.Image : await this.FileToByteArray(DefaultProfileImage);
+            if (requestResult.Image.Length != 0)
+            {
+                this.PreviewImage = await this.FileToByteArray(DefaultProfileImage);
+                this.UserImage = requestResult.Image;
+            }
+            else this.PreviewImage = this.PreviewImage = requestResult.Image;
 
             (this.UserName, this.UserSurname) = (requestResult.Name, requestResult.Surname);
             (this.UserEmail, this.ReferenceLink) = (requestResult.Email, requestResult.ReferenceLink);
 
             if (!this.ProfileLoaded) this.ProfileLoaded = true;
             this.ReloadView.Invoke(this, new EventArgs());
+        }, async (errorInfo) =>
+        {
+            this.UserName = this.UserSurname = this.UserEmail = "Не загружено";
+            (this.ReferenceLink, this.UserImage) = (string.Empty, null);
+
+            this.PreviewImage = await this.FileToByteArray(DefaultProfileImage);
+            this.DisplayAlert.Invoke(this, "Данные не загружены, для редактирования обновить");
         });
         private protected GetProfileInfoResponseModel profileInfoModel = new() 
         {
@@ -133,7 +165,7 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
         }
         public byte[] UserImage
         {
-            set { this.PreviewImage = this.profileInfoModel.Image = value; this.OnPropertyChanged(); }
+            set { this.profileInfoModel.Image = value; this.OnPropertyChanged(); }
             get => this.profileInfoModel.Image;
         }
         public string ReferenceLink 

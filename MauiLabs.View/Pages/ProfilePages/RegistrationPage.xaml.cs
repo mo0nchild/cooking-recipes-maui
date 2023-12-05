@@ -45,7 +45,7 @@ public partial class RegistrationPage : ContentPage
         this.EmailTextField.TextValue = string.Empty;
 
         this.Expander.ResetExpander();
-        this.viewModel.UserImage = null;
+        this.viewModel.ImageClearCommand.Execute(this);
         await this.PageScroller.ScrollToAsync(0, 0, false);
     });
     protected virtual async void DiplayAlertHandler(object sender, string message)

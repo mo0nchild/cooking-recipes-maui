@@ -55,10 +55,25 @@ namespace MauiLabs.View.Services.Commons
                 await UserManager.DisplayAlertAsync("Пользователь не авторизирован");
                 await LogoutUser();
             }
+            catch (TaskCanceledException errorInfo) when (errorInfo.InnerException is TimeoutException) 
+            {
+                await UserManager.DisplayAlertAsync("Время подключения к серверу истекло");
+                await LogoutUser();
+            }
             catch (Exception errorInfo) { await CatchRequestError(errorInfo, cancelled); }
         }
         public static async Task CatchRequestError(Exception errorInfo, Func<Exception, Task>? cancelled = null)
         {
+            var errorType = errorInfo.GetType();
+            /*
+                Bad URL address (Domen):    [Desktop] = HttpRequestException, [Android] = WebException;
+                Device turn of WIFI:        [Desktop] = HttpRequestException, [Android] = WebException,
+            
+                Bad URL address host:       404 Status code;
+                Server OFF:                 503 Status code;
+
+                Request cancelled:          [Desktop] = TaskCanceledException, [Android] = WebException;  
+            */
             if (!(errorInfo is InvalidOperationException) && !(errorInfo is TaskCanceledException))
             {
                 await UserManager.DisplayAlertAsync(errorInfo.Message);

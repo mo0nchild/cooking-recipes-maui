@@ -22,7 +22,7 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
     {
         protected internal readonly IUserAuthorization userAuthorization = default!;
         protected internal CancellationTokenSource cancellationSource = new();
-        public virtual double ImageSize { get => 96; }
+        public virtual double ImageSize { get => 112; }
 
         public static readonly string DefaultProfileImage = $"MauiLabs.View.Resources.Images.Profile.defaultprofile.png";
 
@@ -80,7 +80,7 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
 
                     using var outputStream = new MemoryStream();
                     image.Save(outputStream, new PngEncoder());
-                    this.UserImage = outputStream.ToArray();
+                    this.UserImage = this.PreviewImage = outputStream.ToArray();
                 }
             }
             catch (Exception errorInfo) { this.DisplayAlert.Invoke(this, errorInfo.Message); }

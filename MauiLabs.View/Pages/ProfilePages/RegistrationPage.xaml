@@ -115,7 +115,7 @@
                                     <Border BackgroundColor="Transparent">
                                         <FlexLayout Grid.Row="0" Grid.Column="0"
                                                 JustifyContent="Center" AlignItems="Center" Direction="Column" HeightRequest="220" >
-                                            <Border HeightRequest="100" WidthRequest="100" Stroke="White" StrokeThickness="2"
+                                            <Border HeightRequest="112" WidthRequest="112" Stroke="White" StrokeThickness="2"
                                                     BackgroundColor="White">
                                                 <Border.StrokeShape>
                                                     <RoundRectangle CornerRadius="20" />

@@ -74,11 +74,11 @@
                                 <ImageButton Grid.Row="0" Grid.Column="0" 
                                         Command="{x:Binding ImagePickerCommand}" Style="{x:StaticResource ImagePickerStyle}" 
                                         Source="loadimageicon.png" Margin="4" Padding="3" WidthRequest="60" HeightRequest="46" 
-                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                                        IsEnabled="{Binding ProfileLoaded}"/>
                                 <ImageButton Grid.Row="1" Grid.Column="0"
                                         Command="{x:Binding ImageClearCommand}" Style="{x:StaticResource ImagePickerStyle}" 
                                         Source="clearicon.png"  WidthRequest="60" HeightRequest="46" Margin="4" Padding="8"
-                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                                        IsEnabled="{Binding ProfileLoaded}"/>
                             </Grid>
                             
                         </Grid>
@@ -87,7 +87,7 @@
 
                 <custom:ExpanderView ButtonIcon="arrowicon.png" ExpanderHeight="240" ButtonText="Изменить пароль"
                         Margin="0, 10, 0, 10" x:Name="PasswordExpander" MaximumWidthRequest="400" ButtonHeight="52"
-                        CanExpand="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                        CanExpand="{Binding ProfileLoaded}">
                     <custom:ExpanderView.Item>
                         <Border BackgroundColor="Transparent">
 
@@ -107,13 +107,13 @@
                                 IsValidated="{x:Binding ValidationState[UserName]}" TextValue="{x:Binding UserName}"
                                 CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
                                 MinLenght="4" DefaultText="Укажите имя" LabelText="Имя пользователя:" 
-                                IsReadonly="{Binding ProfileLoaded}"/>
+                                IsReadonly="{Binding ProfileLoaded, Converter={StaticResource InvertedBoolConverter}}"/>
 
                         <custom:ValidationEntryView x:Name="SurnameTextField" ErrorText="Значение от 4 до 50 символов"
                                 IsValidated="{x:Binding ValidationState[Surname]}" TextValue="{x:Binding UserSurname}"
                                 CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
                                 MinLenght="4" DefaultText="Укажите фамилию" LabelText="Фамилия пользователя:" 
-                                IsReadonly="{Binding ProfileLoaded}"/>
+                                IsReadonly="{Binding ProfileLoaded, Converter={StaticResource InvertedBoolConverter}}"/>
 
                         <BoxView BackgroundColor="White" Margin="5, 14" CornerRadius="1" HeightRequest="2"/>
 
@@ -122,12 +122,12 @@
                                 CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
                                 MaxLenght="100" Regex="^([\w\.\-]{4,})@([\w\-]+)((\.(\w){2,3})+)$"
                                 DefaultText="Пример: test@gmail.com" LabelText="Электронная почта:" 
-                                IsReadonly="{Binding ProfileLoaded}"/>
+                                IsReadonly="{Binding ProfileLoaded, Converter={StaticResource InvertedBoolConverter}}"/>
                         
                         <Button x:Name="ReferenceLinkButton" Clicked="ReferenceLinkButton_Clicked"
                                 Text="Ссылка для добавления друзей" HeightRequest="48" FontSize="16"
                                 Style="{x:StaticResource Key=ButtonStyle}" CornerRadius="10" Margin="0, 10"
-                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                                IsEnabled="{Binding ProfileLoaded}"/>
                         
                     </VerticalStackLayout>
                 </Border>

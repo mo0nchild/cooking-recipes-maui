@@ -10,12 +10,21 @@ public partial class ProfileInfoPage : ContentPage
 	{
 		this.InitializeComponent();
         this.BindingContext = this.viewModel = viewModel;
+        
+        this.viewModel.DisplayAlert += delegate (object sender, string message)
+        {
+            this.Dispatcher.Dispatch(async() => await this.DisplayAlert("Произошла ошибка", message, "Назад"));
+        };
+        this.viewModel.DisplayInfo += delegate (object sender, string message)
+        {
+            this.Dispatcher.Dispatch(async () => await this.DisplayAlert("Успешное действие", message, "Назад"));
+        };
     }
-    protected override async void OnAppearing() => await this.Dispatcher.DispatchAsync(() =>
+    protected override void OnAppearing() => this.Dispatcher.Dispatch(() =>
     {
         this.viewModel.GetProfileCommand.Execute(this);
     });
-    protected override async void OnDisappearing() => await this.Dispatcher.DispatchAsync(async () =>
+    protected override void OnDisappearing() => this.Dispatcher.Dispatch(async () =>
     {
         this.viewModel.CancelCommand.Execute(this);
         await this.PageScroller.ScrollToAsync(0, 0, false);
@@ -29,16 +38,14 @@ public partial class ProfileInfoPage : ContentPage
             await Shell.Current.GoToAsync(UserManager.AuthorizationRoute);
         });
     }
-    protected virtual async void UpdateButton_Clicked(object sender, EventArgs args)
-    {
-        await this.Dispatcher.DispatchAsync(() => this.viewModel.GetProfileCommand.Execute(this));
-    }
+    protected virtual void UpdateButton_Clicked(object sender, EventArgs args) { }
     protected virtual async void ReferenceLinkButton_Clicked(object sender, EventArgs e)
     {
         await Share.Default.RequestAsync(new ShareTextRequest
         {
-            Text = string.Format("Используйте ссылку в приложение: {0}\n", this.viewModel.ReferenceLink), 
-            Title = "Ссылка для добавление в друзья", Uri = @"https://github.com/mo0nchild/cs-maui-labs",
+            Text = string.Format("Используйте ссылку в приложение: {0}\n", this.viewModel.ReferenceLink),
+            Title = "Ссылка для добавление в друзья",
+            Uri = @"https://github.com/mo0nchild/cs-maui-labs",
         });
     }
 }
