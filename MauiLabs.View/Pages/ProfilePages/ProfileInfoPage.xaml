@@ -66,19 +66,18 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="20" />
                                 </Border.StrokeShape>
-                                <Image Aspect="AspectFill" HeightRequest="112" WidthRequest="112" x:Name="ProfileImage"
-                                    Source="{Binding PreviewImage, Converter={x:StaticResource ByteArrayToImageConverter}}"/>
+                                <Image Aspect="AspectFill" HeightRequest="112" WidthRequest="112" x:Name="ProfileImage"/>
                             </Border>
                             
                             <Grid RowDefinitions="*, *" ColumnDefinitions="*" Margin="5, 5" Grid.Column="1">
                                 <ImageButton Grid.Row="0" Grid.Column="0" 
                                         Command="{x:Binding ImagePickerCommand}" Style="{x:StaticResource ImagePickerStyle}" 
                                         Source="loadimageicon.png" Margin="4" Padding="3" WidthRequest="60" HeightRequest="46" 
-                                        IsEnabled="{Binding ProfileLoaded}"/>
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
                                 <ImageButton Grid.Row="1" Grid.Column="0"
                                         Command="{x:Binding ImageClearCommand}" Style="{x:StaticResource ImagePickerStyle}" 
                                         Source="clearicon.png"  WidthRequest="60" HeightRequest="46" Margin="4" Padding="8"
-                                        IsEnabled="{Binding ProfileLoaded}"/>
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
                             </Grid>
                             
                         </Grid>

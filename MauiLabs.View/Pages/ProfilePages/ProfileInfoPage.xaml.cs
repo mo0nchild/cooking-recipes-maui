@@ -19,7 +19,224 @@ public partial class ProfileInfoPage : ContentPage
         {
             this.Dispatcher.Dispatch(async () => await this.DisplayAlert("Успешное действие", message, "Назад"));
         };
+        this.viewModel.ReloadImage += (sender, image) => this.Dispatcher.Dispatch(() =>
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Application.Current.Dispatcher.Dispatch(() =>
+                {
+                    Shell.Current.Dispatcher.Dispatch(() =>
+                    {
+                        MainThread.BeginInvokeOnMainThread(() =>
+                        {
+                            this.Dispatcher.Dispatch(() =>
+                            {
+                                MainThread.BeginInvokeOnMainThread(() =>
+                                {
+                                    this.Dispatcher.Dispatch(() =>
+                                    {
+                                        Application.Current.Dispatcher.Dispatch(() =>
+                                        {
+                                            MainThread.BeginInvokeOnMainThread(() =>
+                                            {
+                                                Application.Current.Dispatcher.Dispatch(() =>
+                                                {
+                                                    Shell.Current.Dispatcher.Dispatch(() =>
+                                                    {
+                                                        MainThread.BeginInvokeOnMainThread(() =>
+                                                        {
+                                                            this.Dispatcher.Dispatch(() =>
+                                                            {
+                                                                MainThread.BeginInvokeOnMainThread(() =>
+                                                                {
+                                                                    this.Dispatcher.Dispatch(() =>
+                                                                    {
+                                                                        Application.Current.Dispatcher.Dispatch(() =>
+                                                                        {
+                                                                            Shell.Current.Dispatcher.Dispatch(() =>
+                                                                            {
+                                                                                MainThread.BeginInvokeOnMainThread(() =>
+                                                                                {
+                                                                                    Application.Current.Dispatcher.Dispatch(() =>
+                                                                                    {
+                                                                                        Shell.Current.Dispatcher.Dispatch(() =>
+                                                                                        {
+                                                                                            MainThread.BeginInvokeOnMainThread(() =>
+                                                                                            {
+                                                                                                this.Dispatcher.Dispatch(() =>
+                                                                                                {
+                                                                                                    MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                    {
+                                                                                                        this.Dispatcher.Dispatch(() =>
+                                                                                                        {
+                                                                                                            Application.Current.Dispatcher.Dispatch(() =>
+                                                                                                            {
+                                                                                                                MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                {
+                                                                                                                    Application.Current.Dispatcher.Dispatch(() =>
+                                                                                                                    {
+                                                                                                                        Shell.Current.Dispatcher.Dispatch(() =>
+                                                                                                                        {
+                                                                                                                            MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                            {
+                                                                                                                                this.Dispatcher.Dispatch(() =>
+                                                                                                                                {
+                                                                                                                                    MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                    {
+                                                                                                                                        this.Dispatcher.Dispatch(() =>
+                                                                                                                                        {
+                                                                                                                                            Application.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                            {
+                                                                                                                                                Shell.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                {
+                                                                                                                                                    MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                    {
+                                                                                                                                                        Application.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                        {
+                                                                                                                                                            Shell.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                            {
+                                                                                                                                                                MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                                {
+                                                                                                                                                                    this.Dispatcher.Dispatch(() =>
+                                                                                                                                                                    {
+                                                                                                                                                                        MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                                        {
+                                                                                                                                                                            this.Dispatcher.Dispatch(() =>
+                                                                                                                                                                            {
+                                                                                                                                                                                Application.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                {
+                                                                                                                                                                                    MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                                                    {
+                                                                                                                                                                                        Application.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                        {
+                                                                                                                                                                                            Shell.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                            {
+                                                                                                                                                                                                MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    this.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                    {
+                                                                                                                                                                                                        MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                                                                        {
+                                                                                                                                                                                                            this.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                            {
+                                                                                                                                                                                                                Application.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                {
+                                                                                                                                                                                                                    MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                                                                                    {
+                                                                                                                                                                                                                        Application.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                            Shell.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                            {
+                                                                                                                                                                                                                                MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                                                                                                {
+                                                                                                                                                                                                                                    this.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                                    {
+                                                                                                                                                                                                                                        MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                                            this.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                                            {
+                                                                                                                                                                                                                                                Application.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                                                {
+                                                                                                                                                                                                                                                    MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                                                                                                                    {
+                                                                                                                                                                                                                                                        Application.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                                                            Shell.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                                                            {
+                                                                                                                                                                                                                                                                MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                                                                                                                                {
+                                                                                                                                                                                                                                                                    this.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                                                                    {
+                                                                                                                                                                                                                                                                        MainThread.BeginInvokeOnMainThread(() =>
+                                                                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                                                                            this.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                                                                            {
+                                                                                                                                                                                                                                                                                Application.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                                                                                {
+                                                                                                                                                                                                                                                                                    Shell.Current.Dispatcher.Dispatch(() =>
+                                                                                                                                                                                                                                                                                    {
+                                                                                                                                                                                                                                                                                        this.ProfileImage.Source = ImageSource.FromStream(() => new MemoryStream(image));
+                                                                                                                                                                                                                                                                                    });
+                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                            });
+                                                                                                                                                                                                                                                                        });
+                                                                                                                                                                                                                                                                    });
+                                                                                                                                                                                                                                                                });
+
+                                                                                                                                                                                                                                                            });
+                                                                                                                                                                                                                                                        });
+                                                                                                                                                                                                                                                    });
+                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                            });
+                                                                                                                                                                                                                                        });
+                                                                                                                                                                                                                                    });
+                                                                                                                                                                                                                                });
+
+                                                                                                                                                                                                                            });
+                                                                                                                                                                                                                        });
+                                                                                                                                                                                                                    });
+                                                                                                                                                                                                                });
+                                                                                                                                                                                                            });
+                                                                                                                                                                                                            });
+                                                                                                                                                                                                        });
+                                                                                                                                                                                                    });
+                                                                                                                                                                                                });
+
+                                                                                                                                                                                            });
+                                                                                                                                                                                        });
+                                                                                                                                                                                    });
+                                                                                                                                                                                });
+                                                                                                                                                                            });
+                                                                                                                                                                        });
+                                                                                                                                                                    });
+                                                                                                                                                                });
+
+                                                                                                                                                            });
+                                                                                                                                                        });
+                                                                                                                                                    });
+                                                                                                                                                });
+                                                                                                                                            });
+                                                                                                                                            });
+                                                                                                                                        });
+                                                                                                                                    });
+                                                                                                                                });
+                                                                                                                            });
+
+                                                                                                                        });
+                                                                                                                    });
+                                                                                                                });
+                                                                                                            });
+                                                                                                        });
+                                                                                                    });
+                                                                                                });
+                                                                                            });
+
+                                                                                        });
+                                                                                    });
+                                                                                });
+                                                                            });
+                                                                        });
+                                                                        });
+                                                                    });
+                                                                });
+                                                            });
+                                                        });
+
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+
+                    });
+                });
+            });
+        });
     }
+
     protected override void OnAppearing() => this.Dispatcher.Dispatch(() =>
     {
         this.viewModel.GetProfileCommand.Execute(this);

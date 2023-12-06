@@ -43,7 +43,7 @@ namespace MauiLabs.View.Services.Commons
             }
             await Console.Out.WriteLineAsync(message);
         }
-        public static async Task SendRequest(Func<string, Task> request, Func<Exception, Task>? cancelled = null)
+        public static async Task SendRequest(Func<string, Task> request, Action<Exception>? cancelled = null)
         {
             try { await request.Invoke(await UserManager.JwtToken()); }
             catch (ViewServiceException errorInfo) when (errorInfo.ExceptionType != HttpStatusCode.Unauthorized)
@@ -62,7 +62,7 @@ namespace MauiLabs.View.Services.Commons
             }
             catch (Exception errorInfo) { await CatchRequestError(errorInfo, cancelled); }
         }
-        public static async Task CatchRequestError(Exception errorInfo, Func<Exception, Task>? cancelled = null)
+        public static async Task CatchRequestError(Exception errorInfo, Action<Exception>? cancelled = null)
         {
             var errorType = errorInfo.GetType();
             /*
@@ -79,7 +79,7 @@ namespace MauiLabs.View.Services.Commons
                 await UserManager.DisplayAlertAsync(errorInfo.Message);
                 await LogoutUser();
             }
-            else if (cancelled != null) await cancelled.Invoke(errorInfo);
+            else if (cancelled != null) cancelled.Invoke(errorInfo);
         }
     }
 #nullable disable

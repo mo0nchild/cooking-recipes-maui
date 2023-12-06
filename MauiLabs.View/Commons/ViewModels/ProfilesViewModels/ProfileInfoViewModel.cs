@@ -1,4 +1,5 @@
-﻿using MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Requests;
+﻿using MauiLabs.View.Pages.ProfilePages;
+using MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Requests;
 using MauiLabs.View.Services.ApiModels.ProfileModels.Profile.Responses;
 using MauiLabs.View.Services.Commons;
 using MauiLabs.View.Services.Interfaces;
@@ -25,16 +26,16 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
 
         public static readonly string DefaultProfileImage = $"MauiLabs.View.Resources.Images.Profile.defaultprofile.png";
 
-        public ICommand CancelCommand { get; protected set; } = default!;
         public ICommand GetProfileCommand { get; protected set; } = default!;
         public ICommand UpdateProfileCommand { get; protected set; } = default!;
+        public ICommand CancelCommand { get; protected set; } = default!;
 
         public ICommand ImagePickerCommand { get; protected set; } = default!;
         public ICommand ImageClearCommand { get; protected set; } = default!;
 
         public event EventHandler<string> DisplayAlert = delegate { };
         public event EventHandler<string> DisplayInfo = delegate { };
-        public event EventHandler ReloadView = delegate { };
+        public event EventHandler<byte[]> ReloadImage = delegate { };
 
         public event PropertyChangedEventHandler PropertyChanged;
         public ProfileInfoViewModel(IUserProfile profileService) : base()
@@ -53,15 +54,17 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
             this.CancelCommand = new Command(this.CancelCommandHandler);
 
             this.ImagePickerCommand = new Command(this.ImagePickerCommandHandler);
-            this.ImageClearCommand = new Command(async () =>
+            this.ImageClearCommand = new Command(() =>
             {
                 if (!this.ProfileLoaded) { this.DisplayAlert.Invoke(this, "Необходимо перезагрузить профиль"); return; }
-                this.UserImage = null;
-                this.PreviewImage = await this.FileToByteArray(DefaultProfileImage);
+                //this.UserImage = null;
+                //this.PreviewImage = this.FileToByteArray(DefaultProfileImage);
             });
         }
         protected virtual async void CancelCommandHandler(object sender) => await Task.Run(() =>
         {
+            if (this.isLoading == false) return;
+
             this.cancellationSource.Cancel(); 
             this.cancellationSource = new CancellationTokenSource();
 
@@ -73,12 +76,12 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
             this.IsLoading = false;
         });
 
-        private Task<byte[]> FileToByteArray(string filename)
+        private byte[] FileToByteArray(string filename)
         {
             using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(filename))
             {
                 using var binaryReader = new BinaryReader(fileStream);
-                return Task.FromResult(binaryReader.ReadBytes((int)fileStream.Length));
+                return binaryReader.ReadBytes((int)fileStream.Length);
             }
         }
         protected virtual async void ImagePickerCommandHandler(object sender)
@@ -100,47 +103,57 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
 
                     using var outputStream = new MemoryStream();
                     image.Save(outputStream, new PngEncoder());
-                    this.UserImage = outputStream.ToArray();
+                    this.profileInfoModel.Image = outputStream.ToArray();
                 }
             }
             catch (Exception errorInfo) { this.DisplayAlert.Invoke(this, errorInfo.Message); }
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                this.ReloadImage.Invoke(this, this.FileToByteArray(DefaultProfileImage));
+            });
         }
 
         protected virtual async Task UpdateProfileCommandHander() => await UserManager.SendRequest(async (token) =>
         {
-            var requestResult = await this.profileService.EditProfileInfo(new RequestInfo<EditProfileRequestModel>()
-            {
-                RequestModel = new EditProfileRequestModel()
-                {
-                    Name = this.UserName, Surname = this.UserSurname,
-                    Email = this.UserEmail, Image = this.UserImage,
-                },
-                ProfileToken = token, CancelToken = this.cancellationSource.Token,
-            });
-            this.DisplayInfo.Invoke(this, "Данные успешно обновлены");
-            this.ReloadView.Invoke(this, new EventArgs());
+            //var requestResult = await this.profileService.EditProfileInfo(new RequestInfo<EditProfileRequestModel>()
+            //{
+            //    RequestModel = new EditProfileRequestModel()
+            //    {
+            //        Name = this.UserName, Surname = this.UserSurname,
+            //        Email = this.UserEmail, Image = this.UserImage,
+            //    },
+            //    ProfileToken = token, CancelToken = this.cancellationSource.Token,
+            //});
+            //this.DisplayInfo.Invoke(this, "Данные успешно обновлены");
         });
         protected virtual async Task GetProfileCommandHandler() => await UserManager.SendRequest(async (token) =>
         {
             var requestResult = await this.profileService.GetProfileInfoByToken(token, this.cancellationSource.Token);
-            if (requestResult.Image.Length != 0)
+            if (requestResult.Image.Length == 0)
             {
-                this.PreviewImage = await this.FileToByteArray(DefaultProfileImage);
-                this.UserImage = requestResult.Image;
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    this.ReloadImage.Invoke(this, this.FileToByteArray(DefaultProfileImage));
+                });
+                this.profileInfoModel.Image = null;
             }
-            else this.PreviewImage = this.PreviewImage = requestResult.Image;
+            else this.ReloadImage.Invoke(this, this.profileInfoModel.Image = requestResult.Image);
 
             (this.UserName, this.UserSurname) = (requestResult.Name, requestResult.Surname);
             (this.UserEmail, this.ReferenceLink) = (requestResult.Email, requestResult.ReferenceLink);
 
             if (!this.ProfileLoaded) this.ProfileLoaded = true;
-            this.ReloadView.Invoke(this, new EventArgs());
-        }, async (errorInfo) =>
+            this.profileInfoModel.Id = requestResult.Id;
+        }, (errorInfo) =>
         {
             this.UserName = this.UserSurname = this.UserEmail = "Не загружено";
-            (this.ReferenceLink, this.UserImage) = (string.Empty, null);
+            this.ReferenceLink = string.Empty;
+            (this.profileInfoModel.Id, this.profileInfoModel.Image) = (-1, null);
 
-            this.PreviewImage = await this.FileToByteArray(DefaultProfileImage);
+            //this.ReloadView.Invoke(this, (page) =>
+            //{
+            //    this.PreviewImage = this.FileToByteArray(DefaultProfileImage);
+            //});
             this.DisplayAlert.Invoke(this, "Данные не загружены, для редактирования обновить");
         });
         private protected GetProfileInfoResponseModel profileInfoModel = new() 
@@ -163,21 +176,11 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
             set { this.profileInfoModel.Email = value; OnPropertyChanged(); }
             get => this.profileInfoModel.Email;
         }
-        public byte[] UserImage
-        {
-            set { this.profileInfoModel.Image = value; this.OnPropertyChanged(); }
-            get => this.profileInfoModel.Image;
-        }
         public string ReferenceLink 
         {
             set { this.profileInfoModel.ReferenceLink = value; this.OnPropertyChanged(); }
             get => this.profileInfoModel.ReferenceLink; 
         }
-
-        protected internal byte[] previewImage = new byte[0];
-        public byte[] PreviewImage { get => this.previewImage; set { this.previewImage = value; OnPropertyChanged(); } }
-
-
         private protected bool profileLoaded = default;
         public bool ProfileLoaded { get => this.profileLoaded; set { this.profileLoaded = value; OnPropertyChanged(); } }
 

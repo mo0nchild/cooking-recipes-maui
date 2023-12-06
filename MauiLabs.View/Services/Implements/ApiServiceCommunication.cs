@@ -34,12 +34,11 @@ namespace MauiLabs.View.Services.Implements
             this.BaseAddress = httpClient.BaseAddress;
         }
         public virtual void Dispose() { }
-
         public virtual async Task<TResponse> SendRequestAsync<TResponse>(HttpRequestMessage requestMessage, 
             CancellationToken cancelToken, Func<HttpContent, Task<TResponse>> contentTransform)
         {
             using var httpClient = this.httpClientFactory.CreateClient(this.webApiOptions.ApiClient);            
-            var responseTask = httpClient.SendAsync(requestMessage, cancelToken);
+            var responseTask = httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseContentRead, cancelToken);
 
             if (await responseTask.WaitUntil(cancelToken)) throw new TaskCanceledException();
 
@@ -93,7 +92,7 @@ namespace MauiLabs.View.Services.Implements
             {
                 await Task.Delay(100);
             }
-            return thisTask.Status == TaskStatus.Canceled;
+            return thisTask.Status != TaskStatus.RanToCompletion && token.IsCancellationRequested;
         }
     }
 }

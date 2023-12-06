@@ -32,9 +32,10 @@ namespace MauiLabs.View.Commons.ViewModels.ProfilesViewModels
         }
         protected virtual async void CancelCommandHandler(object sender) => await Task.Run(() =>
         {
+            if (this.isLoading == false) return;
             this.cancellationSource.Cancel();
-            this.cancellationSource = new CancellationTokenSource();
 
+            this.cancellationSource = new CancellationTokenSource();
             this.IsLoading = default;
         });
         protected virtual async void AuthorizateCommandHandler(object sender)
