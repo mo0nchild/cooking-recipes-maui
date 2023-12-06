@@ -137,7 +137,7 @@
                         IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
 
                     <ImageButton Grid.Column="1" Grid.Row="0" Margin="3" WidthRequest="{OnIdiom Desktop=140, Phone=130}"
-                        Source="reloadicon.png" Command="{Binding GetProfileCommand}" Style="{x:StaticResource ImageButtonStyle}"
+                        Source="reloadicon.png" Clicked="GetProfileButton_Clicked" Style="{x:StaticResource ImageButtonStyle}"
                         IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
 
                     <ImageButton Grid.Column="2" Grid.Row="0" Margin="3" WidthRequest="100"
