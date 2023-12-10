@@ -51,11 +51,15 @@
 	  <None Remove="appsettings.json" />
 	  <None Remove="Resources\Images\Profile\defaultprofile.png" />
 	  <None Remove="Resources\Images\Profile\deleteicon.png" />
+	  <None Remove="Resources\Images\Profile\friend.png" />
 	  <None Remove="Resources\Images\Profile\loadimageicon.png" />
 	  <None Remove="Resources\Images\Profile\login.png" />
 	  <None Remove="Resources\Images\Profile\logouticon.png" />
 	  <None Remove="Resources\Images\Profile\registration.png" />
 	  <None Remove="Resources\Images\Profile\reloadicon.png" />
+	  <None Remove="Resources\Images\Profile\user.png" />
+	  <None Remove="Resources\Images\Recipe\bookmark.png" />
+	  <None Remove="Resources\Images\Recipe\cooking.png" />
 	  <None Remove="Resources\Images\Recipe\flyoutheader.jpg" />
 	  <None Remove="Resources\Images\Recipe\starRegular.png" />
 	  <None Remove="Resources\Images\Recipe\starSolid.png" />
@@ -117,6 +121,12 @@
 	  <MauiXaml Update="Pages\ProfilePages\AuthorizationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\ProfilePages\FriendInfoPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\ProfilePages\FriendsListPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\ProfilePages\ProfileInfoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -140,6 +150,7 @@
 
 	<ItemGroup>
 		<MauiImage Include="Resources\Images\Profile\deleteicon.png" />
+		<MauiImage Include="Resources\Images\Profile\friend.png" />
 		<MauiImage Include="Resources\Images\Profile\loadimageicon.png" />
 		<MauiImage Include="Resources\Images\Profile\login.png" />
 		<EmbeddedResource Include="Resources\Images\Profile\defaultprofile.png">
@@ -149,6 +160,9 @@
 		<MauiImage Include="Resources\Images\Profile\registration.png" />
 		<MauiImage Include="Resources\Images\background.png" />
 		<MauiImage Include="Resources\Images\Profile\reloadicon.png" />
+		<MauiImage Include="Resources\Images\Profile\user.png" />
+		<MauiImage Include="Resources\Images\Recipe\bookmark.png" />
+		<MauiImage Include="Resources\Images\Recipe\cooking.png" />
 		<MauiImage Include="Resources\Images\Recipe\flyoutheader.jpg" />
 		<MauiImage Include="Resources\Images\Recipe\starregular.png" />
 		<MauiImage Include="Resources\Images\Recipe\starsolid.png" />

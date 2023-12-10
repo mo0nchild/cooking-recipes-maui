@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:recipePages="clr-namespace:MauiLabs.View.Pages.RecipePages"
     xmlns:profilePages="clr-namespace:MauiLabs.View.Pages.ProfilePages"
-    Shell.TabBarIsVisible="True" Shell.BackgroundColor="{x:StaticResource FirstColor}"
+    Shell.BackgroundColor="{x:StaticResource FirstColor}" Shell.TabBarIsVisible="True"
     FlyoutBackgroundColor="{x:StaticResource SecondColor}" x:Name="this">
     <Shell.Resources>
         <ResourceDictionary>
@@ -70,8 +70,8 @@
             </Border>
         </Grid>
     </Shell.FlyoutFooter>
-    
-    <TabBar Route="authorization" Shell.FlyoutItemIsVisible="False">
+
+    <TabBar Route="authorization" Shell.FlyoutItemIsVisible="False" >
         <Tab Route="loginTab" Title="Авторизация" Icon="/Profile/login.png">
             <ShellContent Route="loginPage" ContentTemplate="{DataTemplate profilePages:AuthorizationPage}"/>
         </Tab>
@@ -79,14 +79,17 @@
             <ShellContent Route="registrationPage" ContentTemplate="{DataTemplate profilePages:RegistrationPage}"/>
         </Tab>
     </TabBar>
-    <FlyoutItem Route="recipes" Title="Рецепты">
-        <Tab Route="listTab" Title="Список рецептов">
-            <ShellContent Route="listPage"  ContentTemplate="{DataTemplate recipePages:RecipesListPage}"/>
+    <FlyoutItem Route="recipes" Title="Рецепты" >
+        <Tab Route="listTab" Title="Список рецептов" Icon="/Recipe/cooking.png">
+            <ShellContent Route="listPage" ContentTemplate="{DataTemplate recipePages:RecipesListPage}"/>
         </Tab>
     </FlyoutItem>
     <FlyoutItem Route="profile" Title="Профиль">
-        <Tab Route="infoTab" Title="Информация">
+        <Tab Route="infoTab" Title="Информация" Icon="/Profile/user.png">
             <ShellContent Route="infoPage" ContentTemplate="{DataTemplate profilePages:ProfileInfoPage}" />
+        </Tab>
+        <Tab Route="friendsTab" Title="Друзья" Icon="/Profile/friend.png">
+            <ShellContent Route="friendsPage" ContentTemplate="{DataTemplate profilePages:FriendsListPage}" />
         </Tab>
     </FlyoutItem>
 </Shell>

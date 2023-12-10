@@ -44,9 +44,10 @@
     </ContentPage.Resources>
     <Grid>
         <Image Source="background.png" Aspect="AspectFill"/>
-        <ScrollView Orientation="Vertical" BackgroundColor="Transparent" x:Name="PageScroller" 
+        <ScrollView Orientation="Vertical" BackgroundColor="Transparent" x:Name="PageScroller"
                     IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
-            <StackLayout x:Name="ProfilePanel" Orientation="Vertical" HorizontalOptions="Fill" Margin="30, 10, 30, 40">
+            <StackLayout x:Name="ProfilePanel" Orientation="Vertical" HorizontalOptions="Fill" Margin="30, 10, 30, 40"
+                         Opacity="0.0" Scale="1.5">
                 
                 <Border StrokeThickness="2" MaximumWidthRequest="260" Padding="20"
                         BackgroundColor="{x:StaticResource Key=FirstColor}" Margin="0, 20, 0, 10"
@@ -61,21 +62,21 @@
                                 <ColumnDefinition Width="0.6*"/>
                                 <ColumnDefinition Width="0.4*"/>
                             </Grid.ColumnDefinitions>
-                            <Border HeightRequest="112" WidthRequest="112" Stroke="White" StrokeThickness="2"
-                                    BackgroundColor="White" Grid.Column="0">
+                            <Border x:Name="ProfileImage" HeightRequest="112" WidthRequest="112" Stroke="White" 
+                                    StrokeThickness="2" BackgroundColor="White" Grid.Column="0" Padding="0">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="20" />
                                 </Border.StrokeShape>
-                                <Image Aspect="AspectFill" HeightRequest="112" WidthRequest="112" x:Name="ProfileImage"/>
+                                <Image Aspect="AspectFill" HeightRequest="112" WidthRequest="112"/>
                             </Border>
                             
                             <Grid RowDefinitions="*, *" ColumnDefinitions="*" Margin="5, 5" Grid.Column="1">
                                 <ImageButton Grid.Row="0" Grid.Column="0" 
-                                        Command="{x:Binding ImagePickerCommand}" Style="{x:StaticResource ImagePickerStyle}" 
+                                        Clicked="ImagePickerButton_Clicked" Style="{x:StaticResource ImagePickerStyle}" 
                                         Source="loadimageicon.png" Margin="4" Padding="3" WidthRequest="60" HeightRequest="46" 
                                         IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
                                 <ImageButton Grid.Row="1" Grid.Column="0"
-                                        Command="{x:Binding ImageClearCommand}" Style="{x:StaticResource ImagePickerStyle}" 
+                                        Clicked="ImageClearButton_Clicked" Style="{x:StaticResource ImagePickerStyle}" 
                                         Source="clearicon.png"  WidthRequest="60" HeightRequest="46" Margin="4" Padding="8"
                                         IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
                             </Grid>
@@ -84,11 +85,30 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <custom:ExpanderView ButtonIcon="arrowicon.png" ExpanderHeight="240" ButtonText="Изменить пароль"
+                <custom:ExpanderView ButtonIcon="arrowicon.png" ExpanderHeight="340" ButtonText="Изменить пароль"
                         Margin="0, 10, 0, 10" x:Name="PasswordExpander" MaximumWidthRequest="400" ButtonHeight="52"
                         CanExpand="{Binding ProfileLoaded}">
                     <custom:ExpanderView.Item>
-                        <Border BackgroundColor="Transparent">
+                        <Border BackgroundColor="Transparent" Padding="20, 5">
+
+                            <VerticalStackLayout Spacing="10">
+                                <custom:ValidationEntryView x:Name="OldPasswordTextField" ErrorText="Значение от 5 до 50 символов"
+                                        IsValidated="{x:Binding PasswordValidationState[Old]}" TextValue="{x:Binding OldPassword}"
+                                        CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                                        DefaultText="Укажите старый пароль" LabelText="Старый пароль:" 
+                                        IsReadonly="{Binding ProfileLoaded, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                                <custom:ValidationEntryView x:Name="NewPasswordTextField" ErrorText="Значение от 5 до 50 символов"
+                                        IsValidated="{x:Binding PasswordValidationState[New]}" TextValue="{x:Binding NewPassword}"
+                                        CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                                        DefaultText="Укажите новый пароль" LabelText="Новый пароль:" 
+                                        IsReadonly="{Binding ProfileLoaded, Converter={StaticResource InvertedBoolConverter}}"/>
+ 
+                                <Button x:Name="PasswordChangeButton" Command="{x:Binding ChangePasswordCommand}" 
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                                        Text="Изменить" CornerRadius="10" Margin="0, 5" TextColor="{x:StaticResource SecondColor}"
+                                        BackgroundColor="White" BorderColor="White" BorderWidth="2" HeightRequest="40" FontSize="16"/>
+                            </VerticalStackLayout>
 
                         </Border>
                     </custom:ExpanderView.Item>
@@ -133,11 +153,11 @@
                 
                 <Grid Margin="0, 0, 0, 20" ColumnDefinitions="*, *, *" RowDefinitions="*">
                     <ImageButton Grid.Column="0" Grid.Row="0" Margin="3" WidthRequest="100"
-                        Source="deleteicon.png" Clicked="ExitProfile_Clicked" Style="{x:StaticResource ImageButtonStyle}"
+                        Source="deleteicon.png" Command="{x:Binding DeleteProfileCommand}" Style="{x:StaticResource ImageButtonStyle}"
                         IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
 
                     <ImageButton Grid.Column="1" Grid.Row="0" Margin="3" WidthRequest="{OnIdiom Desktop=140, Phone=130}"
-                        Source="reloadicon.png" Clicked="GetProfileButton_Clicked" Style="{x:StaticResource ImageButtonStyle}"
+                        Source="reloadicon.png" Command="{x:Binding GetProfileCommand}" Style="{x:StaticResource ImageButtonStyle}"
                         IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
 
                     <ImageButton Grid.Column="2" Grid.Row="0" Margin="3" WidthRequest="100"
@@ -145,8 +165,8 @@
                         IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
                 </Grid>
 
-                <Button x:Name="UpdateButton" Clicked="UpdateButton_Clicked"
-                        FlexLayout.AlignSelf="Stretch" Text="Обновить данные" HeightRequest="54" MaximumWidthRequest="400"
+                <Button x:Name="UpdateButton" Text="Обновить данные" 
+                        HeightRequest="54" MaximumWidthRequest="400"
                         Style="{x:StaticResource Key=ButtonStyle}" Command="{Binding UpdateProfileCommand}"
                         IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
 

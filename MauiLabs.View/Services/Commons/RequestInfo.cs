@@ -23,7 +23,7 @@ namespace MauiLabs.View.Services.Commons
             var urlBuilder = new UriBuilder(new Uri(path));
 
             if (!bodyUsing) urlBuilder.Query = this.GetQueryString(this.RequestModel);
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, urlBuilder.Uri)
+            var requestMessage = new HttpRequestMessage(method, urlBuilder.Uri)
             { 
                 Headers = { { "Authorization", $"Bearer {this.ProfileToken}" } },
                 Content = bodyUsing ? JsonContent.Create(this.RequestModel) : null,

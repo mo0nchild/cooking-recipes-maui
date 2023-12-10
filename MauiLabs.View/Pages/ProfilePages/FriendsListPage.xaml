@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiLabs.View.Pages.ProfilePages.FriendsListPage"
+             xmlns:custom="clr-namespace:MauiLabs.View.Commons.ContentViews"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Список друзей" x:Name="FriendsPage" 
+             Shell.BackgroundColor="{x:StaticResource Key=FirstColor}">
+    <ContentPage.Resources>
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+    </ContentPage.Resources>
+    <Grid>
+        <Image Source="background.png" Aspect="AspectFill"/>
+        <VerticalStackLayout>
+            <Border BackgroundColor="{x:StaticResource FirstColor}" StrokeThickness="2" Stroke="White" Padding="16" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="0, 0, 24, 24" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="5">
+                    <Label TextColor="White" FontSize="14" Text="Ссылка на профиль друга:" />
+                    <Grid ColumnDefinitions="0.7*, 0.1*, 0.1*" RowDefinitions="*" ColumnSpacing="10">
+                        <Border Stroke="White" Padding="2" BackgroundColor="White" Grid.Column="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Entry PlaceholderColor="{x:StaticResource FirstColor}" TextColor="{x:StaticResource SecondColor}" 
+                                FontSize="16" Placeholder="Введите ссылку друга" BackgroundColor="White" ClearButtonVisibility="WhileEditing"
+                                Text="{x:Binding ReferenceLink}" x:Name="ReferenceTextField" MaxLength="100"
+                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                        </Border>
+                        <ImageButton Grid.Column="1" Source="addicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2"
+                                Padding="5" HeightRequest="{OnIdiom Desktop=40, Phone=50}" WidthRequest="{OnIdiom Desktop=40, Phone=50}"
+                                BackgroundColor="{x:StaticResource FirstColor}" Command="{x:Binding AddFriendCommand}"
+                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                        <ImageButton Grid.Column="2" Source="reloadicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2"
+                                Padding="8" HeightRequest="{OnIdiom Desktop=40, Phone=50}" WidthRequest="{OnIdiom Desktop=40, Phone=50}"
+                                BackgroundColor="{x:StaticResource FirstColor}" Command="{x:Binding GetFriendsListCommand}"
+                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/> 
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+            <Grid x:Name="FriendsListPanel" Opacity="0.0" Scale="1.5">
+                <VerticalStackLayout IsVisible="{x:Binding IsEmpty, Converter={StaticResource InvertedBoolConverter}}">
+                    <ScrollView Orientation="Vertical" BackgroundColor="Transparent" x:Name="PageScroller" HeightRequest="500"
+                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+                        <CollectionView x:Name="FriendsListView" ItemsSource="{Binding FriendsList}" HorizontalOptions="Fill"
+                                SelectionChanged="FriendsListView_SelectionChanged" SelectionMode="Single">
+                            <CollectionView.Resources>
+                                <ResourceDictionary>
+                                    <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageConverter" />
+                                    <Style x:Key="CardBorderStyle" TargetType="Border">
+                                        <Setter Property="StrokeThickness" Value="2"/>
+                                        <Setter Property="BackgroundColor" Value="{x:StaticResource Key=FirstColor}"/>
+                                        <Setter Property="Margin" Value="30, 8"/>
+                                        <Setter Property="Padding" Value="10"/>
+                                        <Setter Property="StrokeShape">
+                                            <Setter.Value>
+                                                <RoundRectangle CornerRadius="16" />
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Stroke">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="White" />
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="HorizontalOptions" Value="Fill"/>
+                                        <Setter Property="HeightRequest" Value="120" />
+                                    </Style>
+                                </ResourceDictionary>
+                            </CollectionView.Resources>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup Name="CommonStates">
+                                                <VisualState Name="Normal" />
+                                                <VisualState Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="Transparent" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <Border Style="{StaticResource CardBorderStyle}">
+                                            <Grid ColumnSpacing="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0" HeightRequest="90" WidthRequest="90" StrokeThickness="2">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="16" />
+                                                    </Border.StrokeShape>
+                                                    <Border.Stroke>
+                                                        <SolidColorBrush Color="White" />
+                                                    </Border.Stroke>
+                                                    <Image BackgroundColor="White" Aspect="AspectFill" HeightRequest="90" WidthRequest="90"
+                                                        HorizontalOptions="Center" VerticalOptions="Center"
+
+                                                        Source="{Binding Profile.Image, Converter={x:StaticResource ByteArrayToImageConverter}}"/>
+                                                </Border>
+                                                <StackLayout Grid.Column="1" Orientation="Vertical" Spacing="5" HorizontalOptions="Fill">
+                                                    <Label LineBreakMode="TailTruncation" FontSize="16" Margin="0, 5, 0, 0" TextColor="White">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <Span Text="{Binding Profile.Name}" FontAttributes="Bold"/>
+                                                                <Span Text=" "/>
+                                                                <Span Text="{Binding Profile.Surname}" FontAttributes="Bold"/>
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
+                                                    <Label Text="{Binding DateTime}" LineBreakMode="TailTruncation" FontSize="14" 
+                                                        TextDecorations="Underline" TextColor="White"/>
+                                                </StackLayout>
+
+                                                <ImageButton Grid.Column="2" Source="clearicon.png" 
+                                                    HeightRequest="{OnIdiom Desktop=40, Phone=50}" WidthRequest="{OnIdiom Desktop=40, Phone=50}"
+                                                    Command="{x:Binding BindingContext.DeleteFriendCommand, Source={x:Reference FriendsPage}}"
+                                                    CommandParameter="{x:Binding Id}" BorderWidth="2" Margin="5" BorderColor="White" CornerRadius="10" Padding="8"
+                                                    IsEnabled="{Binding BindingContext.IsLoading, Converter={StaticResource InvertedBoolConverter}, 
+                                                        Source={x:Reference FriendsPage}}"/>
+
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </ScrollView>
+                </VerticalStackLayout>
+                <Border BackgroundColor="{x:StaticResource FirstColor}" Stroke="White" StrokeThickness="3" Padding="30" 
+                        HeightRequest="200" WidthRequest="200" IsVisible="{x:Binding IsEmpty}"
+                        HorizontalOptions="Center" VerticalOptions="Center" Margin="0, 120">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Image Source="nothing.png" HeightRequest="90" WidthRequest="90"/>
+                        <Label Text="Список пуст" FontSize="20" TextColor="White" BackgroundColor="Transparent" FontAttributes="Bold" 
+                            VerticalOptions="Center" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+        </VerticalStackLayout>
+        
+        <custom:LoadingContentView IsLoading="{x:Binding IsLoading}" CancelCommand="{x:Binding CancelCommand}"/>
+    </Grid>
+</ContentPage>

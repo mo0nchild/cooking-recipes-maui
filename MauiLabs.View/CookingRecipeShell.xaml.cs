@@ -2,26 +2,40 @@
 using MauiLabs.View.Pages.ProfilePages;
 using MauiLabs.View.Pages.RecipePages;
 using System.Net;
+using System.Runtime.CompilerServices;
 
 namespace MauiLabs.View
 {
     public partial class CookingRecipeShell : Shell
     {
-        public static readonly BindableProperty TabIsEnabledProperty = BindableProperty.Create(
-            "TabIsEnabled", typeof(bool), 
+        public static readonly BindableProperty MyTabIsEnabledProperty = BindableProperty.Create(
+            "MyTabIsEnabled", typeof(bool), 
             typeof(CookingRecipeShell), true, propertyChanged: TabIsEnabledChangedHandler);
 
-        public bool TabIsEnabled 
+        public bool MyTabIsEnabled 
         { 
-            get => (bool)this.GetValue(TabIsEnabledProperty); set => this.SetValue(TabIsEnabledProperty, value); 
+            get => (bool)this.GetValue(MyTabIsEnabledProperty); set => this.SetValue(MyTabIsEnabledProperty, value); 
         }
         protected static async void TabIsEnabledChangedHandler(BindableObject @object, object oldValue, object newValue)
         {
             await Console.Out.WriteLineAsync($"TabIsEnabled Value: {newValue}");
         }
-        public static void SetTabIsEnabled(bool enabled = true)
+        public static void SetMyTabIsEnabled(bool enabled = true)
         {
-            if (Shell.Current is CookingRecipeShell recipeShell) recipeShell.TabIsEnabled = enabled;
+            if (Shell.Current is CookingRecipeShell recipeShell)
+            {
+                recipeShell.Dispatcher.Dispatch(() => recipeShell.MyTabIsEnabled = enabled);
+            }
+        }
+        public static void SetTabBarVisibility(Page page, bool value)
+        {
+            if (Shell.Current.CurrentItem.Items.Count > 1)
+            {
+                Shell.SetTabBarIsVisible(page, value);
+                ShellSection currentSection = Shell.Current.CurrentItem.CurrentItem;
+                Shell.Current.CurrentItem.CurrentItem = null;
+                Shell.Current.CurrentItem.CurrentItem = currentSection;
+            }
         }
         public CookingRecipeShell() : base()
         {

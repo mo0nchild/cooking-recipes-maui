@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiLabs.View.Pages.ProfilePages.FriendInfoPage"
+             xmlns:custom="clr-namespace:MauiLabs.View.Commons.ContentViews"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Данные о друге" x:Name="FriendPage"
+             Shell.BackgroundColor="{x:StaticResource Key=FirstColor}"
+             Shell.FlyoutBehavior="Disabled">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageConverter" />
+            <Style x:Key="TextFieldStyle" TargetType="Entry">
+                <Setter Property="PlaceholderColor" Value="{x:StaticResource Key=FirstColor}"/>
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{x:StaticResource Key=SecondColor}" />
+            </Style>
+            <Style x:Key="TextFieldLabelStyle" TargetType="Label">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+            <Style x:Key="ImageButtonStyle" TargetType="ImageButton">
+                <Setter Property="HeightRequest" Value="{OnIdiom Desktop=46, Phone=68}" />
+                <Setter Property="Padding" Value="{OnIdiom Desktop=10, Phone=12}" />
+                <Setter Property="CornerRadius" Value="12"/>
+                <Setter Property="BorderColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="2"/>
+                <Setter Property="BackgroundColor" Value="{x:StaticResource FirstColor}"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid>
+        <Image Source="background.png" Aspect="AspectFill"/>
+        <ScrollView Orientation="Vertical" BackgroundColor="Transparent" x:Name="PageScroller"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference FriendPage}}">
+            <StackLayout x:Name="ProfilePanel" Orientation="Vertical" HorizontalOptions="Fill" Margin="30, 10, 30, 40" Opacity="0.0" Scale="1.5">
+                <Border StrokeThickness="2" MaximumWidthRequest="260" Padding="20"
+                        BackgroundColor="{x:StaticResource Key=FirstColor}" Margin="0, 20, 0, 10"
+                        FlexLayout.AlignSelf="Stretch" Stroke="White">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Изображение профиля:" TextColor="White" FontSize="18" Margin="4, 0, 0, 5" TextDecorations="Underline"/>
+                        <Grid RowDefinitions="*">
+                            <Border x:Name="ProfileImage" HeightRequest="120" WidthRequest="120" Stroke="White" 
+                                    StrokeThickness="2" BackgroundColor="White" Grid.Column="0" Padding="0" Margin="0, 0, 0, 10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
+                                <Image Aspect="AspectFill" HeightRequest="120" WidthRequest="120"/>
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+                <Grid Margin="0, 5" ColumnDefinitions="*, *, *" RowDefinitions="*">
+                    <ImageButton Grid.Column="0" Grid.Row="0" Margin="3" WidthRequest="100"
+                            Source="deleteicon.png" Clicked="DeleteButton_Clicked" Style="{x:StaticResource ImageButtonStyle}"
+                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference FriendPage}}"/>
+
+                    <ImageButton Grid.Column="1" Grid.Row="0" Margin="3" WidthRequest="{OnIdiom Desktop=140, Phone=130}"
+                            Source="reloadicon.png" Clicked="RefreshButton_Clicked" Style="{x:StaticResource ImageButtonStyle}"
+                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference FriendPage}}"/>
+
+                    <ImageButton Grid.Column="2" Grid.Row="0" Margin="3" WidthRequest="100" Padding="8" HeightRequest="{OnIdiom Desktop=48, Phone=60}"
+                            Source="bookmark.png" Clicked="BookmarkButton_Clicked" Style="{x:StaticResource ImageButtonStyle}"
+                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference FriendPage}}"/>
+                </Grid>
+                <Border StrokeThickness="2" MaximumWidthRequest="400" Padding="20" BackgroundColor="{x:StaticResource Key=FirstColor}" 
+                        Margin="0, 10, 0, 16" FlexLayout.AlignSelf="Stretch" Stroke="White">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Данные профиля друга:" TextColor="White" FontSize="18" Margin="0, 0, 0, 10" TextDecorations="Underline"/>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Имя пользователя:" Style="{x:StaticResource TextFieldLabelStyle}" />
+                            <Border BackgroundColor="White" Padding="2">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+                                <Entry Text="{x:Binding FriendName, Source={x:Reference FriendPage}}" 
+                                       IsEnabled="False" x:Name="FriendNameTextField" Style="{x:StaticResource Key=TextFieldStyle}">
+                                </Entry>
+                            </Border>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Фамилия пользователя:" Style="{x:StaticResource TextFieldLabelStyle}" />
+                            <Border BackgroundColor="White" Padding="2">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+                                <Entry Text="{x:Binding FriendSurname, Source={x:Reference FriendPage}}" 
+                                       IsEnabled="False" x:Name="FriendSurnameTextField" Style="{x:StaticResource Key=TextFieldStyle}">
+                                </Entry>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <BoxView BackgroundColor="White" Margin="5, 14" CornerRadius="1" HeightRequest="2"/>
+
+                        <VerticalStackLayout Spacing="5" Margin="0, 0, 0, 10">
+                            <Label Text="Email пользователя:" Style="{x:StaticResource TextFieldLabelStyle}" />
+                            <Border BackgroundColor="White" Padding="2">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+                                <Entry Text="{x:Binding FriendEmail, Source={x:Reference FriendPage}}" 
+                                       IsEnabled="False" x:Name="FriendEmailTextField" Style="{x:StaticResource Key=TextFieldStyle}">
+                                </Entry>
+                            </Border>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+            </StackLayout>
+        </ScrollView>
+        <custom:LoadingContentView IsLoading="{x:Binding IsLoading, Source={x:Reference FriendPage}}" CancelCommand="{x:Binding CancelCommand}"/>
+    </Grid>
+</ContentPage>
