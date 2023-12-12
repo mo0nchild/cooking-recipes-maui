@@ -12,10 +12,15 @@ namespace MauiLabs.View
             "MyTabIsEnabled", typeof(bool), 
             typeof(CookingRecipeShell), true, propertyChanged: TabIsEnabledChangedHandler);
 
+        public static readonly BindableProperty IsAdminProperty = BindableProperty.Create(
+            "IsAdmin", typeof(bool),
+            typeof(CookingRecipeShell), true, propertyChanged: TabIsEnabledChangedHandler);
+
         public bool MyTabIsEnabled 
         { 
             get => (bool)this.GetValue(MyTabIsEnabledProperty); set => this.SetValue(MyTabIsEnabledProperty, value); 
         }
+        public bool IsAdmin { get => (bool)this.GetValue(IsAdminProperty); set => this.SetValue(IsAdminProperty, value); }
         protected static async void TabIsEnabledChangedHandler(BindableObject @object, object oldValue, object newValue)
         {
             await Console.Out.WriteLineAsync($"TabIsEnabled Value: {newValue}");
@@ -27,12 +32,20 @@ namespace MauiLabs.View
                 recipeShell.Dispatcher.Dispatch(() => recipeShell.MyTabIsEnabled = enabled);
             }
         }
+        public static void SetIsAdmin(bool value = false)
+        {
+            if (Shell.Current is CookingRecipeShell recipeShell)
+            {
+                recipeShell.Dispatcher.Dispatch(() => recipeShell.IsAdmin = value);
+            }
+        }
         public static void SetTabBarVisibility(Page page, bool value)
         {
             if (Shell.Current.CurrentItem.Items.Count > 1)
             {
                 Shell.SetTabBarIsVisible(page, value);
-                ShellSection currentSection = Shell.Current.CurrentItem.CurrentItem;
+                var currentSection = Shell.Current.CurrentItem.CurrentItem;
+
                 Shell.Current.CurrentItem.CurrentItem = null;
                 Shell.Current.CurrentItem.CurrentItem = currentSection;
             }

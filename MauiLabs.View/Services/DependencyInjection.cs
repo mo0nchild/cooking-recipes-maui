@@ -23,7 +23,7 @@ namespace MauiLabs.View.Services
             collection.AddHttpClient(clientOptions.ApiClient, options =>
             {
                 options.DefaultRequestHeaders.Add("ApiKey", clientOptions.ApiKey);
-                options.Timeout = TimeSpan.FromMilliseconds(10000);
+                options.Timeout = TimeSpan.FromMilliseconds(20000);
                 options.BaseAddress = new Uri(clientOptions.BaseUrl);
             });
             collection.AddTransient<IApiServiceCommunication, ApiServiceCommunication>();

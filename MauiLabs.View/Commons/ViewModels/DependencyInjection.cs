@@ -19,6 +19,7 @@ namespace MauiLabs.View.Commons.ViewModels
             collection.AddTransient<FriendsListViewModel>();
 
             collection.AddTransient<RecipesListViewModel>();
+            collection.AddTransient<PublishedListViewModel>();
 
             return Task.FromResult(collection);
         }

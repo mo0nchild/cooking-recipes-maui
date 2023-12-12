@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiLabs.View.Pages.ProfilePages.FriendsListPage"
+             x:Class="MauiLabs.View.Pages.RecipePages.PublishedListPage"
              xmlns:custom="clr-namespace:MauiLabs.View.Commons.ContentViews"
              xmlns:system="clr-namespace:System;assembly=netstandard"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Title="Список друзей" x:Name="FriendsPage" 
+             Title="Список публикаций" x:Name="PublisherPage"
              Shell.BackgroundColor="{x:StaticResource Key=FirstColor}">
     <ContentPage.Resources>
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
@@ -18,41 +18,32 @@
                     <RoundRectangle CornerRadius="0, 0, 24, 24" />
                 </Border.StrokeShape>
                 <VerticalStackLayout Spacing="5">
-                    <Label TextColor="White" FontSize="14" Text="Ссылка на профиль друга:" />
-                    <Grid ColumnDefinitions="0.7*, 0.1*, 0.1*" RowDefinitions="*" ColumnSpacing="10">
-                        <Border Stroke="White" Padding="2" BackgroundColor="White" Grid.Column="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="10"/>
-                            </Border.StrokeShape>
-                            <Entry PlaceholderColor="{x:StaticResource FirstColor}" TextColor="{x:StaticResource SecondColor}" 
-                                FontSize="16" Placeholder="Введите ссылку друга" BackgroundColor="White" ClearButtonVisibility="WhileEditing"
-                                Text="{x:Binding ReferenceLink}" x:Name="ReferenceTextField" MaxLength="100"
-                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
-                        </Border>
-                        <ImageButton Grid.Column="1" Source="addicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2"
-                                Padding="5" HeightRequest="{OnIdiom Desktop=40, Phone=50}" WidthRequest="{OnIdiom Desktop=40, Phone=50}"
-                                BackgroundColor="{x:StaticResource FirstColor}" Command="{x:Binding AddFriendCommand}"
-                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
-                        <ImageButton Grid.Column="2" Source="reloadicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2"
-                                Padding="8" HeightRequest="{OnIdiom Desktop=40, Phone=50}" WidthRequest="{OnIdiom Desktop=40, Phone=50}"
-                                BackgroundColor="{x:StaticResource FirstColor}" Command="{x:Binding GetFriendsListCommand}"
-                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/> 
+                    <Label TextColor="White" FontSize="14" Text="Возможные действия:" />
+                    <Grid ColumnDefinitions="0.5*, 0.5*" RowDefinitions="*" ColumnSpacing="10">
+                        <ImageButton Grid.Column="0" Source="addicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2"
+                            Padding="5" HeightRequest="{OnIdiom Desktop=40, Phone=50}" 
+                            BackgroundColor="{x:StaticResource FirstColor}" Clicked="AddRecipeButton_Clicked"
+                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                        <ImageButton Grid.Column="1" Source="reloadicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2"
+                            Padding="8" HeightRequest="{OnIdiom Desktop=40, Phone=50}" 
+                            BackgroundColor="{x:StaticResource FirstColor}" Command="{x:Binding GetPublishedListCommand}"
+                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
                     </Grid>
                 </VerticalStackLayout>
             </Border>
-            <Grid x:Name="FriendsListPanel" Opacity="0.0" Scale="1.5">
+            <Grid x:Name="PublishedListPanel" Opacity="0.0" Scale="1.5">
                 <VerticalStackLayout IsVisible="{x:Binding IsEmpty, Converter={StaticResource InvertedBoolConverter}}">
                     <ScrollView Orientation="Vertical" BackgroundColor="Transparent" x:Name="PageScroller" HeightRequest="500"
                             IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" Margin="0, 10, 0, 0">
-                        <CollectionView x:Name="FriendsListView" ItemsSource="{Binding FriendsList}" HorizontalOptions="Fill"
-                                SelectionChanged="FriendsListView_SelectionChanged" SelectionMode="Single">
+                        <CollectionView x:Name="RecipesListView" ItemsSource="{Binding CookingRecipes}" HorizontalOptions="Fill"
+                                SelectionChanged="RecipesListView_SelectionChanged" SelectionMode="Single">
                             <CollectionView.Resources>
                                 <ResourceDictionary>
                                     <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageConverter" />
                                     <Style x:Key="CardBorderStyle" TargetType="Border">
                                         <Setter Property="StrokeThickness" Value="2"/>
                                         <Setter Property="BackgroundColor" Value="{x:StaticResource Key=FirstColor}"/>
-                                        <Setter Property="Margin" Value="30, 8"/>
+                                        <Setter Property="Margin" Value="16, 10"/>
                                         <Setter Property="Padding" Value="10"/>
                                         <Setter Property="StrokeShape">
                                             <Setter.Value>
@@ -65,10 +56,11 @@
                                             </Setter.Value>
                                         </Setter>
                                         <Setter Property="HorizontalOptions" Value="Fill"/>
-                                        <Setter Property="HeightRequest" Value="120" />
+                                        <Setter Property="HeightRequest" Value="100" />
                                     </Style>
                                 </ResourceDictionary>
                             </CollectionView.Resources>
+
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -89,38 +81,30 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <Border Grid.Column="0" HeightRequest="90" WidthRequest="90" StrokeThickness="2">
+                                                <Border Grid.Column="0" HeightRequest="78" WidthRequest="78" StrokeThickness="2">
                                                     <Border.StrokeShape>
                                                         <RoundRectangle CornerRadius="16" />
                                                     </Border.StrokeShape>
                                                     <Border.Stroke>
                                                         <SolidColorBrush Color="White" />
                                                     </Border.Stroke>
-                                                    <Image BackgroundColor="White" Aspect="AspectFill" HeightRequest="90" WidthRequest="90"
-                                                        HorizontalOptions="Center" VerticalOptions="Center"
-                                                        Source="{Binding Profile.Image, Converter={x:StaticResource ByteArrayToImageConverter}}"/>
+                                                    <Image BackgroundColor="White" Aspect="AspectFill" HeightRequest="74" WidthRequest="74"
+                                                        HorizontalOptions="Center" VerticalOptions="Center"  
+                                                        Source="{Binding Image, Converter={x:StaticResource ByteArrayToImageConverter}}"/>
                                                 </Border>
                                                 <StackLayout Grid.Column="1" Orientation="Vertical" Spacing="5" HorizontalOptions="Fill">
-                                                    <Label LineBreakMode="TailTruncation" FontSize="16" Margin="0, 5, 0, 0" TextColor="White">
-                                                        <Label.FormattedText>
-                                                            <FormattedString>
-                                                                <Span Text="{Binding Profile.Name}" FontAttributes="Bold"/>
-                                                                <Span Text=" "/>
-                                                                <Span Text="{Binding Profile.Surname}" FontAttributes="Bold"/>
-                                                            </FormattedString>
-                                                        </Label.FormattedText>
-                                                    </Label>
-                                                    <Label Text="{Binding DateTime}" LineBreakMode="TailTruncation" FontSize="14" 
-                                                        TextDecorations="Underline" TextColor="White"/>
+                                                    <Label Text="{Binding Name}" TextColor="White" FontSize="18" 
+                                                        TextDecorations="Underline" LineBreakMode="TailTruncation"/>
+                                                    <Label Text="{Binding Description}" LineBreakMode="TailTruncation"/>
+                                                    <custom:RatingStarView 
+                                                        NullIcon="starregular.png" ValueIcon="starsolid.png" MaxValue="5" Value="{x:Binding Rating}">
+                                                    </custom:RatingStarView>
                                                 </StackLayout>
-
                                                 <ImageButton Grid.Column="2" Source="clearicon.png" 
-                                                    HeightRequest="{OnIdiom Desktop=40, Phone=50}" WidthRequest="{OnIdiom Desktop=40, Phone=50}"
-                                                    Command="{x:Binding BindingContext.DeleteFriendCommand, Source={x:Reference FriendsPage}}"
-                                                    CommandParameter="{x:Binding Id}" BorderWidth="2" Margin="5" BorderColor="White" CornerRadius="10" Padding="8"
-                                                    IsEnabled="{Binding BindingContext.IsLoading, Converter={StaticResource InvertedBoolConverter}, 
-                                                    Source={x:Reference FriendsPage}}"/>
-
+                                                        HeightRequest="{OnIdiom Desktop=40, Phone=50}" WidthRequest="{OnIdiom Desktop=40, Phone=50}"
+                                                        Command="{x:Binding BindingContext.DeletePublishedCommand, Source={x:Reference PublisherPage}}"
+                                                        CommandParameter="{x:Binding Id}" BorderWidth="2" Margin="5" BorderColor="White" CornerRadius="10" Padding="8"
+                                                        IsEnabled="{Binding BindingContext.IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference PublisherPage}}"/>
                                             </Grid>
                                         </Border>
                                     </Grid>
@@ -142,9 +126,7 @@
                     </VerticalStackLayout>
                 </Border>
             </Grid>
-
         </VerticalStackLayout>
-        
         <custom:LoadingContentView IsLoading="{x:Binding IsLoading}" CancelCommand="{x:Binding CancelCommand}"/>
     </Grid>
 </ContentPage>

@@ -3,6 +3,7 @@ using MauiLabs.View.Services.Commons;
 using MauiLabs.View.Services.Interfaces;
 using System.ComponentModel;
 using System.Reflection;
+using System.Windows.Input;
 
 namespace MauiLabs.View.Pages.ProfilePages;
 
@@ -14,11 +15,15 @@ public partial class FriendInfoPage : ContentPage, INotifyPropertyChanged, INavi
     protected internal readonly IUserProfile userProfile = default!;
     protected internal readonly IFriendsList friendProfile = default!;
 
+    public ICommand CancelCommand { get; protected set; } = default!;
+
     public static readonly string DefaultProfileImage = $"MauiLabs.View.Resources.Images.Profile.defaultprofile.png";
     public FriendInfoPage(IUserProfile userProfile, INavigationService navigationService, IFriendsList friendProfile) : base()
 	{
 		this.InitializeComponent();
         (this.userProfile, this.navigationService, this.friendProfile) = (userProfile, navigationService, friendProfile);
+
+        this.CancelCommand = new Command(this.CancelCommandHandler);
 	}
     private protected bool isLoading = default;
     public bool IsLoading { get => this.isLoading; set { this.isLoading = value; OnPropertyChanged(); } }
@@ -117,7 +122,7 @@ public partial class FriendInfoPage : ContentPage, INotifyPropertyChanged, INavi
         });
         (this.ProfilePanel.Opacity, this.ProfilePanel.Scale) = (1.0, 1.0);
     });
-    public void SetNavigationQuery(IDictionary<string, object> queries)
+    public virtual void SetNavigationQuery(IDictionary<string, object> queries)
     {
         (this.FriendId, this.RecordId) = ((int)queries["FriendId"], (int)queries["RecordId"]);
     }

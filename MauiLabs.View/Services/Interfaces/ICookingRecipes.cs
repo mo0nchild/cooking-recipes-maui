@@ -1,5 +1,7 @@
 ﻿using MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests;
 using MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Responses;
+using MauiLabs.View.Services.ApiModels.RecipeModels.IngredientUnits.Responses;
+using MauiLabs.View.Services.ApiModels.RecipeModels.RecipeCategory.Responses;
 using MauiLabs.View.Services.Commons;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,15 @@ namespace MauiLabs.View.Services.Interfaces
     {
         public Task<GetRecipesListResponseModel> GetRecipesList(RequestInfo<GetRecipesListRequestModel> requestModel);
         public Task<GetRecipeResponseModel> GetRecipeInfo(RequestInfo<GetRecipeRequestModel> requestModel);
+
+        public Task<GetRecipesListResponseModel> GetPublishedList(string token, CancellationToken cancelToken);
+
+        public Task<string> AddRecipeInfo(RequestInfo<AddRecipeRequestModel> requestModel);
+        public Task<string> DeleteRecipeInfo(RequestInfo<DeleteRecipeRequestModel> requestModel);
+        public Task<string> EditRecipeInfo(RequestInfo<EditRecipeRequestModel> requestModel);
+
+        public Task<GetRecipeCategoriesListResponseModel> GetCategoriesList(string token, CancellationToken cancelToken);
+        public Task<GetIngredientUnitsResponseModel> GetUnitsList(string token, CancellationToken cancelToken);
     }
 #nullable disable
 }

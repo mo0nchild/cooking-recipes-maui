@@ -118,6 +118,7 @@
                 </Border>
             </StackLayout>
         </ScrollView>
-        <custom:LoadingContentView IsLoading="{x:Binding IsLoading, Source={x:Reference FriendPage}}" CancelCommand="{x:Binding CancelCommand}"/>
+        <custom:LoadingContentView IsLoading="{x:Binding IsLoading, Source={x:Reference FriendPage}}" 
+                                   CancelCommand="{x:Binding CancelCommand, Source={x:Reference FriendPage}}"/>
     </Grid>
 </ContentPage>

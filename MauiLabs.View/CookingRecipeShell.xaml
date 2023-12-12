@@ -72,24 +72,29 @@
     </Shell.FlyoutFooter>
 
     <TabBar Route="authorization" Shell.FlyoutItemIsVisible="False" >
-        <Tab Route="loginTab" Title="Авторизация" Icon="/Profile/login.png">
+        <Tab Route="loginTab" Title="Авторизация" Icon="login.png">
             <ShellContent Route="loginPage" ContentTemplate="{DataTemplate profilePages:AuthorizationPage}"/>
         </Tab>
-        <Tab Route="registrationTab" Title="Регистрация" Icon="/Profile/registration.png">
+        <Tab Route="registrationTab" Title="Регистрация" Icon="registration.png">
             <ShellContent Route="registrationPage" ContentTemplate="{DataTemplate profilePages:RegistrationPage}"/>
         </Tab>
     </TabBar>
     <FlyoutItem Route="recipes" Title="Рецепты" >
-        <Tab Route="listTab" Title="Список рецептов" Icon="/Recipe/cooking.png">
+        <Tab Route="listTab" Title="Список рецептов" Icon="cooking.png">
             <ShellContent Route="listPage" ContentTemplate="{DataTemplate recipePages:RecipesListPage}"/>
         </Tab>
     </FlyoutItem>
     <FlyoutItem Route="profile" Title="Профиль">
-        <Tab Route="infoTab" Title="Информация" Icon="/Profile/user.png">
+        <Tab Route="infoTab" Title="Информация" Icon="user.png">
             <ShellContent Route="infoPage" ContentTemplate="{DataTemplate profilePages:ProfileInfoPage}" />
         </Tab>
-        <Tab Route="friendsTab" Title="Друзья" Icon="/Profile/friend.png">
+        <Tab Route="friendsTab" Title="Друзья" Icon="friend.png">
             <ShellContent Route="friendsPage" ContentTemplate="{DataTemplate profilePages:FriendsListPage}" />
+        </Tab>
+    </FlyoutItem>
+    <FlyoutItem Route="publisher" Title="Редакция" IsVisible="{Binding IsAdmin, Source={x:Reference this}}" >
+        <Tab Route="creatingTab" Title="Список рецептов" Icon="addicon.png">
+            <ShellContent Route="creatingPage" ContentTemplate="{DataTemplate recipePages:PublishedListPage}"/>
         </Tab>
     </FlyoutItem>
 </Shell>

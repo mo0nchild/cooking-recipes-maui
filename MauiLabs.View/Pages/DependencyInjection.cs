@@ -20,6 +20,8 @@ namespace MauiLabs.View.Pages
             collection.AddTransient<FriendInfoPage>();
 
             collection.AddTransient<RecipesListPage>();
+            collection.AddTransient<PublishedListPage>();
+            collection.AddTransient<EditRecipePage>();
 
             return Task.FromResult(collection);
         } 

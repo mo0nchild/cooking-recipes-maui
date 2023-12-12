@@ -18,9 +18,11 @@ namespace MauiLabs.View.Services.Commons
             await SecureStorage.Default.SetAsync("ProfileId", authorizationInfo.ProfileId.ToString());
 
             await SecureStorage.Default.SetAsync("JwtToken", authorizationInfo.JwtToken);
+            CookingRecipeShell.SetIsAdmin(authorizationInfo.IsAdmin);
         }
         public static async Task LogoutUser() => await Task.Run(async () => 
         {
+            CookingRecipeShell.SetIsAdmin(false);
             SecureStorage.Default.RemoveAll();
             await Application.Current!.Dispatcher.DispatchAsync(async () =>
             {

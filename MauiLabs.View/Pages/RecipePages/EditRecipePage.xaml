@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiLabs.View.Pages.RecipePages.EditRecipePage"
+             xmlns:custom="clr-namespace:MauiLabs.View.Commons.ContentViews"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Редактирование рецепта" x:Name="RecipePage"
+             Shell.BackgroundColor="{x:StaticResource Key=FirstColor}"
+             Shell.FlyoutBehavior="Disabled">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageConverter" />
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="BackgroundColor" Value="{x:StaticResource Key=FirstColor}" />
+                <Setter Property="BorderColor" Value="White" />
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="2" />
+            </Style>
+            <Style x:Key="TextFieldStyle" TargetType="Entry">
+                <Setter Property="PlaceholderColor" Value="{x:StaticResource Key=FirstColor}"/>
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{x:StaticResource Key=SecondColor}" />
+            </Style>
+            <Style x:Key="ImagePickerStyle" TargetType="ImageButton">
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="BorderColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="2"/>
+                <Setter Property="BackgroundColor" Value="{x:StaticResource FirstColor}"/>
+            </Style>
+            <Style x:Key="ImageButtonStyle" TargetType="ImageButton">
+                <Setter Property="HeightRequest" Value="{OnIdiom Desktop=46, Phone=68}" />
+                <Setter Property="Padding" Value="{OnIdiom Desktop=10, Phone=12}" />
+                <Setter Property="CornerRadius" Value="12"/>
+                <Setter Property="BorderColor" Value="White"/>
+                <Setter Property="BorderWidth" Value="2"/>
+                <Setter Property="BackgroundColor" Value="{x:StaticResource FirstColor}"/>
+            </Style>
+            <Style x:Key="TextFieldLabelStyle" TargetType="Label">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid>
+        <Image Source="background.png" Aspect="AspectFill"/>
+        <ScrollView Orientation="Vertical" BackgroundColor="Transparent" x:Name="PageScroller"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference RecipePage}}">
+            <StackLayout x:Name="RecipePanel" Orientation="Vertical" HorizontalOptions="Fill" Margin="30, 10, 30, 40"
+                         Opacity="0.0" Scale="1.5">
+
+                <Border StrokeThickness="2" MaximumWidthRequest="260" Padding="20"
+                        BackgroundColor="{x:StaticResource Key=FirstColor}" Margin="0, 20, 0, 10"
+                        FlexLayout.AlignSelf="Stretch" Stroke="White">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Изображение рецепта:" TextColor="White" FontSize="18" Margin="4, 0, 0, 5" TextDecorations="Underline"/>
+                        <Grid RowDefinitions="*">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.6*"/>
+                                <ColumnDefinition Width="0.4*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="RecipeImageContent" HeightRequest="112" WidthRequest="112" Stroke="White" 
+                                    StrokeThickness="2" BackgroundColor="White" Grid.Column="0" Padding="0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
+                                <Image Aspect="AspectFill" HeightRequest="112" WidthRequest="112"/>
+                            </Border>
+
+                            <Grid RowDefinitions="*, *" ColumnDefinitions="*" Margin="5, 5" Grid.Column="1">
+                                <ImageButton Grid.Row="0" Grid.Column="0" 
+                                        Clicked="ImagePickerButton_Clicked" Style="{x:StaticResource ImagePickerStyle}" 
+                                        Source="loadimageicon.png" Margin="4" Padding="3" WidthRequest="60" HeightRequest="46" 
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference RecipePage}}"/>
+                                <ImageButton Grid.Row="1" Grid.Column="0"
+                                        Clicked="ImageClearButton_Clicked" Style="{x:StaticResource ImagePickerStyle}" 
+                                        Source="clearicon.png"  WidthRequest="60" HeightRequest="46" Margin="4" Padding="8"
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference RecipePage}}"/>
+                            </Grid>
+
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+                <Border StrokeThickness="2" MaximumWidthRequest="400" Padding="20" BackgroundColor="{x:StaticResource Key=FirstColor}" 
+                        Margin="0, 10, 0, 16" FlexLayout.AlignSelf="Stretch" Stroke="White">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Данные рецепта:" TextColor="White" FontSize="18" Margin="0, 0, 0, 10" TextDecorations="Underline"/>
+
+                        <custom:ValidationEntryView x:Name="NameTextField" ErrorText="Значение от 3 до 50 символов"
+                                IsValidated="{x:Binding ValidationState[RecipeName], Source={x:Reference RecipePage}}" 
+                                TextValue="{x:Binding RecipeName, Source={x:Reference RecipePage}}"
+                                CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference RecipePage}}"
+                                MinLenght="3" DefaultText="Укажите название" LabelText="Название рецепта:"/>
+
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Категория рецепта:" Style="{x:StaticResource TextFieldLabelStyle}" />
+                            <Border BackgroundColor="Transparent" Padding="2" Stroke="White" StrokeThickness="2">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+                                <Picker x:Name="CategoriesPicker" FontSize="16" WidthRequest="240" HorizontalTextAlignment="Start"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <BoxView BackgroundColor="White" Margin="5, 8" CornerRadius="1" HeightRequest="2"/>
+
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Описание рецепта:" Style="{x:StaticResource TextFieldLabelStyle}" />
+                            <Border BackgroundColor="White" Padding="2" Stroke="White" StrokeThickness="2">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+                                <Editor TextColor="{x:StaticResource SecondColor}" BackgroundColor="White" MaxLength="160" 
+                                        HeightRequest="100" FontSize="16" Placeholder="Укажите описание рецепта"
+                                        PlaceholderColor="{x:StaticResource FirstColor}" IsSpellCheckEnabled="False"
+                                        Text="{x:Binding Description, Source={x:Reference RecipePage}}"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+                <Border StrokeThickness="2" MaximumWidthRequest="400" Padding="20" BackgroundColor="{x:StaticResource Key=FirstColor}" 
+                        Margin="0, 10, 0, 16" FlexLayout.AlignSelf="Stretch" Stroke="White">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Ингредиенты рецепта:" TextColor="White" FontSize="18" Margin="0, 0, 0, 10" TextDecorations="Underline"/>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Список ингредиентов:" Style="{x:StaticResource TextFieldLabelStyle}" />
+                            <Border Stroke="White" StrokeThickness="2" BackgroundColor="Transparent" HeightRequest="150">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+                                <Grid RowDefinitions="Auto, Auto, *" WidthRequest="280">
+                                    <Grid Grid.Row="0" ColumnDefinitions="0.7*, 0.3*" RowDefinitions="*" Margin="20, 10, 20, 0" ColumnSpacing="5">
+                                        <Border Grid.Column="0" StrokeThickness="0" BackgroundColor="Transparent">
+                                            <Label Text="Название:" TextColor="White" FontSize="14" TextDecorations="Underline" FontAttributes="Bold"/>
+                                        </Border>
+                                        <Border Grid.Column="1" StrokeThickness="0" BackgroundColor="Transparent">
+                                            <Label Text="Кол-во:" TextColor="White" FontSize="14" TextDecorations="Underline" FontAttributes="Bold"/>
+                                        </Border>
+                                    </Grid>
+                                    <ScrollView Orientation="Vertical" BackgroundColor="Transparent" Grid.Row="2"
+                                                IsVisible="{x:Binding IngredientsEmpty, Source={x:Reference RecipePage}, Converter={StaticResource InvertedBoolConverter}}" >
+                                        <CollectionView x:Name="IngredientsView" SelectionMode="Single"  SelectionChanged="IngredientsView_SelectionChanged">
+                                            <CollectionView.Resources>
+                                                <ResourceDictionary>
+                                                    <Style x:Key="CardBorderStyle" TargetType="Border">
+                                                        <Setter Property="StrokeThickness" Value="2"/>
+                                                        <Setter Property="BackgroundColor" Value="{x:StaticResource Key=FirstColor}"/>
+                                                        <Setter Property="Margin" Value="10, 4"/>
+                                                        <Setter Property="Padding" Value="10"/>
+                                                        <Setter Property="Stroke" Value="White"/>
+                                                        <Setter Property="StrokeShape">
+                                                            <Setter.Value>
+                                                                <RoundRectangle CornerRadius="10"/>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Setter Property="HorizontalOptions" Value="Fill"/>
+                                                    </Style>
+                                                </ResourceDictionary>
+                                            </CollectionView.Resources>
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid HorizontalOptions="Fill">
+                                                        <VisualStateManager.VisualStateGroups>
+                                                            <VisualStateGroup Name="CommonStates">
+                                                                <VisualState Name="Normal" />
+                                                                <VisualState Name="Selected">
+                                                                    <VisualState.Setters>
+                                                                        <Setter Property="BackgroundColor" Value="Grey" />
+                                                                    </VisualState.Setters>
+                                                                </VisualState>
+                                                            </VisualStateGroup>
+                                                        </VisualStateManager.VisualStateGroups>
+                                                        <Border Style="{StaticResource CardBorderStyle}">
+                                                            <Grid ColumnDefinitions="0.7*, 0.3*" ColumnSpacing="5">
+
+                                                                <Label Text="{x:Binding Name}" FontSize="14" TextColor="White" LineBreakMode="TailTruncation"/>
+
+                                                                <Label Grid.Column="1" FontSize="14" TextColor="White" LineBreakMode="TailTruncation">
+                                                                    <Label.FormattedText>
+                                                                        <FormattedString>
+                                                                            <Span Text="{x:Binding Value}"/>
+                                                                            <Span Text=" ["/>
+                                                                            <Span Text="{x:Binding Unit}"/>
+                                                                            <Span Text="]"/>
+                                                                        </FormattedString>
+                                                                    </Label.FormattedText>
+                                                                </Label>
+                                                            </Grid>
+                                                        </Border>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+                                    </ScrollView>
+                                    <Label Grid.Row="2" Text="Нет ингредиентов" TextColor="White" FontSize="18" TextDecorations="Underline" 
+                                           HorizontalOptions="Center" VerticalOptions="Center" 
+                                           IsVisible="{x:Binding IngredientsEmpty, Source={x:Reference RecipePage}}"/>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                        <custom:ValidationEntryView x:Name="IngredientNameTextField" ErrorText="Значение от 3 до 50 символов"
+                                IsValidated="{x:Binding ValidationState[IngredientName], Source={x:Reference RecipePage}}"
+                                CanInput="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference RecipePage}}"
+                                MinLenght="3" DefaultText="Название ингредиента" LabelText="Название ингредиента:"/>
+
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Количество:" Style="{x:StaticResource TextFieldLabelStyle}" />
+                            <Border BackgroundColor="Transparent" StrokeThickness="0">
+                                <Grid ColumnDefinitions="*, *, *" ColumnSpacing="10" RowDefinitions="*, *">
+                                    <Border BackgroundColor="Transparent" Padding="2" Stroke="White" StrokeThickness="2" Grid.Column="1">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10" />
+                                        </Border.StrokeShape>
+                                        <Picker x:Name="UnitsPicker" FontSize="16" HorizontalTextAlignment="Start"/>
+                                    </Border>
+                                    <Border BackgroundColor="White" Padding="2" Stroke="White" StrokeThickness="2" Grid.Column="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10" />
+                                        </Border.StrokeShape>
+                                        <Entry BackgroundColor="White" x:Name="UnitValueTextField" Text="0,00"
+                                               TextColor="{x:StaticResource SecondColor}" IsEnabled="False" FontSize="16"/>
+                                    </Border>
+                                    <Slider Minimum="0" Maximum="1000" x:Name="UnitValueSlider" MinimumTrackColor="White" ThumbColor="White" Margin="0, 10"
+                                        MaximumTrackColor="DarkSlateGrey" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                        ValueChanged="UnitValueSlider_ValueChanged"/>
+                                    <ImageButton Grid.Column="3" Source="addicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2"
+                                        Padding="5" BackgroundColor="{x:StaticResource FirstColor}" Clicked="AddIngredientButton_Clicked"
+                                        HeightRequest="{OnIdiom Desktop=40, Phone=50}"
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference RecipePage}}"/>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+                <Button x:Name="EditRecipeButton" Text="Сохранить рецепт" HeightRequest="54" MaximumWidthRequest="400"
+                        Style="{x:StaticResource Key=ButtonStyle}" Clicked="EditRecipeButton_Clicked"
+                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference RecipePage}}"/>
+
+            </StackLayout>
+        </ScrollView>
+        <custom:LoadingContentView IsLoading="{x:Binding IsLoading, Source={x:Reference RecipePage}}" 
+                                   CancelCommand="{x:Binding CancelCommand, Source={x:Reference RecipePage}}"/>
+    </Grid>
+</ContentPage>
