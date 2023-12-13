@@ -65,7 +65,7 @@
                                             </Setter.Value>
                                         </Setter>
                                         <Setter Property="HorizontalOptions" Value="Fill"/>
-                                        <Setter Property="HeightRequest" Value="120" />
+                                        <Setter Property="HeightRequest" Value="100" />
                                     </Style>
                                 </ResourceDictionary>
                             </CollectionView.Resources>
@@ -89,14 +89,14 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <Border Grid.Column="0" HeightRequest="90" WidthRequest="90" StrokeThickness="2">
+                                                <Border Grid.Column="0" HeightRequest="80" WidthRequest="80" StrokeThickness="2">
                                                     <Border.StrokeShape>
                                                         <RoundRectangle CornerRadius="16" />
                                                     </Border.StrokeShape>
                                                     <Border.Stroke>
                                                         <SolidColorBrush Color="White" />
                                                     </Border.Stroke>
-                                                    <Image BackgroundColor="White" Aspect="AspectFill" HeightRequest="90" WidthRequest="90"
+                                                    <Image BackgroundColor="White" Aspect="AspectFill" HeightRequest="80" WidthRequest="80"
                                                         HorizontalOptions="Center" VerticalOptions="Center"
                                                         Source="{Binding Profile.Image, Converter={x:StaticResource ByteArrayToImageConverter}}"/>
                                                 </Border>

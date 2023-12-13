@@ -151,7 +151,7 @@ namespace MauiLabs.Api.Controllers.ApiControllers.RecipeControllers
         [Route("getpublisherlist"), HttpGet]
         [ProducesResponseType(typeof(GetRecipesListResponseModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetPublisherRecipesListHandler([FromQuery] GetPublisherRecipesListRequestModel request)
+        public async Task<IActionResult> GetPublisherRecipesListHandler([FromQuery] GetPublisherRecipesListByIdRequestModel request)
         {
             var mappedRequest = this.mapper.Map<GetPublishedRecipeListRequest>(request);
 
@@ -168,9 +168,10 @@ namespace MauiLabs.Api.Controllers.ApiControllers.RecipeControllers
         [Route("getpublisherlist/bytoken"), HttpGet]
         [ProducesResponseType(typeof(GetRecipesListResponseModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetPublisherRecipesListByTokenHandler()
+        public async Task<IActionResult> GetPublisherRecipesListByTokenHandler([FromQuery] GetPublisherRecipesListRequestModel request)
         {
-            var mappedRequest = new GetPublishedRecipeListRequest() { PublisherId = this.ProfileId };
+            var mappedRequest = this.mapper.Map<GetPublishedRecipeListRequest>(request);
+            mappedRequest.PublisherId = this.ProfileId;
 
             try { return this.Ok(this.mapper.Map<GetRecipesListResponseModel>(await this.mediator.Send(mappedRequest))); }
             catch (ValidationException errorInfo)

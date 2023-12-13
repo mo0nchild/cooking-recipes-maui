@@ -6,5 +6,7 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetPublishedRecip
     public partial class GetPublishedRecipeListRequest : IRequest<CookingRecipesList>
     {
         public required int PublisherId { get; set; } = default!;
+        public string? TextFilter { get; set; } = default;
+        public string? Category { get; set; } = default!;
     }
 }

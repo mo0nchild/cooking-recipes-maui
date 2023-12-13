@@ -6,7 +6,7 @@ public partial class RatingStarView : ContentView
 {
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
            "Value", typeof(int),
-           typeof(RatingStarView), default(int), propertyChanged: ValuePropertyChangedHandler);
+           typeof(RatingStarView), -1, propertyChanged: ValuePropertyChangedHandler);
     public static readonly BindableProperty MaxValueProperty = BindableProperty.Create(
            "MaxValue", typeof(int), typeof(RatingStarView), default(int));
 

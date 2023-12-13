@@ -31,5 +31,11 @@ namespace MauiLabs.Api.Controllers.ApiModels.ProfileModels.Bookmarks.Requests
         /// </summary>
         [Required(ErrorMessage = "Необходимо указать порядок сортировки по дате добавления")]
         public bool ReverseOrder { get; set; } = default!;
+
+        /// <summary>
+        /// Название категории рецепта
+        /// </summary>
+        [MaxLength(50, ErrorMessage = "Длина названия категории рецепта до 50 символов")]
+        public string? Category { get; set; } = default!;
     }
 }

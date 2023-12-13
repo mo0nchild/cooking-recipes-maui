@@ -3,6 +3,7 @@ using MauiLabs.Api.Services.Requests.CookingRecipeRequests.Models;
 using MauiLabs.Dal;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetPublishedRecipeList
 {
@@ -20,7 +21,11 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetPublishedRecip
                     .Include(item => item.Publisher)
                     .Include(item => item.Comments)
                     .Include(item => item.RecipeCategory)
-                    .Include(item => item.Ingredients).ToListAsync();
+                    .Include(item => item.Ingredients)
+                    .Where(item => request.TextFilter == null
+                        ? true : Regex.IsMatch(item.Name, request.TextFilter, RegexOptions.IgnoreCase))
+                    .Where(item => request.Category == null
+                        ? true : request.Category == item.RecipeCategory.Name).ToListAsync();
                 return new CookingRecipesList()
                 {
                     AllCount = requestResult.Count,

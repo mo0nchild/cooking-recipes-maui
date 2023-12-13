@@ -9,5 +9,6 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetBookmarksList
 
         public string? TextFilter { get; set; } = default;
         public bool ReverseOrder { get; set; } = default!;
+        public string? Category { get; set; } = default!;
     }
 }

@@ -25,7 +25,10 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetBookmarksList
                     .Include(item => item.Recipe).ThenInclude(item => item.RecipeCategory)
                     .Include(item => item.Recipe).ThenInclude(item => item.Ingredients)
                     .Where(item => request.TextFilter == null 
-                        ? true : Regex.IsMatch(item.Recipe.Name, request.TextFilter, RegexOptions.IgnoreCase)).ToListAsync();
+                        ? true : Regex.IsMatch(item.Recipe.Name, request.TextFilter, RegexOptions.IgnoreCase))
+                    .Where(item => request.Category == null
+                        ? true : request.Category == item.Recipe.RecipeCategory.Name)
+                    .ToListAsync();
                 var sortedResult = (request.ReverseOrder switch
                 {
                     false => requestResult.OrderByDescending(item => item.AddTime),

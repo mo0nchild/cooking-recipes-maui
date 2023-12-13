@@ -56,7 +56,7 @@
                                             </Setter.Value>
                                         </Setter>
                                         <Setter Property="HorizontalOptions" Value="Fill"/>
-                                        <Setter Property="HeightRequest" Value="100" />
+                                        <Setter Property="HeightRequest" Value="120" />
                                     </Style>
                                 </ResourceDictionary>
                             </CollectionView.Resources>
@@ -81,14 +81,14 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <Border Grid.Column="0" HeightRequest="78" WidthRequest="78" StrokeThickness="2">
+                                                <Border Grid.Column="0" HeightRequest="90" WidthRequest="90" StrokeThickness="2">
                                                     <Border.StrokeShape>
                                                         <RoundRectangle CornerRadius="16" />
                                                     </Border.StrokeShape>
                                                     <Border.Stroke>
                                                         <SolidColorBrush Color="White" />
                                                     </Border.Stroke>
-                                                    <Image BackgroundColor="White" Aspect="AspectFill" HeightRequest="74" WidthRequest="74"
+                                                    <Image BackgroundColor="White" Aspect="AspectFill" HeightRequest="86" WidthRequest="86"
                                                         HorizontalOptions="Center" VerticalOptions="Center"  
                                                         Source="{Binding Image, Converter={x:StaticResource ByteArrayToImageConverter}}"/>
                                                 </Border>
@@ -96,9 +96,27 @@
                                                     <Label Text="{Binding Name}" TextColor="White" FontSize="18" 
                                                         TextDecorations="Underline" LineBreakMode="TailTruncation"/>
                                                     <Label Text="{Binding Description}" LineBreakMode="TailTruncation"/>
-                                                    <custom:RatingStarView 
-                                                        NullIcon="starregular.png" ValueIcon="starsolid.png" MaxValue="5" Value="{x:Binding Rating}">
-                                                    </custom:RatingStarView>
+                                                    <HorizontalStackLayout Spacing="10">
+                                                        <custom:RatingStarView 
+                                                            NullIcon="starregular.png" ValueIcon="starsolid.png" MaxValue="5" Value="{x:Binding Rating}">
+                                                        </custom:RatingStarView>
+                                                        <Label FontSize="14" TextColor="White" LineBreakMode="TailTruncation">
+                                                            <Label.FormattedText>
+                                                                <FormattedString>
+                                                                    <Span Text="Рейтинг: "/>
+                                                                    <Span Text="{Binding Rating, StringFormat='{0:F2}'}" />
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
+                                                    </HorizontalStackLayout>
+                                                    <Label FontSize="14" TextColor="White" LineBreakMode="TailTruncation">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <Span Text="Категория: "/>
+                                                                <Span Text="{Binding Category, StringFormat='{0:F2}'}" />
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
                                                 </StackLayout>
                                                 <ImageButton Grid.Column="2" Source="clearicon.png" 
                                                         HeightRequest="{OnIdiom Desktop=40, Phone=50}" WidthRequest="{OnIdiom Desktop=40, Phone=50}"

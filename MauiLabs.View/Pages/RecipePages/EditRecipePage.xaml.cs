@@ -129,7 +129,7 @@ public partial class EditRecipePage : ContentPage, INotifyPropertyChanged, INavi
     }
     protected virtual void UnitValueSlider_ValueChanged(object sender, ValueChangedEventArgs args)
     {
-        this.Dispatcher.Dispatch(() => this.UnitValueTextField.Text = $"{Math.Round(args.NewValue / 10.0):F2}");
+        this.Dispatcher.Dispatch(() => this.UnitValueTextField.Text = $"{Math.Round(args.NewValue / 100.0, 1):F2}");
     }
     protected virtual void AddIngredientButton_Clicked(object sender, EventArgs args) => this.Dispatcher.Dispatch(async () =>
     {
@@ -138,7 +138,7 @@ public partial class EditRecipePage : ContentPage, INotifyPropertyChanged, INavi
             if (this.Ingredients.Count <= 0) this.IngredientsEmpty = default;
             this.Ingredients.Add(new IngredientModel()
             {
-                Name = this.IngredientNameTextField.TextValue, Value = $"{Math.Round(this.UnitValueSlider.Value / 100.0):F2}",
+                Name = this.IngredientNameTextField.TextValue, Value = $"{Math.Round(this.UnitValueSlider.Value / 100.0, 1):F2}",
                 Unit = this.Units[this.UnitsPicker.SelectedIndex],
             });
             this.IngredientsView.ItemsSource = this.Ingredients;
