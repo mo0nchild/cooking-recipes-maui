@@ -18,17 +18,38 @@
                     <RoundRectangle CornerRadius="0, 0, 24, 24" />
                 </Border.StrokeShape>
                 <VerticalStackLayout Spacing="5">
-                    <Label TextColor="White" FontSize="14" Text="Возможные действия:" />
-                    <Grid ColumnDefinitions="0.5*, 0.5*" RowDefinitions="*" ColumnSpacing="10">
-                        <ImageButton Grid.Column="0" Source="addicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2"
-                            Padding="5" HeightRequest="{OnIdiom Desktop=40, Phone=50}" 
-                            BackgroundColor="{x:StaticResource FirstColor}" Clicked="AddRecipeButton_Clicked"
-                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
-                        <ImageButton Grid.Column="1" Source="reloadicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2"
-                            Padding="8" HeightRequest="{OnIdiom Desktop=40, Phone=50}" 
-                            BackgroundColor="{x:StaticResource FirstColor}" Command="{x:Binding GetPublishedListCommand}"
-                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
-                    </Grid>
+                    <Label TextColor="White" FontSize="14" Text="Возможные действия:" TextDecorations="Underline"/>
+                    <ScrollView Orientation="Vertical" HeightRequest="96" VerticalScrollBarVisibility="Always">
+                        <Grid ColumnDefinitions="0.8*, 0.2*" RowDefinitions="*, *" ColumnSpacing="10" RowSpacing="10">
+                            <Border Stroke="White" Padding="2" BackgroundColor="White" Grid.Column="0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10"/>
+                                </Border.StrokeShape>
+                                <Entry PlaceholderColor="{x:StaticResource FirstColor}" TextColor="{x:StaticResource SecondColor}" 
+                                    FontSize="16" Placeholder="Введите название рецепта" BackgroundColor="White" ClearButtonVisibility="WhileEditing"
+                                    Text="{x:Binding TextFilter}" x:Name="FilterTextField" MaxLength="50" Completed="FilterTextField_Completed"
+                                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                            </Border>
+                            <ImageButton Grid.Column="1" Source="addicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2" Grid.Row="0"
+                                Padding="5" HeightRequest="{OnIdiom Desktop=40, Phone=50}" 
+                                BackgroundColor="{x:StaticResource FirstColor}" Clicked="AddRecipeButton_Clicked"
+                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                            <ImageButton Grid.Column="2" Source="reloadicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2" Grid.Row="1"
+                                Padding="8" HeightRequest="{OnIdiom Desktop=40, Phone=50}" 
+                                BackgroundColor="{x:StaticResource FirstColor}" Command="{x:Binding GetPublishedListCommand}"
+                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                            <VerticalStackLayout Spacing="5" Grid.Column="0" Grid.Row="1">
+                                <Border BackgroundColor="Transparent" Padding="2" Stroke="White" StrokeThickness="2">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10" />
+                                    </Border.StrokeShape>
+                                    <Picker x:Name="CategoriesPicker" FontSize="16" WidthRequest="240" HorizontalTextAlignment="Start"
+                                            SelectedIndexChanged="CategoriesPicker_SelectedIndexChanged"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                        </Grid>
+                    </ScrollView>
                 </VerticalStackLayout>
             </Border>
             <Grid x:Name="PublishedListPanel" Opacity="0.0" Scale="1.5">
@@ -103,7 +124,7 @@
                                                         <Label FontSize="14" TextColor="White" LineBreakMode="TailTruncation">
                                                             <Label.FormattedText>
                                                                 <FormattedString>
-                                                                    <Span Text="Рейтинг: "/>
+                                                                    <Span Text="Оценка: "/>
                                                                     <Span Text="{Binding Rating, StringFormat='{0:F2}'}" />
                                                                 </FormattedString>
                                                             </Label.FormattedText>
@@ -121,7 +142,7 @@
                                                 <ImageButton Grid.Column="2" Source="clearicon.png" 
                                                         HeightRequest="{OnIdiom Desktop=40, Phone=50}" WidthRequest="{OnIdiom Desktop=40, Phone=50}"
                                                         Command="{x:Binding BindingContext.DeletePublishedCommand, Source={x:Reference PublisherPage}}"
-                                                        CommandParameter="{x:Binding Id}" BorderWidth="2" Margin="5" BorderColor="White" CornerRadius="10" Padding="8"
+                                                        CommandParameter="{x:Binding Id}" BorderWidth="2" Margin="1" BorderColor="White" CornerRadius="10" Padding="8"
                                                         IsEnabled="{Binding BindingContext.IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference PublisherPage}}"/>
                                             </Grid>
                                         </Border>

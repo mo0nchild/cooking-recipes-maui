@@ -95,7 +95,7 @@
                         <RoundRectangle CornerRadius="20" />
                     </Border.StrokeShape>
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="Данные рецепта:" TextColor="White" FontSize="18" Margin="0, 0, 0, 10" TextDecorations="Underline"/>
+                        <Label Text="Данные рецепта:" TextColor="White" FontSize="18" Margin="0, 0, 0, 5" TextDecorations="Underline"/>
 
                         <custom:ValidationEntryView x:Name="NameTextField" ErrorText="Значение от 3 до 50 символов"
                                 IsValidated="{x:Binding ValidationState[RecipeName], Source={x:Reference RecipePage}}" 
@@ -124,7 +124,8 @@
                                 <Editor TextColor="{x:StaticResource SecondColor}" BackgroundColor="White" MaxLength="160" 
                                         HeightRequest="100" FontSize="16" Placeholder="Укажите описание рецепта"
                                         PlaceholderColor="{x:StaticResource FirstColor}" IsSpellCheckEnabled="False"
-                                        Text="{x:Binding Description, Source={x:Reference RecipePage}}"/>
+                                        Text="{x:Binding Description, Source={x:Reference RecipePage}}"
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference RecipePage}}"/>
                             </Border>
                         </VerticalStackLayout>
 
@@ -237,7 +238,8 @@
                                     </Border>
                                     <Slider Minimum="0" Maximum="1000" x:Name="UnitValueSlider" MinimumTrackColor="White" ThumbColor="White" Margin="0, 10"
                                         MaximumTrackColor="DarkSlateGrey" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
-                                        ValueChanged="UnitValueSlider_ValueChanged"/>
+                                        ValueChanged="UnitValueSlider_ValueChanged"
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference RecipePage}}"/>
                                     <ImageButton Grid.Column="3" Source="addicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2"
                                         Padding="5" BackgroundColor="{x:StaticResource FirstColor}" Clicked="AddIngredientButton_Clicked"
                                         HeightRequest="{OnIdiom Desktop=40, Phone=50}"

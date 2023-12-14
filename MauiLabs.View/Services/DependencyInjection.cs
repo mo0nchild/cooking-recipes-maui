@@ -34,6 +34,7 @@ namespace MauiLabs.View.Services
             collection.AddTransient<IFriendsList, FriendsList>();
 
             collection.AddTransient<ICookingRecipes, CookingRecipes>();
+            collection.AddTransient<ICommentsList, CommentsList>();
             return Task.FromResult(collection);
         }
     }

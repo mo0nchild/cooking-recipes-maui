@@ -18,6 +18,18 @@ public partial class PublishedListPage : ContentPage
         {
             this.Dispatcher.Dispatch(() => this.RecipesListView.ItemsSource = this.viewModel.CookingRecipes);
         };
+        this.viewModel.CategoriesReload += delegate (object sender, EventArgs args)
+        {
+            this.Dispatcher.Dispatch(() =>
+            {
+                this.CategoriesPicker.ItemsSource = this.viewModel.Categories;
+                if (this.CategoriesPicker.Items.Count > 0) 
+                {
+                    if(!this.viewModel.Categories.Contains(this.viewModel.Category)) this.CategoriesPicker.SelectedIndex = default!;
+                    else this.CategoriesPicker.SelectedIndex = this.CategoriesPicker.Items.IndexOf(this.viewModel.Category);
+                }
+            });
+        };
         this.viewModel.DisplayInfo += (sender, message) => this.Dispatcher.Dispatch(async () =>
         {
             await this.DisplayAlert("Действие выполнено", message, "Назад");
@@ -28,11 +40,21 @@ public partial class PublishedListPage : ContentPage
 
     protected virtual async void RecipesListView_SelectionChanged(object sender, SelectionChangedEventArgs args)
     {
+        if (this.viewModel.IsLoading) return;
         var queryParam = new Dictionary<string, object>()
         {
             ["RecipeId"] = ((GetRecipeResponseModel)this.RecipesListView.SelectedItem).Id
         };
         await this.navigationService.NavigateToPage<EditRecipePage>(Shell.Current, queryParam);
+    }
+    protected virtual void CategoriesPicker_SelectedIndexChanged(object sender, EventArgs args)
+    {
+        if (this.CategoriesPicker.SelectedItem == null) return; 
+        this.viewModel.Category = (this.CategoriesPicker.SelectedItem as string) ?? PublishedListViewModel.DefaultCategory;
+    }
+    protected virtual void FilterTextField_Completed(object sender, EventArgs args)
+    {
+        this.viewModel.GetPublishedListCommand.Execute(null);
     }
     protected virtual async void AddRecipeButton_Clicked(object sender, EventArgs args)
     {
@@ -42,6 +64,9 @@ public partial class PublishedListPage : ContentPage
     protected override void OnAppearing() => this.Dispatcher.Dispatch(async () =>
     {
         this.viewModel.GetPublishedListCommand.Execute(this);
+        this.CategoriesPicker.ItemsSource = this.viewModel.Categories;
+
+        this.CategoriesPicker.SelectedIndex = default!;
         await Task.Run(() => { while (!this.isPageLoaded) ; });
         await Task.WhenAll(new Task[]
         {
@@ -53,8 +78,10 @@ public partial class PublishedListPage : ContentPage
     protected override void OnDisappearing() => this.Dispatcher.Dispatch(async () =>
     {
         this.viewModel.CancelCommand.Execute(this);
+        this.viewModel.Category = PublishedListViewModel.DefaultCategory;
 
         (this.PublishedListPanel.Opacity, this.PublishedListPanel.Scale) = (0, 1.5);
+        this.FilterTextField.Text = string.Empty;
         await this.PageScroller.ScrollToAsync(0, 0, false);
     });
 }

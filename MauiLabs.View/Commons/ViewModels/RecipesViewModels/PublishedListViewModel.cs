@@ -21,14 +21,17 @@ namespace MauiLabs.View.Commons.ViewModels.RecipesViewModels
         protected internal readonly ICookingRecipes cookingRecipes = default!;
 
         public static readonly string DefaultRecipeImage = $"MauiLabs.View.Resources.Images.Recipe.defaultrecipe.jpg";
+        public static readonly string DefaultCategory = "Любая категория";
 
         public ICommand GetPublishedListCommand { get; protected set; } = default!;
         public ICommand DeletePublishedCommand { get; protected set; } = default!;
         public ICommand CancelCommand { get; protected set; } = default!;
 
         public event EventHandler<string> DisplayInfo = delegate { };
-        public event EventHandler RecipesReload = delegate { };
         public event Func<string, Task<bool>> CheckСonfirm = (_) => Task.FromResult(false);  
+
+        public event EventHandler CategoriesReload = delegate { };
+        public event EventHandler RecipesReload = delegate { };
 
         public event PropertyChangedEventHandler PropertyChanged;
         public PublishedListViewModel(ICookingRecipes cookingRecipes) : base() 
@@ -53,7 +56,7 @@ namespace MauiLabs.View.Commons.ViewModels.RecipesViewModels
             this.cancellationSource.Cancel();
 
             this.cancellationSource = new CancellationTokenSource();
-            (this.IsLoading, this.RecipesLoaded, this.AllCount) = (default, default, 0);
+            (this.IsLoading) = (default);
         });
         protected async void LaunchСancelableTask(Func<Task> cancelableTask) => await Task.Run(async () =>
         {
@@ -70,7 +73,15 @@ namespace MauiLabs.View.Commons.ViewModels.RecipesViewModels
         }
         protected virtual async Task GetPublishedListCommandHandler() => await UserManager.SendRequest(async (token) =>
         {
-            var requestResult = await this.cookingRecipes.GetPublishedList(token, this.cancellationSource.Token);
+            var requestResult = await this.cookingRecipes.GetPublishedList(new RequestInfo<GetPublisherRecipesListRequestModel>() 
+            {
+                RequestModel = new GetPublisherRecipesListRequestModel() 
+                { 
+                    TextFilter = this.TextFilter == string.Empty ? null : this.TextFilter, 
+                    Category = this.Category == DefaultCategory ? null : this.Category,  
+                },
+                CancelToken = this.cancellationSource.Token, ProfileToken = token,
+            });
             foreach (var friendRecord in requestResult.Recipes)
             {
                 friendRecord.Image = friendRecord.Image.Length != 0
@@ -81,6 +92,19 @@ namespace MauiLabs.View.Commons.ViewModels.RecipesViewModels
 
             this.RecipesReload.Invoke(this, new EventArgs());
             if (!this.RecipesLoaded) this.RecipesLoaded = true;
+            var categoriesResult = await this.cookingRecipes.GetCategoriesList(token, this.cancellationSource.Token);
+
+            this.Categories = new(categoriesResult.Categories);
+            this.Categories.Insert(0, DefaultCategory);
+
+            this.CategoriesReload.Invoke(this, new EventArgs());
+        }, (errorInfo) =>
+        {
+            (this.Categories, this.CookingRecipes) = (new() { DefaultCategory }, new());
+            (this.RecipesLoaded, this.AllCount) = (default, 0);
+
+            this.RecipesReload.Invoke(this, new EventArgs());
+            this.CategoriesReload.Invoke(this, new EventArgs());
         });
         protected virtual async Task DeletePublishedCommandHandler(int id) => await UserManager.SendRequest(async (token) =>
         {
@@ -93,6 +117,11 @@ namespace MauiLabs.View.Commons.ViewModels.RecipesViewModels
             this.DisplayInfo.Invoke(this, "Рецепт удален");
         });
         public ObservableCollection<GetRecipeResponseModel> CookingRecipes { get; protected set; } = new();
+        public ObservableCollection<string> Categories { get; protected set; } = new() { DefaultCategory };
+
+        private protected string textFilter = string.Empty;
+        public string TextFilter { get => this.textFilter; set { this.textFilter = value; OnPropertyChanged(); } }
+        public string Category { get; set; } = DefaultCategory;
 
         private protected int allCount = default!;
         public int AllCount { get => this.allCount; set { this.IsEmpty = (this.allCount = value) <= 0; OnPropertyChanged(); } }

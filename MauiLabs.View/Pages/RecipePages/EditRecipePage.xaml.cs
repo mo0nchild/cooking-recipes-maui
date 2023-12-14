@@ -57,7 +57,7 @@ public partial class EditRecipePage : ContentPage, INotifyPropertyChanged, INavi
     private protected bool ingredientsEmpty = true;
     public bool IngredientsEmpty { get => this.ingredientsEmpty; set { this.ingredientsEmpty = value; OnPropertyChanged(); } }
 
-    public virtual ObservableCollection<string> Categories { get; protected set; } = new();
+    public virtual ObservableCollection<string> Categories { get; protected set; } = new() { };
     public virtual ObservableCollection<string> Units { get; protected set; } = new();
     public virtual ObservableCollection<IngredientModel> Ingredients { get; protected set; } = new();
 

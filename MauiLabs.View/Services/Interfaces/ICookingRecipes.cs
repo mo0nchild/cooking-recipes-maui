@@ -17,7 +17,8 @@ namespace MauiLabs.View.Services.Interfaces
         public Task<GetRecipesListResponseModel> GetRecipesList(RequestInfo<GetRecipesListRequestModel> requestModel);
         public Task<GetRecipeResponseModel> GetRecipeInfo(RequestInfo<GetRecipeRequestModel> requestModel);
 
-        public Task<GetRecipesListResponseModel> GetPublishedList(string token, CancellationToken cancelToken);
+        public Task<GetRecipesListResponseModel> GetPublishedListById(RequestInfo<GetPublisherRecipesListByIdRequestModel> requestModel);
+        public Task<GetRecipesListResponseModel> GetPublishedList(RequestInfo<GetPublisherRecipesListRequestModel> requestModel);
 
         public Task<string> AddRecipeInfo(RequestInfo<AddRecipeRequestModel> requestModel);
         public Task<string> DeleteRecipeInfo(RequestInfo<DeleteRecipeRequestModel> requestModel);

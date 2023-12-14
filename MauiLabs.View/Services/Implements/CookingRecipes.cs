@@ -37,18 +37,6 @@ namespace MauiLabs.View.Services.Implements
             var requestPath = string.Format("cookingrecipes/recipes/get");
             return await this.apiService.GetDataFromServer<GetRecipeRequestModel, GetRecipeResponseModel>(requestPath, model);
         }
-        public virtual async Task<GetRecipesListResponseModel> GetPublishedList(string token, CancellationToken cancelToken)
-        {
-            var requestPath = string.Format("cookingrecipes/recipes/getpublisherlist/bytoken");
-            using var request = new HttpRequestMessage(HttpMethod.Get, requestPath)
-            {
-                Headers = { { "Authorization", string.Format("Bearer {0}", token) } },
-            };
-            return await this.apiService.SendRequestAsync(request, cancelToken, async content =>
-            {
-                return JsonConvert.DeserializeObject<GetRecipesListResponseModel>(await content.ReadAsStringAsync());
-            });
-        }
         public virtual async Task<string> AddRecipeInfo(RequestInfo<AddRecipeRequestModel> requestModel)
         {
             var requestPath = string.Format("cookingrecipes/recipes/addbytoken");
@@ -64,7 +52,17 @@ namespace MauiLabs.View.Services.Implements
             var requestPath = string.Format("cookingrecipes/recipes/edit");
             return await this.apiService.UpdateDataToServer<EditRecipeRequestModel>(requestPath, requestModel);
         }
-
+        public virtual async Task<GetRecipesListResponseModel> GetPublishedListById(RequestInfo<GetPublisherRecipesListByIdRequestModel> model)
+        {
+            var requestPath = string.Format("cookingrecipes/recipes/getpublisherlist");
+            return await this.apiService
+                .GetDataFromServer<GetPublisherRecipesListByIdRequestModel, GetRecipesListResponseModel>(requestPath, model);
+        }
+        public virtual async Task<GetRecipesListResponseModel> GetPublishedList(RequestInfo<GetPublisherRecipesListRequestModel> model)
+        {
+            var requestPath = string.Format("cookingrecipes/recipes/getpublisherlist/bytoken");
+            return await this.apiService.GetDataFromServer<GetPublisherRecipesListRequestModel, GetRecipesListResponseModel>(requestPath, model);
+        }
         public virtual async Task<GetRecipeCategoriesListResponseModel> GetCategoriesList(string token, CancellationToken cancelToken)
         {
             var requestPath = string.Format("cookingrecipes/category/getlist");
