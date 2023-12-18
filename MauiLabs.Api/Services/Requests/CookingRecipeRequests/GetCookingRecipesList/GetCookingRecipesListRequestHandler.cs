@@ -23,27 +23,26 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetCookingRecipes
             var sortedRating = (CookingRecipe item) => item.Comments.Sum(op => (double)op.Rating / item.Comments.Count());
             using (var dbcontext = await this._factory.CreateDbContextAsync(cancellationToken))
             {
-                var requestResult = dbcontext.CookingRecipes.Include(item => item.RecipeCategory)
+                var requestResult = await dbcontext.CookingRecipes.Include(item => item.RecipeCategory)
                     .Where(item => request.Category == null ? true : item.RecipeCategory!.Name == request.Category)
                     .Where(item => request.TextFilter == null 
                         ? true : Regex.IsMatch(item.Name, request.TextFilter, RegexOptions.IgnoreCase))
                     .Include(item => item.Publisher)
                     .Include(item => item.Comments)
                     .Include(item => item.RecipeCategory)
-                    .Include(item => item.Ingredients);
-                var filtredResult = await requestResult.Skip(request.Skip).Take(request.Take).ToListAsync();
+                    .Include(item => item.Ingredients).ToListAsync();
                 var orderedResult = (request.SortingType switch
                 {
-                    RecipeSortingType.ByRating => filtredResult.OrderByDescending(item => sortedRating(item)),
-                    RecipeSortingType.ByDate => filtredResult.OrderByDescending(item => item.PublicationTime),
-                    RecipeSortingType.ByName => filtredResult.OrderBy(item => item.Name),
+                    RecipeSortingType.ByRating => requestResult.OrderByDescending(item => sortedRating(item)),
+                    RecipeSortingType.ByDate => requestResult.OrderByDescending(item => item.PublicationTime),
+                    RecipeSortingType.ByName => requestResult.OrderBy(item => item.Name),
                     _ => throw new ApiServiceException("Не установлен режим сортировки", typeof(GetCookingRecipesListRequest))
-                })
-                .ToImmutableList();
+                });
+                var filtredResult = requestResult.Skip(request.Skip).Take(request.Take).ToImmutableList();
                 return new CookingRecipesList()
                 {
-                    AllCount = await requestResult.CountAsync(),
-                    Recipes = this._mapper.Map<List<CookingRecipeInfo>>(orderedResult),
+                    AllCount = requestResult.Count(),
+                    Recipes = this._mapper.Map<List<CookingRecipeInfo>>(filtredResult),
                 };
             }
         }
