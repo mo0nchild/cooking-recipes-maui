@@ -123,6 +123,9 @@
 	  <MauiXaml Update="Pages\ProfilePages\AuthorizationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\ProfilePages\BookmarksListPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\ProfilePages\FriendInfoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

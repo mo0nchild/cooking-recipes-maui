@@ -1,3 +1,4 @@
+using MauiLabs.View.Services.ApiModels.ProfileModels.Bookmarks.Requests;
 using MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests;
 using MauiLabs.View.Services.Commons;
 using MauiLabs.View.Services.Interfaces;
@@ -12,6 +13,7 @@ public partial class RecipeInfoPage : ContentPage, INotifyPropertyChanged, INavi
 {
     protected internal CancellationTokenSource cancellationSource = new();
     protected internal readonly ICookingRecipes cookingRecipes = default!;
+    protected internal readonly IBookmarksList bookmarks = default!;
     protected internal readonly INavigationService navigationService = default!;
 
     public static readonly string DefaultRecipeImage = $"MauiLabs.View.Resources.Images.Recipe.defaultrecipe.jpg";
@@ -21,10 +23,10 @@ public partial class RecipeInfoPage : ContentPage, INotifyPropertyChanged, INavi
     public ICommand GetRecipeCommand { get; protected set; } = default!;
     public ICommand CancelCommand { get; protected set; } = default!;
 
-    public RecipeInfoPage(ICookingRecipes cookingRecipes, INavigationService navigationService) : base()
+    public RecipeInfoPage(ICookingRecipes cookingRecipes, IBookmarksList bookmarks, INavigationService navigationService) : base()
     {
         this.InitializeComponent();
-        (this.cookingRecipes, this.navigationService) = (cookingRecipes, navigationService);
+        (this.cookingRecipes, this.navigationService, this.bookmarks) = (cookingRecipes, navigationService, bookmarks);
         this.GetRecipeCommand = new Command(() =>
         {
             this.LaunchÑancelableTask(() => this.GetRecipeCommandHandler());
@@ -110,7 +112,14 @@ public partial class RecipeInfoPage : ContentPage, INotifyPropertyChanged, INavi
     }
     protected virtual void BookmarkButton_Clicked(object sender, EventArgs args)
     {
-
+        this.LaunchÑancelableTask(() => UserManager.SendRequest(async token =>
+        {
+            await this.bookmarks.AddBookmark(new RequestInfo<AddBookmarkRequestModel>() 
+            { 
+                RequestModel = new AddBookmarkRequestModel() { RecipeId = this.RecipeId },
+                CancelToken = this.cancellationSource.Token, ProfileToken = token,
+            });
+        }));
     }
     protected virtual void PublisherRecipesButton_Clicked(object sender, EventArgs args)
     {

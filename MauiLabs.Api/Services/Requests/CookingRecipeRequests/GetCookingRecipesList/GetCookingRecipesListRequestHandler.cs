@@ -38,7 +38,7 @@ namespace MauiLabs.Api.Services.Requests.CookingRecipeRequests.GetCookingRecipes
                     RecipeSortingType.ByName => requestResult.OrderBy(item => item.Name),
                     _ => throw new ApiServiceException("Не установлен режим сортировки", typeof(GetCookingRecipesListRequest))
                 });
-                var filtredResult = requestResult.Skip(request.Skip).Take(request.Take).ToImmutableList();
+                var filtredResult = orderedResult.Skip(request.Skip).Take(request.Take).ToImmutableList();
                 return new CookingRecipesList()
                 {
                     AllCount = requestResult.Count(),

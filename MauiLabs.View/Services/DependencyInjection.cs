@@ -23,7 +23,7 @@ namespace MauiLabs.View.Services
             collection.AddHttpClient(clientOptions.ApiClient, options =>
             {
                 options.DefaultRequestHeaders.Add("ApiKey", clientOptions.ApiKey);
-                options.Timeout = TimeSpan.FromMilliseconds(20000);
+                options.Timeout = TimeSpan.FromMilliseconds(16000);
                 options.BaseAddress = new Uri(clientOptions.BaseUrl);
             });
             collection.AddTransient<IApiServiceCommunication, ApiServiceCommunication>();
@@ -35,6 +35,7 @@ namespace MauiLabs.View.Services
 
             collection.AddTransient<ICookingRecipes, CookingRecipes>();
             collection.AddTransient<ICommentsList, CommentsList>();
+            collection.AddTransient<IBookmarksList, BookmarksList>();
             return Task.FromResult(collection);
         }
     }
