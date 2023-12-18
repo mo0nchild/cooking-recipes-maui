@@ -83,6 +83,9 @@
         <Tab Route="listTab" Title="Список рецептов" Icon="cooking.png">
             <ShellContent Route="listPage" ContentTemplate="{DataTemplate recipePages:RecipesListPage}"/>
         </Tab>
+        <Tab Route="bookmarksTab" Title="Список заметок" Icon="recipelist.png">
+            <ShellContent Route="bookmarksPage" ContentTemplate="{DataTemplate profilePages:BookmarksListPage}"/>
+        </Tab>
     </FlyoutItem>
     <FlyoutItem Route="profile" Title="Профиль">
         <Tab Route="infoTab" Title="Информация" Icon="user.png">

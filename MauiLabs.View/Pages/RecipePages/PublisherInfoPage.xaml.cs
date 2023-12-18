@@ -1,6 +1,3 @@
-using MauiLabs.View.Pages.RecipePages;
-using MauiLabs.View.Services.ApiModels.ProfileModels.Bookmarks.Requests;
-using MauiLabs.View.Services.ApiModels.ProfileModels.Bookmarks.Responses;
 using MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Requests;
 using MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Responses;
 using MauiLabs.View.Services.Commons;
@@ -10,28 +7,26 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Windows.Input;
 
-namespace MauiLabs.View.Pages.ProfilePages;
+namespace MauiLabs.View.Pages.RecipePages;
 
-public partial class BookmarksListPage : ContentPage, INotifyPropertyChanged
+public partial class PublisherInfoPage : ContentPage, INotifyPropertyChanged, INavigationService.IQueryableNavigation
 {
     protected internal readonly INavigationService navigationService = default!;
-    protected internal readonly IBookmarksList bookmarksService = default!;
     protected internal readonly ICookingRecipes cookingRecipes = default!;
     protected internal CancellationTokenSource cancellationSource = new();
 
     public static readonly string DefaultRecipeImage = $"MauiLabs.View.Resources.Images.Recipe.defaultrecipe.jpg";
     public static readonly string DefaultCategory = "Любая категория";
 
-    public ICommand GetBookmarksListCommand { get; protected set; } = default!;
-    public ICommand DeleteBookmarkCommand { get; protected set; } = default!;
+    public ICommand GetRecipeListCommand { get; protected set; } = default!;
     public ICommand CancelCommand { get; protected set; } = default!;
 
     public event EventHandler CategoriesReload = delegate { };
     public event EventHandler RecipesReload = delegate { };
-    public BookmarksListPage(IBookmarksList bookmarksService, ICookingRecipes cookingRecipes, INavigationService navigationService) : base()
+    public PublisherInfoPage(ICookingRecipes cookingRecipes, INavigationService navigationService) : base()
 	{
 		this.InitializeComponent();
-        (this.bookmarksService, this.navigationService, this.cookingRecipes) = (bookmarksService, navigationService, cookingRecipes);
+        (this.navigationService, this.cookingRecipes) = (navigationService, cookingRecipes);
         this.RecipesReload += (sender, args) => this.Dispatcher.Dispatch(() => this.RecipesListView.ItemsSource = this.CookingRecipes);
         this.CategoriesReload += (sender, args) => this.Dispatcher.Dispatch(() =>
         {
@@ -42,14 +37,7 @@ public partial class BookmarksListPage : ContentPage, INotifyPropertyChanged
                 else this.CategoriesPicker.SelectedIndex = this.CategoriesPicker.Items.IndexOf(this.Category);
             }
         });
-        this.GetBookmarksListCommand = new Command(() => this.LaunchСancelableTask(() => this.GetBookmarksListCommandHandler()));
-        this.DeleteBookmarkCommand = new Command<int>(async (id) =>
-        {
-            if (await this.DisplayAlert("Подтверждение", "Удалить данную заметку?", "Ок", "Назад"))
-            {
-                this.LaunchСancelableTask(() => this.DeleteBookmarkCommandHandler(id));
-            }
-        });
+        this.GetRecipeListCommand = new Command(() => this.LaunchСancelableTask(() => this.GetRecipeListCommandHandler()));
         this.CancelCommand = new Command(this.CancelCommandHandler);
     }
     private protected string textFilter = string.Empty;
@@ -64,6 +52,8 @@ public partial class BookmarksListPage : ContentPage, INotifyPropertyChanged
 
     private protected bool isLoading = default;
     public bool IsLoading { get => this.isLoading; set { this.isLoading = value; OnPropertyChanged(); } }
+
+    public virtual int PublisherId { get; protected set; } = default!;
 
     public ObservableCollection<GetRecipeResponseModel> CookingRecipes { get; protected set; } = new();
     public ObservableCollection<string> Categories { get; protected set; } = new() { DefaultCategory };
@@ -89,23 +79,24 @@ public partial class BookmarksListPage : ContentPage, INotifyPropertyChanged
             return binaryReader.ReadBytes((int)fileStream.Length);
         }
     }
-    protected virtual async Task GetBookmarksListCommandHandler() => await UserManager.SendRequest(async (token) =>
+    protected virtual async Task GetRecipeListCommandHandler() => await UserManager.SendRequest(async (token) =>
     {
-        var requestResult = await this.bookmarksService.GetBookmarks(new RequestInfo<GetBookmarksRequestModel>()
+        var requestResult = await this.cookingRecipes.GetPublishedListById(new RequestInfo<GetPublisherRecipesListByIdRequestModel>()
         {
-            RequestModel = new GetBookmarksRequestModel()
+            RequestModel = new GetPublisherRecipesListByIdRequestModel()
             {
                 TextFilter = this.TextFilter == string.Empty ? null : this.TextFilter,
                 Category = this.Category == DefaultCategory ? null : this.Category,
+                PublisherId = this.PublisherId,
             },
             CancelToken = this.cancellationSource.Token, ProfileToken = token,
         });
-        foreach (var bookmarkrecord in requestResult.Bookmarks)
+        foreach (var bookmarkrecord in requestResult.Recipes)
         {
-            bookmarkrecord.Recipe.Image = bookmarkrecord.Recipe.Image.Length != 0
-                ? bookmarkrecord.Recipe.Image : this.FileToByteArray(DefaultRecipeImage);
+            bookmarkrecord.Image = bookmarkrecord.Image.Length != 0
+                ? bookmarkrecord.Image : this.FileToByteArray(DefaultRecipeImage);
         }
-        this.CookingRecipes = new(requestResult.Bookmarks.Select(p => p.Recipe));
+        this.CookingRecipes = new(requestResult.Recipes);
         this.AllCount = requestResult.AllCount;
 
         this.RecipesReload.Invoke(this, new EventArgs());
@@ -123,28 +114,17 @@ public partial class BookmarksListPage : ContentPage, INotifyPropertyChanged
         this.RecipesReload.Invoke(this, new EventArgs());
         this.CategoriesReload.Invoke(this, new EventArgs());
     });
-    protected virtual async Task DeleteBookmarkCommandHandler(int id) => await UserManager.SendRequest(async (token) =>
-    {
-        await this.bookmarksService.DeleteBookmark(new RequestInfo<DeleteBookmarkRequestModel>()
-        {
-            RequestModel = new DeleteBookmarkRequestModel() { RecipeId = id },
-            CancelToken = this.cancellationSource.Token, ProfileToken = token,
-        });
-        await this.GetBookmarksListCommandHandler();
-        this.Dispatcher.Dispatch(async () => await this.DisplayAlert("Успешное действие", "Заметка удалена", "Назад"));
-    });
-
     protected virtual async void RecipesListView_SelectionChanged(object sender, SelectionChangedEventArgs args)
     {
         if (this.IsLoading) return;
         var queryParam = new Dictionary<string, object>()
         {
             ["RecipeId"] = ((GetRecipeResponseModel)this.RecipesListView.SelectedItem).Id,
-            ["EnablePublisher"] = true,
+            ["EnablePublisher"] = false,
         };
         await this.navigationService.NavigateToPage<RecipeInfoPage>(Shell.Current, queryParam);
     }
-    protected virtual void RefreshButton_Clicked(object sender, EventArgs args) => this.GetBookmarksListCommand.Execute(null);
+    protected virtual void RefreshButton_Clicked(object sender, EventArgs args) => this.GetRecipeListCommand.Execute(null);
     protected virtual void CategoriesPicker_SelectedIndexChanged(object sender, EventArgs args)
     {
         if (this.CategoriesPicker.SelectedItem == null) return;
@@ -152,11 +132,11 @@ public partial class BookmarksListPage : ContentPage, INotifyPropertyChanged
     }
     protected virtual void FilterTextField_Completed(object sender, EventArgs args)
     {
-        this.GetBookmarksListCommand.Execute(null);
+        this.GetRecipeListCommand.Execute(null);
     }
     protected override void OnAppearing() => this.Dispatcher.Dispatch(() =>
     {
-        this.GetBookmarksListCommand.Execute(this);
+        this.GetRecipeListCommand.Execute(this);
         this.CategoriesPicker.ItemsSource = this.Categories;
 
         this.CategoriesPicker.SelectedIndex = default!;
@@ -168,4 +148,5 @@ public partial class BookmarksListPage : ContentPage, INotifyPropertyChanged
 
         await this.PageScroller.ScrollToAsync(0, 0, false);
     });
+    public void SetNavigationQuery(IDictionary<string, object> queries) => this.PublisherId = (int)queries["PublisherId"];
 }

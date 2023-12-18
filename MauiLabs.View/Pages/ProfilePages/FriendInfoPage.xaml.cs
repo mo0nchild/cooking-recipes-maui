@@ -1,6 +1,10 @@
+using MauiLabs.View.Pages.RecipePages;
+using MauiLabs.View.Services.ApiModels.ProfileModels.Bookmarks.Requests;
 using MauiLabs.View.Services.ApiModels.ProfileModels.FriendsList.Requests;
+using MauiLabs.View.Services.ApiModels.RecipeModels.CookingRecipe.Responses;
 using MauiLabs.View.Services.Commons;
 using MauiLabs.View.Services.Interfaces;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows.Input;
@@ -11,18 +15,28 @@ public partial class FriendInfoPage : ContentPage, INotifyPropertyChanged, INavi
 {
     protected internal CancellationTokenSource cancellationSource = new();
     protected internal readonly INavigationService navigationService = default!;
+    protected internal readonly IBookmarksList bookmarksService = default!;
 
     protected internal readonly IUserProfile userProfile = default!;
     protected internal readonly IFriendsList friendProfile = default!;
 
+    public ICommand GetBookmarksListCommand { get; protected set; } = default!;
     public ICommand CancelCommand { get; protected set; } = default!;
 
     public static readonly string DefaultProfileImage = $"MauiLabs.View.Resources.Images.Profile.defaultprofile.png";
-    public FriendInfoPage(IUserProfile userProfile, INavigationService navigationService, IFriendsList friendProfile) : base()
+    public static readonly string DefaultRecipeImage = $"MauiLabs.View.Resources.Images.Recipe.defaultrecipe.jpg";
+
+    public event EventHandler RecipesReload = delegate { };
+    public FriendInfoPage(IUserProfile userProfile, IBookmarksList bookmarksService, IFriendsList friendProfile, 
+        INavigationService navigationService) : base()
 	{
 		this.InitializeComponent();
-        (this.userProfile, this.navigationService, this.friendProfile) = (userProfile, navigationService, friendProfile);
-
+        (this.userProfile, this.bookmarksService, this.friendProfile) = (userProfile, bookmarksService, friendProfile);
+        this.navigationService = navigationService;
+        this.RecipesReload += (sender, args) => 
+        {
+            this.Dispatcher.Dispatch(() => this.RecipesListView.ItemsSource = this.CookingRecipes);
+        };
         this.CancelCommand = new Command(this.CancelCommandHandler);
 	}
     private protected bool isLoading = default;
@@ -39,6 +53,14 @@ public partial class FriendInfoPage : ContentPage, INotifyPropertyChanged, INavi
 
     public virtual int FriendId { get; protected set; } = default!;
     public virtual int RecordId { get; protected set; } = default!;
+
+
+    private protected int allCount = default!;
+    public int AllCount { get => this.allCount; set { this.IsEmpty = (this.allCount = value) <= 0; OnPropertyChanged(); } }
+
+    private protected bool isEmpty = default!;
+    public bool IsEmpty { get => this.isEmpty; set { this.isEmpty = value; OnPropertyChanged(); } }
+    public ObservableCollection<GetRecipeResponseModel> CookingRecipes { get; protected set; } = new();
 
     protected async void LaunchСancelableTask(Func<Task> cancelableTask) => await Task.Run(async () =>
     {
@@ -81,10 +103,25 @@ public partial class FriendInfoPage : ContentPage, INotifyPropertyChanged, INavi
         (this.FriendName, this.FriendSurname) = (requestResult.Name, requestResult.Surname);
         this.FriendEmail = requestResult.Email;
 
+        var bookmarkRequest = await this.bookmarksService.GetBookmarksById(new RequestInfo<GetBookmarksByIdRequestModel>() 
+        { 
+            RequestModel = new GetBookmarksByIdRequestModel() { ProfileId = this.FriendId },
+            CancelToken = this.cancellationSource.Token, ProfileToken = token,
+        });
+        foreach (var bookmarkrecord in bookmarkRequest.Bookmarks)
+        {
+            bookmarkrecord.Recipe.Image = bookmarkrecord.Recipe.Image.Length != 0
+                ? bookmarkrecord.Recipe.Image : this.FileToByteArray(DefaultRecipeImage);
+        }
+        this.CookingRecipes = new(bookmarkRequest.Bookmarks.Select(p => p.Recipe));
+        this.AllCount = bookmarkRequest.AllCount;
+
+        this.RecipesReload.Invoke(this, new EventArgs());
     }, async (errorInfo) =>
     {
         await Shell.Current.Navigation.PopAsync(animated: true);
     });
+   
     protected virtual async Task DeleteFriend() => await UserManager.SendRequest(async (token) =>
     {
         if(await this.DisplayAlert("Подтверждение", "Удалить друга из списка?", "Ок", "Назад"))
@@ -96,10 +133,15 @@ public partial class FriendInfoPage : ContentPage, INotifyPropertyChanged, INavi
             });
         }
     });
-
-    protected virtual void BookmarkButton_Clicked(object sender, EventArgs args)
+    protected virtual async void RecipesListView_SelectionChanged(object sender, SelectionChangedEventArgs args)
     {
-
+        if (this.IsLoading) return;
+        var queryParam = new Dictionary<string, object>()
+        {
+            ["RecipeId"] = ((GetRecipeResponseModel)this.RecipesListView.SelectedItem).Id,
+            ["EnablePublisher"] = true,
+        };
+        await this.navigationService.NavigateToPage<RecipeInfoPage>(Shell.Current, queryParam);
     }
     protected virtual async void DeleteButton_Clicked(object sender, EventArgs args)
     {

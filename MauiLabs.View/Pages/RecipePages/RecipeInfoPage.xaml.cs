@@ -60,6 +60,8 @@ public partial class RecipeInfoPage : ContentPage, INotifyPropertyChanged, INavi
     private protected string publisherTime = default!;
     public string PublisherTime { get => this.publisherTime; set { this.publisherTime = value; OnPropertyChanged(); } }
 
+    public virtual int PublisherId { get; protected set; } = default!;
+
     public sealed class IngredientModel : object
     {
         public required string Name { get; set; } = default!;
@@ -119,11 +121,16 @@ public partial class RecipeInfoPage : ContentPage, INotifyPropertyChanged, INavi
                 RequestModel = new AddBookmarkRequestModel() { RecipeId = this.RecipeId },
                 CancelToken = this.cancellationSource.Token, ProfileToken = token,
             });
+            this.DisplayMessage("Успешное действие", "Рецепт сохранен в заметках");
         }));
     }
-    protected virtual void PublisherRecipesButton_Clicked(object sender, EventArgs args)
+    protected virtual async void PublisherRecipesButton_Clicked(object sender, EventArgs args)
     {
-
+        if (this.EnablePublisher)
+        {
+            var queryParam = new Dictionary<string, object>() { ["PublisherId"] = this.PublisherId };
+            await this.navigationService.NavigateToPage<PublisherInfoPage>(Shell.Current, queryParam);
+        }
     }
     protected virtual async void CommentsButton_Clicked(object sender, EventArgs args)
     {
@@ -156,6 +163,8 @@ public partial class RecipeInfoPage : ContentPage, INotifyPropertyChanged, INavi
             else this.ReloadProfileImage(this.RecipeImage = recipeResult.Publisher.Image, this.PublisherImageContent);
             (this.PublisherName, this.PublisherSurname) = (recipeResult.Publisher.Name, recipeResult.Publisher.Surname);
             this.PublisherTime = recipeResult.PublicationTime.ToString();
+
+            this.PublisherId = recipeResult.PublisherId;
 
             if (recipeResult.Ingredients.Count > 0)
             {

@@ -23,10 +23,10 @@ namespace MauiLabs.View.Services.Implements
             {
                 queryAttributable.SetNavigationQuery(parameters);
             }
+            pageInstance.Unloaded += (_, _) => CookingRecipeShell.SetTabBarVisibility(pageInstance, true);
             pageInstance.Loaded += (_, _) => CookingRecipeShell.SetTabBarVisibility(pageInstance, false);
 
             await root.Navigation.PushAsync(pageInstance);
-            //pageInstance.Unloaded += (_, _) => CookingRecipeShell.SetTabBarVisibility(pageInstance, true);
         }
     }
 }

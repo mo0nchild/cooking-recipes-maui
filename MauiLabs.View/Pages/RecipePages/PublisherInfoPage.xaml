@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiLabs.View.Pages.ProfilePages.BookmarksListPage"
+             x:Class="MauiLabs.View.Pages.RecipePages.PublisherInfoPage"
              xmlns:custom="clr-namespace:MauiLabs.View.Commons.ContentViews"
              xmlns:system="clr-namespace:System;assembly=netstandard"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Title="Список заметок" x:Name="BookmarksPage"
-             Shell.BackgroundColor="{x:StaticResource Key=FirstColor}">
+             Title="Список публикаций" x:Name="PublisherPage"
+             Shell.BackgroundColor="{x:StaticResource Key=FirstColor}"
+             Shell.FlyoutBehavior="Disabled">
     <ContentPage.Resources>
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
@@ -27,14 +28,14 @@
                                 </Border.StrokeShape>
                                 <Entry PlaceholderColor="{x:StaticResource FirstColor}" TextColor="{x:StaticResource SecondColor}" 
                                     FontSize="16" Placeholder="Введите название рецепта" BackgroundColor="White" ClearButtonVisibility="WhileEditing"
-                                    Text="{x:Binding TextFilter, Source={x:Reference BookmarksPage}}" x:Name="FilterTextField" 
+                                    Text="{x:Binding TextFilter, Source={x:Reference PublisherPage}}" x:Name="FilterTextField" 
                                        MaxLength="50" Completed="FilterTextField_Completed"
-                                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference BookmarksPage}}"/>
+                                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference PublisherPage}}"/>
                             </Border>
                             <ImageButton Grid.Column="2" Source="reloadicon.png" BorderColor="White" CornerRadius="10" BorderWidth="2" Grid.Row="0"
                                 Padding="8" HeightRequest="{OnIdiom Desktop=40, Phone=50}" x:Name="RefreshButton"
                                 BackgroundColor="{x:StaticResource FirstColor}" Clicked="RefreshButton_Clicked"
-                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference BookmarksPage}}"/>
+                                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference PublisherPage}}"/>
                             <VerticalStackLayout Spacing="5" Grid.Column="0" Grid.Row="1">
                                 <Border BackgroundColor="Transparent" Padding="2" Stroke="White" StrokeThickness="2">
                                     <Border.StrokeShape>
@@ -50,10 +51,10 @@
                 </VerticalStackLayout>
             </Border>
             <Grid x:Name="BookmarksListPanel">
-                <VerticalStackLayout IsVisible="{x:Binding IsEmpty, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference BookmarksPage}}">
+                <VerticalStackLayout IsVisible="{x:Binding IsEmpty, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference PublisherPage}}">
                     <ScrollView Orientation="Vertical" BackgroundColor="Transparent" x:Name="PageScroller" HeightRequest="500"
-                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference BookmarksPage}}" Margin="0, 10, 0, 0">
-                        <CollectionView x:Name="RecipesListView" ItemsSource="{Binding CookingRecipes, Source={x:Reference BookmarksPage}}" HorizontalOptions="Fill"
+                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference PublisherPage}}" Margin="0, 10, 0, 0">
+                        <CollectionView x:Name="RecipesListView" ItemsSource="{Binding CookingRecipes, Source={x:Reference PublisherPage}}" HorizontalOptions="Fill"
                                 SelectionChanged="RecipesListView_SelectionChanged" SelectionMode="Single">
                             <CollectionView.Resources>
                                 <ResourceDictionary>
@@ -136,11 +137,6 @@
                                                         </Label.FormattedText>
                                                     </Label>
                                                 </StackLayout>
-                                                <ImageButton Grid.Column="2" Source="clearicon.png" 
-                                                        HeightRequest="{OnIdiom Desktop=40, Phone=50}" WidthRequest="{OnIdiom Desktop=40, Phone=50}"
-                                                        Command="{x:Binding DeleteBookmarkCommand, Source={x:Reference BookmarksPage}}"
-                                                        CommandParameter="{x:Binding Id}" BorderWidth="2" Margin="1" BorderColor="White" CornerRadius="10" Padding="8"
-                                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}, Source={x:Reference BookmarksPage}}"/>
                                             </Grid>
                                         </Border>
                                     </Grid>
@@ -150,7 +146,7 @@
                     </ScrollView>
                 </VerticalStackLayout>
                 <Border BackgroundColor="{x:StaticResource FirstColor}" Stroke="White" StrokeThickness="3" Padding="30" 
-                        HeightRequest="200" WidthRequest="200" IsVisible="{x:Binding IsEmpty, Source={x:Reference BookmarksPage}}"
+                        HeightRequest="200" WidthRequest="200" IsVisible="{x:Binding IsEmpty, Source={x:Reference PublisherPage}}"
                         HorizontalOptions="Center" VerticalOptions="Center" Margin="0, 120">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="16" />
@@ -163,7 +159,7 @@
                 </Border>
             </Grid>
         </VerticalStackLayout>
-        <custom:LoadingContentView IsLoading="{x:Binding IsLoading, Source={x:Reference BookmarksPage}}" 
-                                   CancelCommand="{x:Binding CancelCommand, Source={x:Reference BookmarksPage}}"/>
+        <custom:LoadingContentView IsLoading="{x:Binding IsLoading, Source={x:Reference PublisherPage}}" 
+                                   CancelCommand="{x:Binding CancelCommand, Source={x:Reference PublisherPage}}"/>
     </Grid>
 </ContentPage>
