@@ -13,7 +13,7 @@
 
 		<!-- Display name -->
 		<ApplicationTitle>Книга рецептов</ApplicationTitle>
-		<RunAOTCompilation>False</RunAOTCompilation>
+		<RunAOTCompilation>True</RunAOTCompilation>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.MauiLabs.View</ApplicationId>
